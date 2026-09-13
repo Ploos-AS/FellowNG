@@ -1,7 +1,11 @@
+#include <chrono>
 #include <cstdlib>
+#include <filesystem>
 
 #include "CustomChipset/RegisterUtility.h"
 #include "CustomChipset/Registers.h"
+#include "Platform/StdClock.h"
+#include "Platform/StdFileSystem.h"
 
 namespace
 {
@@ -35,6 +39,17 @@ int main()
   if (!check(utility.IsMasterDMAAndBitplaneDMAEnabled())) return EXIT_FAILURE;
   if (!check(utility.IsDiskDMAEnabled())) return EXIT_FAILURE;
   if (!check(utility.IsBlitterPriorityEnabled())) return EXIT_FAILURE;
+
+  FellowNG::Platform::StdClock clock;
+  const auto before = clock.Now();
+  clock.SleepFor(std::chrono::milliseconds(1));
+  const auto after = clock.Now();
+  if (!check(after >= before)) return EXIT_FAILURE;
+
+  FellowNG::Platform::StdFileSystem file_system;
+  const auto current = file_system.Stat(std::filesystem::current_path());
+  if (!check(current.exists && current.directory)) return EXIT_FAILURE;
+  if (!check(file_system.Absolute(".").is_absolute())) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }
