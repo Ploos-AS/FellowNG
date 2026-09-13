@@ -43,12 +43,23 @@ Implemented:
 
 SDL device identifiers are retained in the portable event value fields where useful so later Fellow integration can select or route physical controllers without coupling the core to SDL types.
 
+## M4.4 — audio backend ✅
+
+Implemented:
+
+- `SdlAudioOutput` implementing `Platform::IAudioOutput`;
+- interleaved signed 16-bit PCM input via `SDL_AUDIO_S16`;
+- configurable sample rate and channel count from the portable `AudioFormat` contract;
+- SDL3 playback stream creation through the default playback device;
+- explicit stream-device resume after opening;
+- queued PCM submission with `SDL_PutAudioStreamData`;
+- deterministic stream shutdown through `SDL_DestroyAudioStream`;
+- CI self-test opens the SDL dummy audio backend, queues a stereo 44.1 kHz silence buffer, and verifies start/submit/stop state transitions.
+
+M4.4 intentionally does not connect Fellow's legacy sound generator yet. That wiring belongs to M4.5 so the SDL audio backend can first be qualified independently of emulator-runtime behavior.
+
 ## Remaining M4 work
-
-### M4.4 — audio backend
-
-Implement `IAudioOutput` for interleaved signed 16-bit PCM.
 
 ### M4.5 — Fellow integration
 
-Connect the SDL backends to the actual Fellow runtime, boot a representative classic Amiga configuration interactively, and document remaining platform differences.
+Connect the SDL video, input, and audio backends to the actual Fellow runtime, boot a representative classic Amiga configuration interactively, and document remaining platform differences.
