@@ -2,7 +2,7 @@
 
 #include <SDL3/SDL.h>
 
-#include "../../fellow/SRC/WinFellow.Core/Platform/IAudioOutput.h"
+#include "Platform/IAudioOutput.h"
 
 namespace FellowNG::Frontend::SDL
 {
