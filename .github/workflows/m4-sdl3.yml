@@ -1,0 +1,38 @@
+name: M4 SDL3 Frontend
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  linux-sdl3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SDL3
+        id: sdl
+        uses: libsdl-org/setup-sdl@main
+        with:
+          version: 3.4.16
+          install-linux-dependencies: true
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build-m4
+          -DFELLOWNG_BUILD_TESTS=OFF
+          -DFELLOWNG_BUILD_SDL_FRONTEND=ON
+          -DCMAKE_PREFIX_PATH="${{ steps.sdl.outputs.prefix }}"
+
+      - name: Build SDL frontend
+        run: cmake --build build-m4 --parallel
+
+      - name: SDL bootstrap self-test
+        env:
+          SDL_VIDEODRIVER: dummy
+        run: ./build-m4/frontend/sdl/fellowng-sdl --self-test
