@@ -58,8 +58,29 @@ Implemented:
 
 M4.4 intentionally does not connect Fellow's legacy sound generator yet. That wiring belongs to M4.5 so the SDL audio backend can first be qualified independently of emulator-runtime behavior.
 
-## Remaining M4 work
+## M4.5 — Fellow integration
 
-### M4.5 — Fellow integration
+### M4.5a — runtime bridge ✅
 
-Connect the SDL video, input, and audio backends to the actual Fellow runtime, boot a representative classic Amiga configuration interactively, and document remaining platform differences.
+Implemented:
+
+- `Platform::IEmulatorRuntime`, a frontend-neutral contract for runtime start/stop, input delivery, and bounded runtime execution through `RunSlice()`;
+- `Platform::FrontendSession`, which owns the frontend-side orchestration between `IInputSource`, `IVideoOutput`, `IAudioOutput`, and the emulator runtime;
+- quit handling is centralized in `FrontendSession` rather than being SDL-specific;
+- a portable `runtime-session-smoke` CTest target validates start, input forwarding, runtime slicing, and deterministic stop behavior.
+
+This seam is necessary because the current WinFellow `fellowRun()` path is blocking and still coupled to the Windows GUI lifecycle. The SDL frontend must not directly call that loop from its UI/event thread.
+
+### M4.5b — portable WinFellow runtime adapter
+
+Remaining work:
+
+- split Win32-only service/driver creation out of `VirtualHost/CoreFactory.cpp`;
+- provide portable replacements/adapters for logging, file operations, HUD/requester behavior, sound-driver selection, and host lifecycle;
+- expose the existing Fellow startup/emulation/shutdown sequence behind `IEmulatorRuntime`;
+- preserve the current Windows/DirectX path while adding the portable path;
+- arrange bounded or worker-thread execution so SDL can continue polling input while Fellow runs.
+
+### M4.5c — interactive Amiga boot
+
+After M4.5b, wire the real renderer, keyboard/gameport input, and sound generator to the SDL backends and boot a representative classic Amiga configuration. ROMs and Amiga OS media remain external user-supplied assets and are never distributed by FellowNG.
