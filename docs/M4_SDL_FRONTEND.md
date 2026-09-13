@@ -25,15 +25,25 @@ Implemented:
 - texture recreation when incoming frame dimensions change;
 - nearest-neighbor texture scaling for pixel-accurate classic output;
 - frame validation for dimensions, pitch and buffer size;
-- `--self-test` now creates and presents a generated 320×256 XRGB8888 frame before reporting PASS.
+- `--self-test` creates and presents a generated 320×256 XRGB8888 frame.
 
 The renderer stretches the source frame to the current SDL window size, so normal interactive execution remains resize-safe. Aspect-ratio policy is intentionally deferred until the Fellow runtime supplies the exact display-mode requirements.
 
+## M4.3 — input backend ✅
+
+Implemented:
+
+- `SdlInputSource` implementing `Platform::IInputSource`;
+- SDL3 keyboard down/up translation using scancodes;
+- relative mouse movement and mouse-button events;
+- gamepad axis and button translation into the portable joystick event types;
+- SDL quit translation into `InputType::Quit`;
+- normal interactive event processing routed through the portable input interface;
+- CI self-test pushes synthetic keyboard, mouse, gamepad-axis and quit SDL events and validates the translated portable events.
+
+SDL device identifiers are retained in the portable event value fields where useful so later Fellow integration can select or route physical controllers without coupling the core to SDL types.
+
 ## Remaining M4 work
-
-### M4.3 — input backend
-
-Implement `IInputSource` for keyboard, mouse, gamepad/joystick and quit events.
 
 ### M4.4 — audio backend
 
