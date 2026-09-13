@@ -1,6 +1,6 @@
 # M3 — Platform abstraction
 
-M3 is being delivered incrementally. The goal is to establish host-service boundaries that compile on Linux and Windows without Win32 APIs, then move legacy host behavior behind those boundaries without changing Amiga-visible semantics.
+M3 establishes host-service boundaries that compile on Linux and Windows without Win32 APIs, while preserving the existing WinFellow backends until portable replacements are ready.
 
 ## M3.1 — Host services foundation ✅
 
@@ -36,17 +36,33 @@ Implemented:
 
 This milestone deliberately does not replace every Win32 synchronization call mechanically. Existing code must be migrated only when its required semantics are understood. In particular, timing-sensitive or auto-reset-event behavior must remain explicit rather than being approximated silently.
 
-## Remaining M3 work
+## M3.4 — Frontend boundaries ✅
 
-### M3.4 — frontend boundaries
+Implemented:
 
-Create explicit interfaces for:
+- `Platform/IAudioOutput.h`: backend-neutral PCM output boundary using interleaved signed 16-bit samples and an explicit sample-rate/channel format.
+- `Platform/IVideoOutput.h`: frame-presentation boundary with explicit dimensions, pitch, pixel format, and byte span.
+- `Platform/IInputSource.h`: normalized polling boundary for keyboard, mouse, joystick, and quit events.
+- Portable-core smoke coverage provides small test backends and verifies start/stop, audio submission, frame presentation, and input polling contracts.
 
-- video/frame presentation
-- keyboard/mouse/joystick input
+The existing WinFellow `ISoundDriver` and Win32/DirectX input/video/audio code are intentionally retained. M3 defines the portable contracts; adapters from the legacy Windows backend and new SDL3 implementations belong to later work.
+
+The initial video contract uses `Xrgb8888` as the first portable pixel format. Additional formats should be added only when a backend or emulation path requires them.
+
+## M3 result
+
+M3 now provides portable boundaries for:
+
+- timing and sleep
+- filesystem and paths
+- logging
+- host lifecycle
+- threads and event synchronization
 - audio output
+- video presentation
+- keyboard/mouse/joystick input
 
-The existing Win32/DirectX implementations remain the Windows backend. SDL3 implementations are M4.
+This is enough architectural separation to begin M4 without rewriting the Fellow emulation core or deleting the working Windows frontend.
 
 ## Rule
 
