@@ -8,6 +8,7 @@
 #include <span>
 #include <vector>
 
+#include "SdlAudioOutput.h"
 #include "SdlInputSource.h"
 #include "SdlVideoOutput.h"
 
@@ -81,13 +82,31 @@ namespace
     const auto quit = input.Poll();
     return quit && quit->type == FellowNG::Platform::InputType::Quit;
   }
+
+  bool RunAudioSelfTest(FellowNG::Frontend::SDL::SdlAudioOutput &audio)
+  {
+    const FellowNG::Platform::AudioFormat format{
+      .sample_rate = 44100,
+      .channels = 2,
+    };
+
+    if (!audio.Start(format) || !audio.IsRunning())
+    {
+      return false;
+    }
+
+    const std::vector<std::int16_t> silence(512u * format.channels, 0);
+    const bool submitted = audio.SubmitInterleaved(silence);
+    audio.Stop();
+    return submitted && !audio.IsRunning();
+  }
 }
 
 int main(int argc, char **argv)
 {
   const bool self_test = argc > 1 && std::strcmp(argv[1], "--self-test") == 0;
 
-  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
+  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
   {
     std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n';
     return EXIT_FAILURE;
@@ -109,6 +128,7 @@ int main(int argc, char **argv)
 
   FellowNG::Frontend::SDL::SdlVideoOutput video(window);
   FellowNG::Frontend::SDL::SdlInputSource input;
+  FellowNG::Frontend::SDL::SdlAudioOutput audio;
 
   if (!video.Start(TestWidth, TestHeight))
   {
@@ -140,6 +160,7 @@ int main(int argc, char **argv)
   if (self_test)
   {
     const bool input_ok = RunInputSelfTest(input);
+    const bool audio_ok = RunAudioSelfTest(audio);
     video.Stop();
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -148,7 +169,12 @@ int main(int argc, char **argv)
       std::cerr << "FellowNG SDL3 input backend self-test failed\n";
       return EXIT_FAILURE;
     }
-    std::cout << "FellowNG SDL3 video+input backends: PASS\n";
+    if (!audio_ok)
+    {
+      std::cerr << "FellowNG SDL3 audio backend self-test failed\n";
+      return EXIT_FAILURE;
+    }
+    std::cout << "FellowNG SDL3 video+input+audio backends: PASS\n";
     return EXIT_SUCCESS;
   }
 
@@ -166,6 +192,7 @@ int main(int argc, char **argv)
     SDL_Delay(1);
   }
 
+  audio.Stop();
   video.Stop();
   SDL_DestroyWindow(window);
   SDL_Quit();
