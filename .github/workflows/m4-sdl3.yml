@@ -32,7 +32,8 @@ jobs:
       - name: Build SDL frontend
         run: cmake --build build-m4 --parallel
 
-      - name: SDL bootstrap self-test
+      - name: SDL backend self-test
         env:
           SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
         run: ./build-m4/frontend/sdl/fellowng-sdl --self-test
