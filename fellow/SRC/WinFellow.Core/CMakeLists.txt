@@ -1,6 +1,8 @@
 add_library(FellowNG.Core.Portable STATIC
   CustomChipset/Registers.cpp
   CustomChipset/RegisterUtility.cpp
+  Platform/StdClock.cpp
+  Platform/StdFileSystem.cpp
 )
 
 target_include_directories(FellowNG.Core.Portable
