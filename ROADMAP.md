@@ -36,7 +36,7 @@ See `docs/M2_PORTABLE_CORE.md`.
 ## M3 — Platform abstraction
 
 - [x] M3.1: establish portable timing and filesystem/path host-service boundaries.
-- [ ] M3.2: portable logging and host lifecycle/service aggregation.
+- [x] M3.2: portable logging and host lifecycle/service aggregation.
 - [ ] M3.3: threading and synchronization abstraction.
 - [ ] M3.4: explicit input, audio, and video frontend interfaces while retaining Win32/DirectX backends.
 
