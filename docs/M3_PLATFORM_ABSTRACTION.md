@@ -24,13 +24,19 @@ Implemented:
 
 The legacy `Service::Log` remains untouched for the existing WinFellow frontend. It currently contains MSVC/Windows-specific formatting and time helpers (`vsprintf_s`, `_snprintf`, `_vsnprintf`, `localtime_s`, `fopen_s`). Later migration can adapt that behavior behind the new logger boundary rather than modify emulator behavior during this milestone.
 
+## M3.3 — Threading and synchronization ✅
+
+Implemented:
+
+- `Platform/IThread.h`: minimal host-thread contract with explicit start/join semantics.
+- `Platform/StdThread.*`: C++20 backend using `std::thread`; destruction safely joins an outstanding worker.
+- `Platform/IEvent.h`: signal/reset/wait contract suitable for event-style synchronization.
+- `Platform/ManualResetEvent.*`: manual-reset event semantics using `std::mutex` and `std::condition_variable`.
+- Portable-core smoke coverage verifies blocking wake-up, timeout, persistent signaled state, reset behavior, joinability, and prevention of a second concurrent `Start()` on the same thread object.
+
+This milestone deliberately does not replace every Win32 synchronization call mechanically. Existing code must be migrated only when its required semantics are understood. In particular, timing-sensitive or auto-reset-event behavior must remain explicit rather than being approximated silently.
+
 ## Remaining M3 work
-
-### M3.3 — threading and synchronization
-
-- Inventory Win32 thread/event/critical-section usage.
-- Introduce portable primitives based on standard C++ where semantics match.
-- Keep specialized low-level behavior explicit when standard primitives are not equivalent.
 
 ### M3.4 — frontend boundaries
 
