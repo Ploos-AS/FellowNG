@@ -22,12 +22,16 @@ The project starts from the existing WinFellow source tree and preserves its ind
 
 See `docs/M1_PORTABILITY_INVENTORY.md`.
 
-## M2 — Portable core build
+## M2 — Portable core build ✅
 
 - Introduce a CMake-based portable build for reusable core components.
-- Build core and existing portable unit tests on Linux x86-64.
-- Keep the native Visual Studio build working.
+- Build an initial real Fellow core slice and smoke test on Linux x86-64.
+- Keep the native Visual Studio build untouched.
 - No GUI requirement yet.
+
+The initial portable slice contains the custom-chipset register model and register utility. It builds as `FellowNG.Core.Portable` and is exercised through CTest on Ubuntu CI.
+
+See `docs/M2_PORTABLE_CORE.md`.
 
 ## M3 — Platform abstraction
 
