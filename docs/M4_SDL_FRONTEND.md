@@ -15,11 +15,21 @@ Implemented:
 
 The normal executable is interactive and visible. The hidden window is used only by the automated CI self-test.
 
+## M4.2 — video backend ✅
+
+Implemented:
+
+- `SdlVideoOutput` implementing `Platform::IVideoOutput`;
+- SDL3 renderer + streaming texture backend;
+- native `PixelFormat::Xrgb8888` upload path;
+- texture recreation when incoming frame dimensions change;
+- nearest-neighbor texture scaling for pixel-accurate classic output;
+- frame validation for dimensions, pitch and buffer size;
+- `--self-test` now creates and presents a generated 320×256 XRGB8888 frame before reporting PASS.
+
+The renderer stretches the source frame to the current SDL window size, so normal interactive execution remains resize-safe. Aspect-ratio policy is intentionally deferred until the Fellow runtime supplies the exact display-mode requirements.
+
 ## Remaining M4 work
-
-### M4.2 — video backend
-
-Implement `IVideoOutput` using SDL3 textures/renderer and validate XRGB8888 frame presentation.
 
 ### M4.3 — input backend
 
