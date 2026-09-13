@@ -7,6 +7,7 @@ add_library(FellowNG.Core.Portable STATIC
   Platform/HostLifecycle.cpp
   Platform/StdThread.cpp
   Platform/ManualResetEvent.cpp
+  Platform/FrontendSession.cpp
 )
 
 target_include_directories(FellowNG.Core.Portable
