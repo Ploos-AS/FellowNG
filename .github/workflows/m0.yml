@@ -1,0 +1,32 @@
+name: M0 Foundation
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate M0 repository foundation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f ROADMAP.md
+          test -f LICENSE
+          test -f CONTRIBUTING.md
+          test -f docs/UPSTREAM.md
+          test -d fellow/SRC
+          test -f fellow/SRC/WinFellow.sln
+          grep -q '^# FellowNG' README.md
+          grep -q '^## M0 — Foundation' ROADMAP.md
+          grep -q 'petschau/WinFellow' docs/UPSTREAM.md
+          echo 'FellowNG M0 foundation: PASS'
