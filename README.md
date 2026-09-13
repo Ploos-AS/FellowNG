@@ -1,95 +1,91 @@
 ![WinFellow](./fellow/Docs/WinFellow/winfellow_logo_large.png)
 
-# Amiga Emulator for Windows
+# FellowNG
 
-WinFellow source code archive
-=============================
+**A modern, cross-platform continuation of the Fellow/WinFellow Amiga emulator.**
 
-This is a README file describing the contents of the source code archive.
+FellowNG starts from the existing WinFellow source tree and aims to make Fellow a first-class emulator on modern platforms while preserving its independent emulation lineage.
 
-Introduction
-------------
+The immediate focus is portability: separate the reusable emulator core from Windows-specific host code, establish a portable build, add a modern SDL-based frontend, and make deterministic command-line automation a first-class capability.
 
-WinFellow is a high performance Amiga Emulator primarily targeted for Windows.
-Its distinguished API and core do however allow a fairly easy port to other operating systems.
+> **Project status:** M0 — foundation. The imported WinFellow Windows build remains the current functional baseline; the FellowNG portable frontend does not exist yet.
 
-WinFellow is targeted for Windows 7/8/10/11.
+## Why FellowNG?
 
-Obtaining these sources
------------------------
+Most widely used modern Amiga emulators belong to the UAE family. Fellow is valuable because its emulator core has a separate lineage. Keeping Fellow healthy provides another implementation for users, developers, compatibility testing, and independent cross-validation of Amiga software.
 
-The entire source tree can be found as a Git repository at http://github.com/petschau/WinFellow.
+FellowNG is an incremental continuation, not a rewrite. Working emulation code should be preserved unless there is a concrete portability, correctness, maintainability, or testing reason to change it.
 
-GNU General Public License (GPLv2)
-----------------------------------
+## Goals
 
-WinFellow and its source code are developed and distributed under the terms of the
-[GNU General Public License version 2.0 (GPLv2)](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+- Preserve and modernize the Fellow emulator.
+- Make Linux a first-class supported host platform.
+- Retain Windows support throughout the transition.
+- Add macOS and additional architectures when the portable foundation is ready.
+- Separate emulator core, host/platform services, and frontend code.
+- Introduce a portable build system alongside the existing Visual Studio build.
+- Add an SDL3 frontend for portable video, audio, and input.
+- Provide stable CLI and automation interfaces suitable for CI.
+- Support reproducible emulator profiles and runtime qualification.
+- Keep Fellow useful as an implementation independent from the UAE emulator family.
 
-Source organisation
--------------------
-The source code is being reorganized into a structure based on solution/project files.
+## Non-goals for the early milestones
 
-```
+- Rewriting the emulator core from scratch.
+- Chasing every WinUAE feature before portability is established.
+- Shipping copyrighted Kickstart ROMs, Workbench media, or commercial software.
+- Removing the existing Windows frontend before its replacement is mature.
+
+## Current source tree
+
+The imported WinFellow source lives primarily under:
+
+```text
 fellow/SRC
 ```
 
-This directory is the main directory for source code. It contains the Visual Studio solution, as well
-as subdirectories for child project specific implementations like the emulator core, the hardfile code,
-68k generator and unit testing infrastructure.
+The generic emulation engine and Windows-specific implementations are currently intermingled in the historical layout. M1 will inventory these dependencies before structural changes begin.
 
-The WinFellow folder contains the original project files that have not yet been reorganized.
+The existing Visual Studio solution is:
 
-```
-fellow/SRC/WinFellow/C
-fellow/SRC/WinFellow/INCLUDE
+```text
+fellow/SRC/WinFellow.sln
 ```
 
-These directories contain the original parts of what can be refered to as the emulation engine.
-This is a generic implementation.
+## Building the current baseline
 
-The C-files are ANSI-C or C++, although the OS-dependent parts might require a specific
-compiler. In the event of changing the C-compiler, some generic header files need to be
-changed for the emulation engine files to work with it.
+The current functional baseline is still WinFellow and requires Microsoft Visual Studio 2022. GitHub Actions also builds this baseline and runs the existing core and hardfile unit tests.
 
-```
-fellow/SRC/WinFellow/uae
-```
+Portable Linux build instructions will be added when the M2 portable-core build exists.
 
-This directory contains the filesystem module from WinUAE V8.8 and some
-other stripped down UAE files needed to interact with it. This module is GPL.
-Explicit permission has been granted to use these files from the respective authors.
+## Roadmap
 
-```
-fellow/SRC/WinFellow/Windows
-```
+See [ROADMAP.md](ROADMAP.md).
 
-This directory contain pure win32 (and DirectX) implementations needed to
-support Fellow on Win32. A workspace setup to compile WinFellow into
-an executable is provided for MS Visual Studio.
+The planned progression is:
 
-```
-fellow/SRC/WinFellow
-```
+**M0 foundation → M1 portability inventory → M2 portable core → M3 platform abstraction → M4 SDL frontend → M5 CLI/automation → M6 cross-platform expansion → M7 emulator qualification.**
 
-This directory contains an MS Visual Studio workspace for the entire Fellow sources.
+## Upstream and provenance
 
+FellowNG is based on WinFellow:
 
-What you need to compile the sources
-------------------------------------
+https://github.com/petschau/WinFellow
 
-Microsoft Visual Studio 2022; the community edition of Visual Studio is sufficient to compile WinFellow.
+See [docs/UPSTREAM.md](docs/UPSTREAM.md) for provenance and contribution policy.
 
-The build process currently also requires git to be located in the search path, as well as posh-git to be installed. The execution policy must allow execution of PowerShell scripts for both 32 as well as 64 bit PowerShell processes.
+The historical WinFellow tree includes a filesystem module derived from WinUAE plus supporting UAE-derived files. Those components retain their upstream provenance; Fellow itself has an independent emulator lineage.
 
-Other notes
------------
+## License
 
-There is a new configuration format, which was decided ages ago
-to be common for UAE and Fellow. Brian King specified most of it.
+FellowNG inherits the **GNU General Public License version 2 (GPLv2)** from WinFellow. Existing copyright and attribution notices must be preserved.
 
-These is also a keymapping file which allows you to redefine the
-mapping of PC-keys to Amiga keys. It is called mapping.key
+See [LICENSE](LICENSE).
 
-If you need more detailed information, you can contact me via mail at
-[petschau@gmail.com](mailto:petschau@gmail.com).
+## Contributing
+
+FellowNG favors small, reviewable portability changes that keep the existing baseline working. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Project
+
+FellowNG is maintained under the Ploos-AS organization as an open-source Amiga preservation, development, and compatibility project.
