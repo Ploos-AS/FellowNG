@@ -12,3 +12,18 @@ add_test(
   NAME portable-core-smoke
   COMMAND fellowng-portable-core-smoke
 )
+
+add_executable(fellowng-runtime-session-smoke
+  runtime_session_smoke.cpp
+)
+
+target_link_libraries(fellowng-runtime-session-smoke
+  PRIVATE FellowNG.Core.Portable
+)
+
+target_compile_features(fellowng-runtime-session-smoke PRIVATE cxx_std_20)
+
+add_test(
+  NAME runtime-session-smoke
+  COMMAND fellowng-runtime-session-smoke
+)
