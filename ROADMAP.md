@@ -51,6 +51,9 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
 - [x] M4.3: SDL3 keyboard/mouse/gamepad backend implementing `IInputSource`.
 - [x] M4.4: SDL3 audio backend implementing `IAudioOutput` for interleaved signed 16-bit PCM.
 - [ ] M4.5: connect SDL backends to the Fellow runtime and boot a representative Amiga configuration interactively.
+  - [x] M4.5a: portable emulator-runtime contract and frontend session/lifecycle pump.
+  - [ ] M4.5b: detach WinFellow runtime services/drivers from Win32-only `CoreFactory` and expose a portable runtime adapter.
+  - [ ] M4.5c: wire SDL video/input/audio to the real Fellow runtime and complete an interactive Amiga boot.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
