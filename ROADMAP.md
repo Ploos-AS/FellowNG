@@ -33,12 +33,14 @@ The initial portable slice contains the custom-chipset register model and regist
 
 See `docs/M2_PORTABLE_CORE.md`.
 
-## M3 — Platform abstraction
+## M3 — Platform abstraction ✅
 
 - [x] M3.1: establish portable timing and filesystem/path host-service boundaries.
 - [x] M3.2: portable logging and host lifecycle/service aggregation.
 - [x] M3.3: threading and synchronization abstraction.
-- [ ] M3.4: explicit input, audio, and video frontend interfaces while retaining Win32/DirectX backends.
+- [x] M3.4: explicit input, audio, and video frontend interfaces while retaining Win32/DirectX backends.
+
+M3 provides the portable host contracts required for an SDL frontend without rewriting the Fellow emulation core.
 
 See `docs/M3_PLATFORM_ABSTRACTION.md`.
 
