@@ -2,6 +2,7 @@ find_package(SDL3 REQUIRED CONFIG)
 
 add_executable(fellowng-sdl
   main.cpp
+  SdlVideoOutput.cpp
 )
 
 target_compile_features(fellowng-sdl PRIVATE cxx_std_20)
