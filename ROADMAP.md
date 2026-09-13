@@ -4,7 +4,7 @@ FellowNG is a modern, cross-platform continuation of the Fellow/WinFellow Amiga 
 
 The project starts from the existing WinFellow source tree and preserves its independent emulation lineage while progressively separating portable emulator code from platform-specific frontends.
 
-## M0 — Foundation
+## M0 — Foundation ✅
 
 - Establish FellowNG project identity and scope.
 - Preserve upstream WinFellow source and GPLv2 licensing.
@@ -13,12 +13,14 @@ The project starts from the existing WinFellow source tree and preserves its ind
 - Define the portability architecture and milestone sequence.
 - Add a lightweight repository-level M0 validation workflow.
 
-## M1 — Portability inventory
+## M1 — Portability inventory ✅
 
 - Inventory Win32/DirectX dependencies.
 - Classify code into emulator core, platform abstraction, frontend, tooling, and tests.
 - Identify compiler- and ABI-specific assumptions.
 - Produce an initial Linux portability report.
+
+See `docs/M1_PORTABILITY_INVENTORY.md`.
 
 ## M2 — Portable core build
 
