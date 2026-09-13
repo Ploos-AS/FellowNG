@@ -1,11 +1,15 @@
 #include <chrono>
 #include <cstdlib>
 #include <filesystem>
+#include <sstream>
+#include <string>
 
 #include "CustomChipset/RegisterUtility.h"
 #include "CustomChipset/Registers.h"
+#include "Platform/HostLifecycle.h"
 #include "Platform/StdClock.h"
 #include "Platform/StdFileSystem.h"
+#include "Platform/StreamLogger.h"
 
 namespace
 {
@@ -50,6 +54,23 @@ int main()
   const auto current = file_system.Stat(std::filesystem::current_path());
   if (!check(current.exists && current.directory)) return EXIT_FAILURE;
   if (!check(file_system.Absolute(".").is_absolute())) return EXIT_FAILURE;
+
+  std::ostringstream log_output;
+  FellowNG::Platform::StreamLogger logger(log_output);
+  FellowNG::Platform::HostLifecycle host(logger);
+
+  if (!check(!host.IsRunning())) return EXIT_FAILURE;
+  if (!check(host.Start())) return EXIT_FAILURE;
+  if (!check(host.IsRunning())) return EXIT_FAILURE;
+  if (!check(host.Start())) return EXIT_FAILURE;
+  host.Stop();
+  if (!check(!host.IsRunning())) return EXIT_FAILURE;
+  host.Stop();
+
+  const std::string log = log_output.str();
+  if (!check(log.find("[INFO] host starting") != std::string::npos)) return EXIT_FAILURE;
+  if (!check(log.find("[INFO] host stopped") != std::string::npos)) return EXIT_FAILURE;
+  if (!check(log.find("[DEBUG] host already running") != std::string::npos)) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }
