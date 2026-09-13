@@ -46,9 +46,13 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
 
 ## M4 — SDL frontend
 
-- Add an SDL3 frontend for Linux.
-- Implement display, keyboard, mouse, joystick, and audio paths.
-- Boot a basic Amiga configuration interactively.
+- [x] M4.1: SDL3 build/bootstrap, visible window/event loop, and CI self-test.
+- [ ] M4.2: SDL3 video backend implementing `IVideoOutput`.
+- [ ] M4.3: SDL3 keyboard/mouse/joystick backend implementing `IInputSource`.
+- [ ] M4.4: SDL3 audio backend implementing `IAudioOutput`.
+- [ ] M4.5: connect SDL backends to the Fellow runtime and boot a representative Amiga configuration interactively.
+
+See `docs/M4_SDL_FRONTEND.md`.
 
 ## M5 — CLI and automation
 
