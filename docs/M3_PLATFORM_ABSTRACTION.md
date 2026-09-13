@@ -1,8 +1,8 @@
 # M3 — Platform abstraction
 
-M3 is being delivered incrementally. The first slice establishes host-service boundaries that compile on Linux and Windows without Win32 APIs.
+M3 is being delivered incrementally. The goal is to establish host-service boundaries that compile on Linux and Windows without Win32 APIs, then move legacy host behavior behind those boundaries without changing Amiga-visible semantics.
 
-## M3.1 — Host services foundation
+## M3.1 — Host services foundation ✅
 
 Implemented:
 
@@ -12,15 +12,19 @@ Implemented:
 - `Platform/StdFileSystem.*`: portable implementation using `std::filesystem` and `std::error_code`.
 - Both implementations are part of `FellowNG.Core.Portable` and exercised by the portable-core smoke test.
 
-The intent is to migrate existing host calls behind these boundaries gradually rather than rewrite emulation code.
+## M3.2 — Logging and host lifecycle ✅
+
+Implemented:
+
+- `Platform/ILogger.h`: portable logging boundary with explicit log levels.
+- `Platform/StreamLogger.*`: thread-safe standard C++ stream-backed logger.
+- `Platform/IHostLifecycle.h`: explicit host start/stop/running contract.
+- `Platform/HostLifecycle.*`: portable lifecycle implementation with idempotent start/stop behavior and lifecycle logging.
+- Portable-core smoke coverage verifies lifecycle state transitions and emitted log messages.
+
+The legacy `Service::Log` remains untouched for the existing WinFellow frontend. It currently contains MSVC/Windows-specific formatting and time helpers (`vsprintf_s`, `_snprintf`, `_vsnprintf`, `localtime_s`, `fopen_s`). Later migration can adapt that behavior behind the new logger boundary rather than modify emulator behavior during this milestone.
 
 ## Remaining M3 work
-
-### M3.2 — logging and host lifecycle
-
-- Define portable logging sink/interface.
-- Decouple core logging from Windows-specific presentation and debugger facilities.
-- Define host lifecycle/service aggregation where useful.
 
 ### M3.3 — threading and synchronization
 
