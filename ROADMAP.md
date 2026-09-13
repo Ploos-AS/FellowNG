@@ -48,7 +48,7 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
 
 - [x] M4.1: SDL3 build/bootstrap, visible window/event loop, and CI self-test.
 - [x] M4.2: SDL3 video backend implementing `IVideoOutput` with XRGB8888 streaming textures.
-- [ ] M4.3: SDL3 keyboard/mouse/joystick backend implementing `IInputSource`.
+- [x] M4.3: SDL3 keyboard/mouse/gamepad backend implementing `IInputSource`.
 - [ ] M4.4: SDL3 audio backend implementing `IAudioOutput`.
 - [ ] M4.5: connect SDL backends to the Fellow runtime and boot a representative Amiga configuration interactively.
 
