@@ -1,3 +1,4 @@
+#include <atomic>
 #include <chrono>
 #include <cstdlib>
 #include <filesystem>
@@ -7,8 +8,10 @@
 #include "CustomChipset/RegisterUtility.h"
 #include "CustomChipset/Registers.h"
 #include "Platform/HostLifecycle.h"
+#include "Platform/ManualResetEvent.h"
 #include "Platform/StdClock.h"
 #include "Platform/StdFileSystem.h"
+#include "Platform/StdThread.h"
 #include "Platform/StreamLogger.h"
 
 namespace
@@ -71,6 +74,27 @@ int main()
   if (!check(log.find("[INFO] host starting") != std::string::npos)) return EXIT_FAILURE;
   if (!check(log.find("[INFO] host stopped") != std::string::npos)) return EXIT_FAILURE;
   if (!check(log.find("[DEBUG] host already running") != std::string::npos)) return EXIT_FAILURE;
+
+  FellowNG::Platform::ManualResetEvent event;
+  if (!check(!event.WaitFor(std::chrono::milliseconds(1)))) return EXIT_FAILURE;
+
+  std::atomic<bool> worker_released{false};
+  FellowNG::Platform::StdThread worker;
+  if (!check(worker.Start([&event, &worker_released] {
+        event.Wait();
+        worker_released.store(true);
+      }))) return EXIT_FAILURE;
+  if (!check(worker.Joinable())) return EXIT_FAILURE;
+  if (!check(!worker.Start([] {}))) return EXIT_FAILURE;
+
+  event.Set();
+  worker.Join();
+  if (!check(!worker.Joinable())) return EXIT_FAILURE;
+  if (!check(worker_released.load())) return EXIT_FAILURE;
+  if (!check(event.WaitFor(std::chrono::milliseconds(0)))) return EXIT_FAILURE;
+
+  event.Reset();
+  if (!check(!event.WaitFor(std::chrono::milliseconds(1)))) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }
