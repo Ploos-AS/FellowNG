@@ -5,6 +5,7 @@ add_executable(fellowng-sdl
   SdlVideoOutput.cpp
   SdlInputSource.cpp
   SdlAudioOutput.cpp
+  SdlFrontendSession.cpp
 )
 
 target_compile_features(fellowng-sdl PRIVATE cxx_std_20)
