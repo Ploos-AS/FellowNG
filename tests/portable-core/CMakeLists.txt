@@ -72,3 +72,18 @@ add_test(
   NAME portable-audio-platform-factory-smoke
   COMMAND fellowng-portable-audio-platform-factory-smoke
 )
+
+add_executable(fellowng-module-lifecycle-smoke
+  module_lifecycle_smoke.cpp
+)
+
+target_link_libraries(fellowng-module-lifecycle-smoke
+  PRIVATE FellowNG.Core.Portable
+)
+
+target_compile_features(fellowng-module-lifecycle-smoke PRIVATE cxx_std_20)
+
+add_test(
+  NAME module-lifecycle-smoke
+  COMMAND fellowng-module-lifecycle-smoke
+)
