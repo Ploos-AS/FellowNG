@@ -36,10 +36,7 @@ namespace
       running = false;
     }
 
-    bool IsRunning() const override
-    {
-      return running;
-    }
+    bool IsRunning() const override { return running; }
 
     void HandleInput(const FellowNG::Platform::InputEvent &event) override
     {
@@ -63,7 +60,6 @@ namespace
   {
     std::vector<std::uint32_t> pixels(TestWidth * TestHeight);
     for (std::uint32_t y = 0; y < TestHeight; ++y)
-    {
       for (std::uint32_t x = 0; x < TestWidth; ++x)
       {
         const std::uint32_t r = (x * 255u) / (TestWidth - 1u);
@@ -71,7 +67,6 @@ namespace
         const std::uint32_t b = ((x ^ y) & 0xffu);
         pixels[y * TestWidth + x] = (r << 16u) | (g << 8u) | b;
       }
-    }
     return pixels;
   }
 
@@ -80,7 +75,6 @@ namespace
     SDL_Event key{};
     key.type = SDL_EVENT_KEY_DOWN;
     key.key.scancode = SDL_SCANCODE_A;
-    key.key.key = SDLK_A;
     if (!SDL_PushEvent(&key)) return false;
 
     SDL_Event mouse{};
@@ -92,7 +86,6 @@ namespace
     gamepad.type = SDL_EVENT_GAMEPAD_AXIS_MOTION;
     gamepad.gaxis.axis = SDL_GAMEPAD_AXIS_LEFTX;
     gamepad.gaxis.value = 1234;
-    gamepad.gaxis.which = 7;
     if (!SDL_PushEvent(&gamepad)) return false;
 
     SDL_Event quit{};
@@ -106,17 +99,17 @@ namespace
 
     const auto key = input.Poll();
     if (!key || key->type != FellowNG::Platform::InputType::Key ||
-        key->code != SDL_SCANCODE_A || !key->pressed)
+        key->code != static_cast<std::int32_t>(FellowNG::Platform::KeyCode::A) || !key->pressed)
       return false;
 
     const auto mouse = input.Poll();
     if (!mouse || mouse->type != FellowNG::Platform::InputType::MouseButton ||
-        mouse->code != SDL_BUTTON_LEFT || !mouse->pressed)
+        mouse->code != static_cast<std::int32_t>(FellowNG::Platform::MouseButton::Left) || !mouse->pressed)
       return false;
 
     const auto gamepad = input.Poll();
     if (!gamepad || gamepad->type != FellowNG::Platform::InputType::JoystickAxis ||
-        gamepad->code != SDL_GAMEPAD_AXIS_LEFTX || gamepad->value != 1234)
+        gamepad->code != static_cast<std::int32_t>(FellowNG::Platform::JoystickAxis::LeftX) || gamepad->value != 1234)
       return false;
 
     const auto quit = input.Poll();
@@ -125,16 +118,8 @@ namespace
 
   bool RunAudioSelfTest(FellowNG::Frontend::SDL::SdlAudioOutput &audio)
   {
-    const FellowNG::Platform::AudioFormat format{
-      .sample_rate = 44100,
-      .channels = 2,
-    };
-
-    if (!audio.Start(format) || !audio.IsRunning())
-    {
-      return false;
-    }
-
+    const FellowNG::Platform::AudioFormat format{.sample_rate = 44100, .channels = 2};
+    if (!audio.Start(format) || !audio.IsRunning()) return false;
     const std::vector<std::int16_t> silence(512u * format.channels, 0);
     const bool submitted = audio.SubmitInterleaved(silence);
     audio.Stop();
@@ -152,7 +137,6 @@ namespace
     SDL_Event key{};
     key.type = SDL_EVENT_KEY_DOWN;
     key.key.scancode = SDL_SCANCODE_B;
-    key.key.key = SDLK_B;
     if (!SDL_PushEvent(&key)) return false;
 
     if (!session.PumpOnce()) return false;
@@ -178,10 +162,7 @@ int main(int argc, char **argv)
   }
 
   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
-  if (self_test)
-  {
-    flags |= SDL_WINDOW_HIDDEN;
-  }
+  if (self_test) flags |= SDL_WINDOW_HIDDEN;
 
   SDL_Window *window = SDL_CreateWindow("FellowNG SDL3", DefaultWidth, DefaultHeight, flags);
   if (window == nullptr)
@@ -253,13 +234,7 @@ int main(int argc, char **argv)
   while (running)
   {
     while (const auto event = input.Poll())
-    {
-      if (event->type == FellowNG::Platform::InputType::Quit)
-      {
-        running = false;
-      }
-    }
-
+      if (event->type == FellowNG::Platform::InputType::Quit) running = false;
     SDL_Delay(1);
   }
 
