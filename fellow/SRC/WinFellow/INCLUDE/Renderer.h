@@ -28,22 +28,11 @@ struct draw_rect
   uint32_t right;
   uint32_t bottom;
 
-  uint32_t GetWidth() const
-  {
-    return right - left;
-  }
-  uint32_t GetHeight() const
-  {
-    return bottom - top;
-  }
+  uint32_t GetWidth() const { return right - left; }
+  uint32_t GetHeight() const { return bottom - top; }
 
-  draw_rect(uint32_t clip_left, uint32_t clip_top, uint32_t clip_right, uint32_t clip_bottom) : left(clip_left), top(clip_top), right(clip_right), bottom(clip_bottom)
-  {
-  }
-
-  draw_rect() : left(0), top(0), right(0), bottom(0)
-  {
-  }
+  draw_rect(uint32_t clip_left, uint32_t clip_top, uint32_t clip_right, uint32_t clip_bottom) : left(clip_left), top(clip_top), right(clip_right), bottom(clip_bottom) {}
+  draw_rect() : left(0), top(0), right(0), bottom(0) {}
 };
 
 struct draw_buffer_information
@@ -61,6 +50,9 @@ struct draw_buffer_information
   uint32_t bluesize;
   uint32_t bluepos;
 };
+
+using draw_frame_present_callback = void (*)(const draw_buffer_information &buffer, void *context);
+extern void drawSetFramePresentCallback(draw_frame_present_callback callback, void *context);
 
 /*===========================================================================*/
 /* Draw line routines and data                                               */
@@ -80,25 +72,17 @@ extern draw_line_func draw_line_HAM_lores_routine;
 
 extern uint32_t draw_frame_count;
 extern uint32_t draw_color_table[4096];
-extern uint32_t draw_buffer_draw; /* Number of the current drawing buffer */
-
+extern uint32_t draw_buffer_draw;
 extern int32_t draw_frame_skip;
 extern uint32_t draw_switch_bg_to_bpl;
 extern uint32_t draw_clear_buffers;
-
 extern draw_buffer_information draw_buffer_info;
 extern draw_mode draw_mode_windowed;
 
 extern uint64_t drawMake64BitColorFrom32Bit(uint32_t color);
-
-/*===========================================================================*/
-/* Module properties                                                         */
-/*===========================================================================*/
-
 extern void drawAddMode(draw_mode *modenode);
 extern void drawClearModeList();
 extern draw_mode_list &drawGetModes();
-
 extern void drawSetFullScreenMode(uint32_t width, uint32_t height, uint32_t colorbits, uint32_t refresh);
 extern void drawSetWindowedMode(uint32_t width, uint32_t height);
 extern void drawSetDisplayScale(DISPLAYSCALE displayscale);
@@ -117,27 +101,13 @@ extern void drawSetDisplayDriver(DISPLAYDRIVER displaydriver);
 extern DISPLAYDRIVER drawGetDisplayDriver();
 extern void drawSetGraphicsEmulationMode(GRAPHICSEMULATIONMODE graphicsemulationmode);
 extern GRAPHICSEMULATIONMODE drawGetGraphicsEmulationMode();
-
-/*===========================================================================*/
-/* Which part of the Amiga screen is visible in the host buffer              */
-/* Units are cylinders (lores-pixels, non-interlaced height)                 */
-/*===========================================================================*/
-
 extern void drawSetInternalClip(const draw_rect &internal_clip);
 extern const draw_rect &drawGetInternalClip();
 extern void drawSetOutputClip(const draw_rect &output_clip);
 extern const draw_rect &drawGetOutputClip();
-
 extern std::pair<uint32_t, uint32_t> drawCalculateHorizontalOutputClip(uint32_t buffer_width, uint32_t buffer_scale_factor);
 extern std::pair<uint32_t, uint32_t> drawCalculateVerticalOutputClip(uint32_t buffer_height, uint32_t buffer_scale_factor);
-
-/*===========================================================================*/
-/* Where the visible part of the Amiga screen is located in the host buffer  */
-/* Units are host pixels                                                     */
-/*===========================================================================*/
-
 extern uint32_t drawGetBufferCount();
-
 extern uint32_t drawGetBufferClipLeft();
 extern float drawGetBufferClipLeftAsFloat();
 extern uint32_t drawGetBufferClipTop();
@@ -146,34 +116,14 @@ extern uint32_t drawGetBufferClipWidth();
 extern float drawGetBufferClipWidthAsFloat();
 extern uint32_t drawGetBufferClipHeight();
 extern float drawGetBufferClipHeightAsFloat();
-
-/*===========================================================================*/
-/* When switching rendering (progressive->interlaced)                        */
-/*===========================================================================*/
-
 extern void drawReinitializeRendering();
-
-/*===========================================================================*/
-/* Draw statistics                                                           */
-/*===========================================================================*/
-
 extern void drawStatClear();
 extern void drawStatTimestamp();
 extern uint32_t drawStatLast50FramesFps();
 extern uint32_t drawStatLastFrameFps();
 extern uint32_t drawStatSessionFps();
-
-/*===========================================================================*/
-/* Framebuffer pointer locking                                               */
-/*===========================================================================*/
-
 extern uint32_t drawValidateBufferPointer(uint32_t amiga_line_number);
 extern void drawInvalidateBufferPointer();
-
-/*===========================================================================*/
-/* Standard Fellow functions                                                 */
-/*===========================================================================*/
-
 extern void drawEndOfFrame();
 extern void drawHardReset();
 extern bool drawEmulationStart();
