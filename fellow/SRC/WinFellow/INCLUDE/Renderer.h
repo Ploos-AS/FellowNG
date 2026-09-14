@@ -52,7 +52,22 @@ struct draw_buffer_information
 };
 
 using draw_frame_present_callback = void (*)(const draw_buffer_information &buffer, void *context);
-extern void drawSetFramePresentCallback(draw_frame_present_callback callback, void *context);
+inline draw_frame_present_callback draw_frame_present_callback_fn = nullptr;
+inline void *draw_frame_present_context = nullptr;
+
+inline void drawSetFramePresentCallback(draw_frame_present_callback callback, void *context)
+{
+  draw_frame_present_callback_fn = callback;
+  draw_frame_present_context = context;
+}
+
+inline void drawPresentCurrentFrame(const draw_buffer_information &buffer)
+{
+  if (draw_frame_present_callback_fn != nullptr)
+  {
+    draw_frame_present_callback_fn(buffer, draw_frame_present_context);
+  }
+}
 
 /*===========================================================================*/
 /* Draw line routines and data                                               */
