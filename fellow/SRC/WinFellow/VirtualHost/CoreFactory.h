@@ -1,8 +1,13 @@
 #pragma once
 
+#include "VirtualHost/ICorePlatformFactory.h"
+
 class CoreFactory
 {
 public:
+  static void SetPlatformFactory(ICorePlatformFactory *factory);
+  static ICorePlatformFactory *GetPlatformFactory();
+
   static void CreateDrivers();
   static void DestroyDrivers();
   static void CreateServices();
