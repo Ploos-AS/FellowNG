@@ -8,7 +8,13 @@ add_executable(fellowng-sdl
   SdlFrontendSession.cpp
 )
 
+add_executable(fellowng-sdl-runtime-factory-smoke
+  runtime_factory_smoke.cpp
+  SdlFrontendSession.cpp
+)
+
 target_compile_features(fellowng-sdl PRIVATE cxx_std_20)
+target_compile_features(fellowng-sdl-runtime-factory-smoke PRIVATE cxx_std_20)
 
 target_link_libraries(fellowng-sdl
   PRIVATE
@@ -16,8 +22,19 @@ target_link_libraries(fellowng-sdl
     SDL3::SDL3
 )
 
+target_link_libraries(fellowng-sdl-runtime-factory-smoke
+  PRIVATE FellowNG.Core.Portable
+)
+
+add_test(
+  NAME sdl-runtime-factory-smoke
+  COMMAND fellowng-sdl-runtime-factory-smoke
+)
+
 if(MSVC)
   target_compile_options(fellowng-sdl PRIVATE /W4)
+  target_compile_options(fellowng-sdl-runtime-factory-smoke PRIVATE /W4)
 else()
   target_compile_options(fellowng-sdl PRIVATE -Wall -Wextra -Wpedantic)
+  target_compile_options(fellowng-sdl-runtime-factory-smoke PRIVATE -Wall -Wextra -Wpedantic)
 endif()
