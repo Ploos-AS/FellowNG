@@ -57,3 +57,18 @@ add_test(
   NAME portable-sound-driver-smoke
   COMMAND fellowng-portable-sound-driver-smoke
 )
+
+add_executable(fellowng-portable-audio-platform-factory-smoke
+  portable_audio_platform_factory_smoke.cpp
+)
+
+target_link_libraries(fellowng-portable-audio-platform-factory-smoke
+  PRIVATE FellowNG.Core.Portable
+)
+
+target_compile_features(fellowng-portable-audio-platform-factory-smoke PRIVATE cxx_std_20)
+
+add_test(
+  NAME portable-audio-platform-factory-smoke
+  COMMAND fellowng-portable-audio-platform-factory-smoke
+)
