@@ -56,6 +56,14 @@ namespace
     int slice_count = 0;
   };
 
+  void DrainSdlEventQueue()
+  {
+    SDL_Event event{};
+    while (SDL_PollEvent(&event))
+    {
+    }
+  }
+
   std::vector<std::uint32_t> BuildTestFrame()
   {
     std::vector<std::uint32_t> pixels(TestWidth * TestHeight);
@@ -123,24 +131,60 @@ namespace
                           FellowNG::Frontend::SDL::SdlVideoOutput &video,
                           FellowNG::Frontend::SDL::SdlAudioOutput &audio)
   {
+    // SDL owns a process-wide event queue. Previous video/input/audio probes may
+    // leave window or device events behind, so isolate this end-to-end session
+    // test before injecting its deterministic key/quit sequence.
+    DrainSdlEventQueue();
+
     SessionSelfTestRuntime runtime;
     FellowNG::Frontend::SDL::SdlFrontendSession session(runtime, input, video, audio);
-    if (!session.Start() || !session.IsRunning()) return false;
+    if (!session.Start() || !session.IsRunning())
+    {
+      std::cerr << "runtime-session: start failed\n";
+      return false;
+    }
 
     SDL_Event key{};
     key.type = SDL_EVENT_KEY_DOWN;
     key.key.scancode = SDL_SCANCODE_B;
-    if (!SDL_PushEvent(&key)) return false;
+    if (!SDL_PushEvent(&key))
+    {
+      std::cerr << "runtime-session: SDL_PushEvent(key) failed: " << SDL_GetError() << '\n';
+      return false;
+    }
 
-    if (!session.PumpOnce()) return false;
-    if (runtime.start_count != 1 || runtime.key_count != 1 || runtime.slice_count != 1) return false;
+    if (!session.PumpOnce())
+    {
+      std::cerr << "runtime-session: key pump stopped unexpectedly\n";
+      return false;
+    }
+    if (runtime.start_count != 1 || runtime.key_count != 1 || runtime.slice_count != 1)
+    {
+      std::cerr << "runtime-session: counters after key: start=" << runtime.start_count
+                << " key=" << runtime.key_count << " slice=" << runtime.slice_count << '\n';
+      return false;
+    }
 
     SDL_Event quit{};
     quit.type = SDL_EVENT_QUIT;
-    if (!SDL_PushEvent(&quit)) return false;
+    if (!SDL_PushEvent(&quit))
+    {
+      std::cerr << "runtime-session: SDL_PushEvent(quit) failed: " << SDL_GetError() << '\n';
+      return false;
+    }
 
-    if (session.PumpOnce()) return false;
-    return !session.IsRunning() && !runtime.running && runtime.stop_count == 1;
+    if (session.PumpOnce())
+    {
+      std::cerr << "runtime-session: quit pump stayed running\n";
+      return false;
+    }
+    if (session.IsRunning() || runtime.running || runtime.stop_count != 1)
+    {
+      std::cerr << "runtime-session: stop state invalid: session=" << session.IsRunning()
+                << " runtime=" << runtime.running << " stop=" << runtime.stop_count << '\n';
+      return false;
+    }
+    return true;
   }
 }
 
