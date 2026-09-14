@@ -1,6 +1,10 @@
 #pragma once
 
+#include <cstddef>
+#include <span>
+
 #include "Defs.h"
+#include "Renderer.h"
 #include "Platform/IEmulatorRuntime.h"
 
 enum class fellow_runtime_error_codes
@@ -74,8 +78,11 @@ namespace FellowNG::Runtime
         _modules_started = true;
       }
 
+      drawSetFramePresentCallback(&WinFellowRuntime::PresentFrame, this);
+
       if (!fellowEmulationStart())
       {
+        drawSetFramePresentCallback(nullptr, nullptr);
         if (_modules_started && _modules_shutdown != nullptr) _modules_shutdown();
         _modules_started = false;
         _video = nullptr;
@@ -90,6 +97,8 @@ namespace FellowNG::Runtime
 
     void Stop() override
     {
+      drawSetFramePresentCallback(nullptr, nullptr);
+
       if (_emulation_started)
       {
         fellowRequestEmulationStop();
@@ -123,13 +132,43 @@ namespace FellowNG::Runtime
       if (!_running) return false;
 
       // Conservative bounded execution for the first real runtime adapter.
-      // M4.5d will replace this one-instruction slice with a larger bounded
-      // scheduler slice once the real SDL device adapters are connected.
+      // A later M4.5d slice will replace instruction-at-a-time stepping with
+      // a practical bounded scheduler slice for interactive emulation.
       fellowStepOne();
       return _running;
     }
 
   private:
+    static void PresentFrame(const draw_buffer_information &buffer, void *context)
+    {
+      auto *runtime = static_cast<WinFellowRuntime *>(context);
+      if (runtime == nullptr || runtime->_video == nullptr || buffer.top_ptr == nullptr)
+      {
+        return;
+      }
+
+      // The portable video contract currently exposes XRGB8888. Keep the
+      // bridge strict until explicit converters for legacy 16/24-bit modes
+      // are added.
+      if (buffer.bits != 32 || buffer.redsize != 8 || buffer.greensize != 8 || buffer.bluesize != 8 ||
+          buffer.redpos != 16 || buffer.greenpos != 8 || buffer.bluepos != 0 ||
+          buffer.width == 0 || buffer.height == 0 || buffer.pitch < buffer.width * 4u)
+      {
+        return;
+      }
+
+      const std::size_t byte_count = static_cast<std::size_t>(buffer.pitch) * buffer.height;
+      Platform::VideoFrame frame{
+        .width = buffer.width,
+        .height = buffer.height,
+        .pitch_bytes = buffer.pitch,
+        .format = Platform::PixelFormat::Xrgb8888,
+        .pixels = std::span<const std::byte>(reinterpret_cast<const std::byte *>(buffer.top_ptr), byte_count),
+      };
+
+      runtime->_video->Present(frame);
+    }
+
     int _argc = 0;
     const char **_argv = nullptr;
     ModulesStartup _modules_startup = nullptr;
