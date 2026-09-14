@@ -11,6 +11,8 @@
 
 #if defined(_WIN32)
 #include "VirtualHost/WindowsCorePlatformFactory.h"
+#else
+#include "VirtualHost/PortableBootstrapPlatformFactory.h"
 #endif
 
 using namespace Service;
@@ -24,7 +26,7 @@ namespace
 #if defined(_WIN32)
     return GetWindowsCorePlatformFactory();
 #else
-    return nullptr;
+    return FellowNG::VirtualHost::GetPortableBootstrapPlatformFactory();
 #endif
   }
 
