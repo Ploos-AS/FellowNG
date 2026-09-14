@@ -94,18 +94,26 @@ Implemented:
 - quit input requests a safe Fellow emulation stop;
 - adapter shutdown is deterministic and idempotent, including destructor cleanup.
 
-The one-instruction slice is intentionally conservative. It establishes frontend-safe execution semantics first; M4.5d will replace it with a practical bounded scheduler slice and connect real renderer, keyboard/gameport, and sound paths.
-
 ### M4.5d — interactive Amiga boot
 
-Next work:
+Completed integration increments:
 
-- instantiate `WinFellowRuntime` from the SDL host with an SDL/Linux module lifecycle and platform factory;
-- provide portable replacements for remaining Windows-only module/UI hooks required during startup;
-- connect Fellow graphics output to `SdlVideoOutput`;
-- translate portable input into the existing keyboard, mouse, and gameport subsystems;
-- bridge Fellow's generated stereo samples into `SdlAudioOutput`;
-- replace the conservative instruction-at-a-time runtime loop with a bounded scheduler slice suitable for interactive speed;
+- portable renderer callback and SDL video bridge;
+- portable keyboard, mouse and joystick input bridge;
+- portable audio driver and audio-platform-factory decorator;
+- bounded frontend scheduler;
+- host platform factory split;
+- portable runtime-factory contract;
+- SDL frontend runtime ownership through `IEmulatorRuntimeFactory`;
+- concrete `WinFellowRuntimeFactory` provider, allowing frontend code to request the real Fellow runtime through the portable factory contract without depending on the concrete runtime type.
+
+Remaining work:
+
+- provide an SDL/Linux core-platform provider for file operations, HUD and RetroPlatform services;
+- expose a frontend-neutral Fellow module startup path that skips Windows GUI startup while preserving the legacy Windows frontend;
+- link the required Fellow emulation sources into the SDL/Linux build;
+- instantiate `WinFellowRuntimeFactory` from normal SDL execution;
+- replace the conservative instruction stepping internals with a practical bounded Fellow scheduler slice;
 - boot a representative classic Amiga configuration interactively.
 
 ROMs and Amiga OS media remain external user-supplied assets and are never distributed by FellowNG.
