@@ -7,7 +7,7 @@
 class PortableAudioPlatformFactory final : public ICorePlatformFactory
 {
 public:
-  PortableAudioPlatformFactory(ICorePlatformFactory &fallback, Platform::IAudioOutput &audio_output)
+  PortableAudioPlatformFactory(ICorePlatformFactory &fallback, FellowNG::Platform::IAudioOutput &audio_output)
     : _fallback(fallback), _audio_output(audio_output)
   {
   }
@@ -34,5 +34,5 @@ public:
 
 private:
   ICorePlatformFactory &_fallback;
-  Platform::IAudioOutput &_audio_output;
+  FellowNG::Platform::IAudioOutput &_audio_output;
 };
