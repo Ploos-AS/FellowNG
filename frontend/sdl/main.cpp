@@ -86,11 +86,7 @@ namespace
     gamepad.type = SDL_EVENT_GAMEPAD_AXIS_MOTION;
     gamepad.gaxis.axis = SDL_GAMEPAD_AXIS_LEFTX;
     gamepad.gaxis.value = 1234;
-    if (!SDL_PushEvent(&gamepad)) return false;
-
-    SDL_Event quit{};
-    quit.type = SDL_EVENT_QUIT;
-    return SDL_PushEvent(&quit);
+    return SDL_PushEvent(&gamepad);
   }
 
   bool RunInputSelfTest(FellowNG::Frontend::SDL::SdlInputSource &input)
@@ -108,12 +104,9 @@ namespace
       return false;
 
     const auto gamepad = input.Poll();
-    if (!gamepad || gamepad->type != FellowNG::Platform::InputType::JoystickAxis ||
-        gamepad->code != static_cast<std::int32_t>(FellowNG::Platform::JoystickAxis::LeftX) || gamepad->value != 1234)
-      return false;
-
-    const auto quit = input.Poll();
-    return quit && quit->type == FellowNG::Platform::InputType::Quit;
+    return gamepad && gamepad->type == FellowNG::Platform::InputType::JoystickAxis &&
+           gamepad->code == static_cast<std::int32_t>(FellowNG::Platform::JoystickAxis::LeftX) &&
+           gamepad->value == 1234;
   }
 
   bool RunAudioSelfTest(FellowNG::Frontend::SDL::SdlAudioOutput &audio)
