@@ -53,8 +53,8 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
 - [ ] M4.5: connect SDL backends to the Fellow runtime and boot a representative Amiga configuration interactively.
   - [x] M4.5a: portable emulator-runtime contract and frontend session/lifecycle pump.
   - [x] M4.5b: detach Win32 host-service/driver construction behind an injectable platform factory while preserving the Windows default backend.
-  - [ ] M4.5c: expose WinFellow startup/emulation/shutdown behind the portable runtime contract and make blocking execution frontend-safe.
-  - [ ] M4.5d: wire SDL video/input/audio to the real Fellow runtime and complete an interactive Amiga boot.
+  - [x] M4.5c: implement `WinFellowRuntime` behind `IEmulatorRuntime`, with injectable module startup/shutdown callbacks and bounded frontend-safe execution slices.
+  - [ ] M4.5d: wire SDL video/input/audio to the real Fellow runtime, replace the conservative instruction slice with a practical bounded scheduler slice, and complete an interactive Amiga boot.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
