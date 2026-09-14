@@ -19,6 +19,7 @@ namespace
   constexpr int DefaultHeight = 568;
   constexpr std::uint32_t TestWidth = 320;
   constexpr std::uint32_t TestHeight = 256;
+  constexpr int RuntimeSlicesPerPump = 4096;
 
   class SessionSelfTestRuntime final : public FellowNG::Platform::IEmulatorRuntime
   {
@@ -158,7 +159,7 @@ namespace
       std::cerr << "runtime-session: key pump stopped unexpectedly\n";
       return false;
     }
-    if (runtime.start_count != 1 || runtime.key_count != 1 || runtime.slice_count != 1)
+    if (runtime.start_count != 1 || runtime.key_count != 1 || runtime.slice_count != RuntimeSlicesPerPump)
     {
       std::cerr << "runtime-session: counters after key: start=" << runtime.start_count
                 << " key=" << runtime.key_count << " slice=" << runtime.slice_count << '\n';
