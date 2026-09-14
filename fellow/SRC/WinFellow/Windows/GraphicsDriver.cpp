@@ -35,7 +35,7 @@ uint8_t *gfxDrvValidateBufferPointer()
   return gfxDrvDDrawValidateBufferPointer();
 }
 
-void gfxDrvInvalidateBufferPointer()
+void gfxDrvInvalidateBufferPointerBackend()
 {
   if (gfx_drv_use_dxgi)
   {
