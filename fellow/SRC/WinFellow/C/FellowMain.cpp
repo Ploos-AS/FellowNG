@@ -404,6 +404,14 @@ static void fellowDrawFailed()
   exit(EXIT_FAILURE);
 }
 
+static void fellowDrawFailedPortable()
+{
+  static const char *message = "Graphics subsystem failed to start. Please check your OS graphics driver setup.";
+  if (_core.Log != nullptr) _core.Log->AddLog(message);
+  fprintf(stderr, "%s\n", message);
+  exit(EXIT_FAILURE);
+}
+
 /*============================================================================*/
 /* Save statefile                                                             */
 /*============================================================================*/
@@ -446,11 +454,18 @@ BOOLE fellowLoadState(char *filename)
   return TRUE;
 }
 
+using FellowModuleHook = void (*)();
+using FellowDrawFailureHook = void (*)();
+
 /*============================================================================*/
-/* Inititalize all modules in the emulator, called on startup                 */
+/* Initialize all modules in the emulator. Frontend hooks are optional.       */
 /*============================================================================*/
 
-static void fellowModulesStartup(int argc, const char **argv)
+static void fellowModulesStartupCommon(
+    int argc,
+    const char **argv,
+    FellowModuleHook frontend_startup,
+    FellowDrawFailureHook draw_failure)
 {
   CoreFactory::CreateServices();
 
@@ -468,7 +483,7 @@ static void fellowModulesStartup(int argc, const char **argv)
   iniStartup();
   kbdStartup();
   cfgStartup(argc, argv);
-  if (!drawStartup()) fellowDrawFailed();
+  if (!drawStartup()) draw_failure();
   gameportStartup();
   busStartup();
   _core.Sound->Startup();
@@ -480,7 +495,7 @@ static void fellowModulesStartup(int argc, const char **argv)
   interruptStartup();
   graphStartup();
   cpuIntegrationStartup();
-  wguiStartup();
+  if (frontend_startup != nullptr) frontend_startup();
 #ifdef RETRO_PLATFORM
   if (RP.GetHeadlessMode()) RP.Startup();
 #endif
@@ -490,17 +505,17 @@ static void fellowModulesStartup(int argc, const char **argv)
 }
 
 /*============================================================================*/
-/* Release all modules in the emulator, called on shutdown                    */
+/* Release all modules in the emulator. Frontend hooks are optional.          */
 /*============================================================================*/
 
-static void fellowModulesShutdown()
+static void fellowModulesShutdownCommon(FellowModuleHook frontend_shutdown)
 {
   automator.Shutdown();
   if (drawGetGraphicsEmulationMode() == GRAPHICSEMULATIONMODE::GRAPHICSEMULATIONMODE_CYCLEEXACT) GraphicsContext.Shutdown();
 #ifdef RETRO_PLATFORM
   if (RP.GetHeadlessMode()) RP.Shutdown();
 #endif
-  wguiShutdown();
+  if (frontend_shutdown != nullptr) frontend_shutdown();
   cpuIntegrationShutdown();
   graphShutdown();
   interruptShutdown();
@@ -525,6 +540,26 @@ static void fellowModulesShutdown()
   CoreFactory::DestroyDebugVM();
   CoreFactory::DestroyDrivers();
   CoreFactory::DestroyServices();
+}
+
+void fellowModulesStartupPortable(int argc, const char **argv)
+{
+  fellowModulesStartupCommon(argc, argv, nullptr, &fellowDrawFailedPortable);
+}
+
+void fellowModulesShutdownPortable()
+{
+  fellowModulesShutdownCommon(nullptr);
+}
+
+static void fellowModulesStartup(int argc, const char **argv)
+{
+  fellowModulesStartupCommon(argc, argv, &wguiStartup, &fellowDrawFailed);
+}
+
+static void fellowModulesShutdown()
+{
+  fellowModulesShutdownCommon(&wguiShutdown);
 }
 
 /*============================================================================*/
