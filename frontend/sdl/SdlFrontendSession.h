@@ -25,7 +25,7 @@ public:
 private:
   std::unique_ptr<Platform::IEmulatorRuntime> _owned_runtime;
   std::unique_ptr<Platform::FrontendSession> _owned_session;
-  Platform::FrontendSession *_session = nullptr;
   std::unique_ptr<Platform::FrontendSession> _borrowed_session;
+  Platform::FrontendSession *_session = nullptr;
 };
 }
