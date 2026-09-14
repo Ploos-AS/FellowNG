@@ -1,6 +1,7 @@
 add_library(FellowNG.Core.Portable STATIC
   CustomChipset/Registers.cpp
   CustomChipset/RegisterUtility.cpp
+  Driver/PortableSoundDriver.cpp
   Platform/StdClock.cpp
   Platform/StdFileSystem.cpp
   Platform/StreamLogger.cpp
