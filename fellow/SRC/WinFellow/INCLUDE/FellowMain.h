@@ -35,8 +35,6 @@ extern void fellowHardReset();
 extern bool fellowEmulationStart();
 extern void fellowEmulationStop();
 extern void fellowRequestEmulationStop();
-extern void fellowModulesStartup(int argc, const char **argv);
-extern void fellowModulesShutdown();
 
 extern void fellowShowRequester(FELLOW_REQUESTER_TYPE, const char *, ...);
 
@@ -45,7 +43,17 @@ namespace FellowNG::Runtime
   class WinFellowRuntime final : public Platform::IEmulatorRuntime
   {
   public:
-    WinFellowRuntime(int argc = 0, const char **argv = nullptr) : _argc(argc), _argv(argv) {}
+    using ModulesStartup = void (*)(int argc, const char **argv);
+    using ModulesShutdown = void (*)();
+
+    WinFellowRuntime(
+        int argc = 0,
+        const char **argv = nullptr,
+        ModulesStartup modules_startup = nullptr,
+        ModulesShutdown modules_shutdown = nullptr)
+      : _argc(argc), _argv(argv), _modules_startup(modules_startup), _modules_shutdown(modules_shutdown)
+    {
+    }
 
     ~WinFellowRuntime() override
     {
@@ -58,14 +66,17 @@ namespace FellowNG::Runtime
 
       _video = &video;
       _audio = &audio;
-
       fellowSetPreStartReset(true);
-      fellowModulesStartup(_argc, _argv);
-      _modules_started = true;
+
+      if (_modules_startup != nullptr)
+      {
+        _modules_startup(_argc, _argv);
+        _modules_started = true;
+      }
 
       if (!fellowEmulationStart())
       {
-        fellowModulesShutdown();
+        if (_modules_started && _modules_shutdown != nullptr) _modules_shutdown();
         _modules_started = false;
         _video = nullptr;
         _audio = nullptr;
@@ -86,12 +97,12 @@ namespace FellowNG::Runtime
         _emulation_started = false;
       }
 
-      if (_modules_started)
+      if (_modules_started && _modules_shutdown != nullptr)
       {
-        fellowModulesShutdown();
-        _modules_started = false;
+        _modules_shutdown();
       }
 
+      _modules_started = false;
       _running = false;
       _video = nullptr;
       _audio = nullptr;
@@ -111,9 +122,9 @@ namespace FellowNG::Runtime
     {
       if (!_running) return false;
 
-      // One instruction is deliberately conservative for the first portable
-      // runtime adapter. M4.5d can replace this with a larger bounded bus slice
-      // once SDL input/video/audio are attached to the real Fellow devices.
+      // Conservative bounded execution for the first real runtime adapter.
+      // M4.5d will replace this one-instruction slice with a larger bounded
+      // scheduler slice once the real SDL device adapters are connected.
       fellowStepOne();
       return _running;
     }
@@ -121,6 +132,8 @@ namespace FellowNG::Runtime
   private:
     int _argc = 0;
     const char **_argv = nullptr;
+    ModulesStartup _modules_startup = nullptr;
+    ModulesShutdown _modules_shutdown = nullptr;
     Platform::IVideoOutput *_video = nullptr;
     Platform::IAudioOutput *_audio = nullptr;
     bool _modules_started = false;
