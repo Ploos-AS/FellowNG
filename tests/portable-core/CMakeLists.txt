@@ -65,7 +65,6 @@ add_executable(fellowng-portable-audio-platform-factory-smoke
 target_link_libraries(fellowng-portable-audio-platform-factory-smoke
   PRIVATE FellowNG.Core.Portable
 )
-
 target_compile_features(fellowng-portable-audio-platform-factory-smoke PRIVATE cxx_std_20)
 
 add_test(
@@ -86,4 +85,19 @@ target_compile_features(fellowng-module-lifecycle-smoke PRIVATE cxx_std_20)
 add_test(
   NAME module-lifecycle-smoke
   COMMAND fellowng-module-lifecycle-smoke
+)
+
+add_executable(fellowng-runtime-factory-smoke
+  runtime_factory_smoke.cpp
+)
+
+target_link_libraries(fellowng-runtime-factory-smoke
+  PRIVATE FellowNG.Core.Portable
+)
+
+target_compile_features(fellowng-runtime-factory-smoke PRIVATE cxx_std_20)
+
+add_test(
+  NAME runtime-factory-smoke
+  COMMAND fellowng-runtime-factory-smoke
 )
