@@ -19,9 +19,49 @@ using namespace Service;
 using namespace Debug;
 using namespace fellow::hardfile;
 
+namespace
+{
+  class WindowsCorePlatformFactory final : public ICorePlatformFactory
+  {
+  public:
+    ISoundDriver *CreateSoundDriver() override
+    {
+      return new DirectSoundDriver();
+    }
+
+    Service::IFileops *CreateFileops(Service::ILog *log) override
+    {
+      return new FileopsWin32(log);
+    }
+
+    Service::IHud *CreateHud() override
+    {
+      return new Hud();
+    }
+
+    Service::IRetroPlatform *CreateRetroPlatform() override
+    {
+      return new RetroPlatformWrapper();
+    }
+  };
+
+  WindowsCorePlatformFactory windows_platform_factory;
+  ICorePlatformFactory *platform_factory = &windows_platform_factory;
+}
+
+void CoreFactory::SetPlatformFactory(ICorePlatformFactory *factory)
+{
+  platform_factory = factory == nullptr ? &windows_platform_factory : factory;
+}
+
+ICorePlatformFactory *CoreFactory::GetPlatformFactory()
+{
+  return platform_factory;
+}
+
 void CoreFactory::CreateDrivers()
 {
-  _core.Drivers.SoundDriver = new DirectSoundDriver();
+  _core.Drivers.SoundDriver = platform_factory->CreateSoundDriver();
 }
 
 void CoreFactory::DestroyDrivers()
@@ -33,10 +73,10 @@ void CoreFactory::DestroyDrivers()
 void CoreFactory::CreateServices()
 {
   _core.Log = new Log();
-  _core.Fileops = new FileopsWin32(_core.Log);
+  _core.Fileops = platform_factory->CreateFileops(_core.Log);
   _core.FileInformation = new FileInformation();
-  _core.Hud = new Hud();
-  _core.RP = new RetroPlatformWrapper();
+  _core.Hud = platform_factory->CreateHud();
+  _core.RP = platform_factory->CreateRetroPlatform();
 }
 
 void CoreFactory::DestroyServices()
