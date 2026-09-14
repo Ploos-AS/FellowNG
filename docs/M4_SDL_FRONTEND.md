@@ -83,16 +83,29 @@ Implemented:
 
 This does not yet make the complete WinFellow runtime linkable on Linux. It removes the first explicit host-construction barrier so a future SDL/Linux provider can replace Windows services without changing the emulator's global `Core` shape.
 
-### M4.5c — WinFellow lifecycle adapter
+### M4.5c — WinFellow lifecycle adapter ✅
 
-Next work:
+Implemented:
 
-- extract the current module startup/shutdown sequence from the Windows UI entry path;
-- expose startup, emulation start/stop, and shutdown behind `Platform::IEmulatorRuntime`;
-- keep `wguiStartup()`/`wguiShutdown()` optional so the SDL runtime does not instantiate the Windows GUI;
-- make the blocking `fellowRun()`/`busRun()` execution frontend-safe, most likely through a dedicated emulator worker thread with controlled stop/join behavior;
-- preserve the existing Windows executable path unchanged.
+- `FellowNG::Runtime::WinFellowRuntime` implements `Platform::IEmulatorRuntime` directly on top of the existing Fellow emulation start/stop and single-step APIs;
+- startup/shutdown of the broader module graph is injectable through callback hooks, allowing the legacy Windows entry path to remain unchanged while a future SDL host supplies its own module lifecycle;
+- the adapter records the frontend video/audio endpoints for the next wiring step without prematurely coupling legacy Fellow devices to SDL;
+- runtime execution is bounded through the existing one-instruction stepping path instead of calling blocking `fellowRun()`/`busRun()` from the frontend thread;
+- quit input requests a safe Fellow emulation stop;
+- adapter shutdown is deterministic and idempotent, including destructor cleanup.
+
+The one-instruction slice is intentionally conservative. It establishes frontend-safe execution semantics first; M4.5d will replace it with a practical bounded scheduler slice and connect real renderer, keyboard/gameport, and sound paths.
 
 ### M4.5d — interactive Amiga boot
 
-After M4.5c, wire the real renderer, keyboard/gameport input, and sound generator to the SDL backends and boot a representative classic Amiga configuration. ROMs and Amiga OS media remain external user-supplied assets and are never distributed by FellowNG.
+Next work:
+
+- instantiate `WinFellowRuntime` from the SDL host with an SDL/Linux module lifecycle and platform factory;
+- provide portable replacements for remaining Windows-only module/UI hooks required during startup;
+- connect Fellow graphics output to `SdlVideoOutput`;
+- translate portable input into the existing keyboard, mouse, and gameport subsystems;
+- bridge Fellow's generated stereo samples into `SdlAudioOutput`;
+- replace the conservative instruction-at-a-time runtime loop with a bounded scheduler slice suitable for interactive speed;
+- boot a representative classic Amiga configuration interactively.
+
+ROMs and Amiga OS media remain external user-supplied assets and are never distributed by FellowNG.
