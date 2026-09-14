@@ -85,6 +85,8 @@ namespace
 
 int main()
 {
+  constexpr int ExpectedSlicesPerPump = 4096;
+
   TestRuntime runtime;
   ScriptedInput input;
   NullVideo video;
@@ -94,7 +96,7 @@ int main()
   if (!session.Start() || !session.IsRunning()) return EXIT_FAILURE;
   if (!session.PumpOnce()) return EXIT_FAILURE;
   if (runtime.input_count != 1 || runtime.last_code != 17) return EXIT_FAILURE;
-  if (runtime.slice_count != 1) return EXIT_FAILURE;
+  if (runtime.slice_count != ExpectedSlicesPerPump) return EXIT_FAILURE;
 
   session.Stop();
   if (session.IsRunning() || runtime.stop_count != 1) return EXIT_FAILURE;
