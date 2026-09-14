@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <iostream>
 #include <optional>
 #include <span>
 
@@ -40,8 +41,6 @@ namespace
       }
       return std::nullopt;
     }
-
-    void QueueQuit() { stage = 2; }
 
     int stage = 0;
   };
@@ -93,13 +92,43 @@ int main()
   NullAudio audio;
   FellowNG::Platform::FrontendSession session(runtime, input, video, audio);
 
-  if (!session.Start() || !session.IsRunning()) return EXIT_FAILURE;
-  if (!session.PumpOnce()) return EXIT_FAILURE;
-  if (runtime.input_count != 1 || runtime.last_code != 17) return EXIT_FAILURE;
-  if (runtime.slice_count != ExpectedSlicesPerPump) return EXIT_FAILURE;
+  if (!session.Start())
+  {
+    std::cerr << "FAIL: session.Start() returned false\n";
+    return EXIT_FAILURE;
+  }
+  if (!session.IsRunning())
+  {
+    std::cerr << "FAIL: session not running after Start()\n";
+    return EXIT_FAILURE;
+  }
+  if (!session.PumpOnce())
+  {
+    std::cerr << "FAIL: PumpOnce() returned false; running=" << runtime.running
+              << " input_count=" << runtime.input_count
+              << " slice_count=" << runtime.slice_count << '\n';
+    return EXIT_FAILURE;
+  }
+  if (runtime.input_count != 1 || runtime.last_code != 17)
+  {
+    std::cerr << "FAIL: input bridge input_count=" << runtime.input_count
+              << " last_code=" << runtime.last_code << '\n';
+    return EXIT_FAILURE;
+  }
+  if (runtime.slice_count != ExpectedSlicesPerPump)
+  {
+    std::cerr << "FAIL: slice_count=" << runtime.slice_count
+              << " expected=" << ExpectedSlicesPerPump << '\n';
+    return EXIT_FAILURE;
+  }
 
   session.Stop();
-  if (session.IsRunning() || runtime.stop_count != 1) return EXIT_FAILURE;
+  if (session.IsRunning() || runtime.stop_count != 1)
+  {
+    std::cerr << "FAIL: stop running=" << session.IsRunning()
+              << " stop_count=" << runtime.stop_count << '\n';
+    return EXIT_FAILURE;
+  }
 
   return EXIT_SUCCESS;
 }
