@@ -21,17 +21,17 @@ public:
 
   Service::IFileops *CreateFileops(Service::ILog *log) override
   {
-    return new Service::FileopsWin32(log);
+    return new FileopsWin32(log);
   }
 
   Service::IHud *CreateHud() override
   {
-    return new Service::Hud();
+    return new Hud();
   }
 
   Service::IRetroPlatform *CreateRetroPlatform() override
   {
-    return new Service::RetroPlatformWrapper();
+    return new RetroPlatformWrapper();
   }
 };
 
