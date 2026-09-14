@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "SdlAudioOutput.h"
+#include "SdlFrontendSession.h"
 #include "SdlInputSource.h"
 #include "SdlVideoOutput.h"
 
@@ -18,6 +19,45 @@ namespace
   constexpr int DefaultHeight = 568;
   constexpr std::uint32_t TestWidth = 320;
   constexpr std::uint32_t TestHeight = 256;
+
+  class SessionSelfTestRuntime final : public FellowNG::Platform::IEmulatorRuntime
+  {
+  public:
+    bool Start(FellowNG::Platform::IVideoOutput &, FellowNG::Platform::IAudioOutput &) override
+    {
+      running = true;
+      ++start_count;
+      return true;
+    }
+
+    void Stop() override
+    {
+      if (running) ++stop_count;
+      running = false;
+    }
+
+    bool IsRunning() const override
+    {
+      return running;
+    }
+
+    void HandleInput(const FellowNG::Platform::InputEvent &event) override
+    {
+      if (event.type == FellowNG::Platform::InputType::Key) ++key_count;
+    }
+
+    bool RunSlice() override
+    {
+      ++slice_count;
+      return running;
+    }
+
+    bool running = false;
+    int start_count = 0;
+    int stop_count = 0;
+    int key_count = 0;
+    int slice_count = 0;
+  };
 
   std::vector<std::uint32_t> BuildTestFrame()
   {
@@ -100,6 +140,31 @@ namespace
     audio.Stop();
     return submitted && !audio.IsRunning();
   }
+
+  bool RunSessionSelfTest(FellowNG::Frontend::SDL::SdlInputSource &input,
+                          FellowNG::Frontend::SDL::SdlVideoOutput &video,
+                          FellowNG::Frontend::SDL::SdlAudioOutput &audio)
+  {
+    SessionSelfTestRuntime runtime;
+    FellowNG::Frontend::SDL::SdlFrontendSession session(runtime, input, video, audio);
+    if (!session.Start() || !session.IsRunning()) return false;
+
+    SDL_Event key{};
+    key.type = SDL_EVENT_KEY_DOWN;
+    key.key.scancode = SDL_SCANCODE_B;
+    key.key.key = SDLK_B;
+    if (!SDL_PushEvent(&key)) return false;
+
+    if (!session.PumpOnce()) return false;
+    if (runtime.start_count != 1 || runtime.key_count != 1 || runtime.slice_count != 1) return false;
+
+    SDL_Event quit{};
+    quit.type = SDL_EVENT_QUIT;
+    if (!SDL_PushEvent(&quit)) return false;
+
+    if (session.PumpOnce()) return false;
+    return !session.IsRunning() && !runtime.running && runtime.stop_count == 1;
+  }
 }
 
 int main(int argc, char **argv)
@@ -161,6 +226,7 @@ int main(int argc, char **argv)
   {
     const bool input_ok = RunInputSelfTest(input);
     const bool audio_ok = RunAudioSelfTest(audio);
+    const bool session_ok = RunSessionSelfTest(input, video, audio);
     video.Stop();
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -174,7 +240,12 @@ int main(int argc, char **argv)
       std::cerr << "FellowNG SDL3 audio backend self-test failed\n";
       return EXIT_FAILURE;
     }
-    std::cout << "FellowNG SDL3 video+input+audio backends: PASS\n";
+    if (!session_ok)
+    {
+      std::cerr << "FellowNG SDL3 runtime-session self-test failed\n";
+      return EXIT_FAILURE;
+    }
+    std::cout << "FellowNG SDL3 video+input+audio+runtime-session: PASS\n";
     return EXIT_SUCCESS;
   }
 
