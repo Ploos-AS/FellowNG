@@ -1,5 +1,5 @@
 #include <cassert>
-#include <cstddef>
+#include <cstdint>
 #include <span>
 
 #include "Platform/IAudioOutput.h"
@@ -13,7 +13,7 @@ namespace
     bool Start(const FellowNG::Platform::AudioFormat &) override { return true; }
     void Stop() override {}
     bool IsRunning() const override { return true; }
-    bool SubmitInterleaved(std::span<const std::byte>) override { return true; }
+    bool SubmitInterleaved(std::span<const std::int16_t>) override { return true; }
   };
 }
 
