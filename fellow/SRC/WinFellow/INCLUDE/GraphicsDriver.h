@@ -15,7 +15,12 @@ extern void gfxDrvSizeChanged(unsigned int width, unsigned int height);
 extern void gfxDrvPositionChanged();
 
 extern uint8_t *gfxDrvValidateBufferPointer();
-extern void gfxDrvInvalidateBufferPointer();
+extern void gfxDrvInvalidateBufferPointerBackend();
+inline void gfxDrvInvalidateBufferPointer()
+{
+  drawPresentCurrentFrame(draw_buffer_info);
+  gfxDrvInvalidateBufferPointerBackend();
+}
 extern void gfxDrvGetBufferInformation(draw_buffer_information *buffer_information);
 
 extern uint32_t gfxDrvEmulationStartPost();
