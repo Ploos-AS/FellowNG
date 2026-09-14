@@ -10,6 +10,8 @@
 #include "Keycode.h"
 #include "Renderer.h"
 #include "Platform/IEmulatorRuntime.h"
+#include "VirtualHost/CoreFactory.h"
+#include "VirtualHost/PortableAudioPlatformFactory.h"
 
 enum class fellow_runtime_error_codes
 {
@@ -76,6 +78,17 @@ namespace FellowNG::Runtime
       _audio = &audio;
       fellowSetPreStartReset(true);
 
+      _previous_platform_factory = CoreFactory::GetPlatformFactory();
+      if (_previous_platform_factory == nullptr)
+      {
+        _video = nullptr;
+        _audio = nullptr;
+        return false;
+      }
+
+      _audio_platform_factory = new PortableAudioPlatformFactory(*_previous_platform_factory, audio);
+      CoreFactory::SetPlatformFactory(_audio_platform_factory);
+
       if (_modules_startup != nullptr)
       {
         _modules_startup(_argc, _argv);
@@ -89,6 +102,7 @@ namespace FellowNG::Runtime
         drawSetFramePresentCallback(nullptr, nullptr);
         if (_modules_started && _modules_shutdown != nullptr) _modules_shutdown();
         _modules_started = false;
+        RestoreAudioPlatformFactory();
         _video = nullptr;
         _audio = nullptr;
         return false;
@@ -113,6 +127,7 @@ namespace FellowNG::Runtime
       if (_modules_started && _modules_shutdown != nullptr) _modules_shutdown();
 
       _modules_started = false;
+      RestoreAudioPlatformFactory();
       _running = false;
       _video = nullptr;
       _audio = nullptr;
@@ -173,6 +188,16 @@ namespace FellowNG::Runtime
     }
 
   private:
+    void RestoreAudioPlatformFactory()
+    {
+      if (_audio_platform_factory == nullptr) return;
+
+      CoreFactory::SetPlatformFactory(_previous_platform_factory);
+      delete _audio_platform_factory;
+      _audio_platform_factory = nullptr;
+      _previous_platform_factory = nullptr;
+    }
+
     static uint8_t TranslateKey(Platform::KeyCode key)
     {
       using K = Platform::KeyCode;
@@ -270,6 +295,8 @@ namespace FellowNG::Runtime
     ModulesShutdown _modules_shutdown = nullptr;
     Platform::IVideoOutput *_video = nullptr;
     Platform::IAudioOutput *_audio = nullptr;
+    ICorePlatformFactory *_previous_platform_factory = nullptr;
+    PortableAudioPlatformFactory *_audio_platform_factory = nullptr;
     std::int32_t _mouse_x = 0;
     std::int32_t _mouse_y = 0;
     bool _mouse_left = false;
