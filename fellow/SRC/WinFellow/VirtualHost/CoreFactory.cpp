@@ -1,19 +1,17 @@
 #include "VirtualHost/Core.h"
 #include "VirtualHost/CoreFactory.h"
 
-#include "Driver/Sound/DirectSoundDriver.h"
-
 #include "Service/Log.h"
 #include "Service/FileInformation.h"
-#include "Windows/Service/Hud.h"
-#include "Windows/Service/RetroPlatformWrapper.h"
 
 #include "hardfile/HardfileHandler.h"
 
-#include "Windows/Service/FileopsWin32.h"
-
 #include "DebugApi/M68K.h"
 #include "DebugApi/MemorySystem.h"
+
+#if defined(_WIN32)
+#include "VirtualHost/WindowsCorePlatformFactory.h"
+#endif
 
 using namespace Service;
 using namespace Debug;
@@ -21,37 +19,21 @@ using namespace fellow::hardfile;
 
 namespace
 {
-  class WindowsCorePlatformFactory final : public ICorePlatformFactory
+  ICorePlatformFactory *DefaultPlatformFactory()
   {
-  public:
-    ISoundDriver *CreateSoundDriver() override
-    {
-      return new DirectSoundDriver();
-    }
+#if defined(_WIN32)
+    return GetWindowsCorePlatformFactory();
+#else
+    return nullptr;
+#endif
+  }
 
-    Service::IFileops *CreateFileops(Service::ILog *log) override
-    {
-      return new FileopsWin32(log);
-    }
-
-    Service::IHud *CreateHud() override
-    {
-      return new Hud();
-    }
-
-    Service::IRetroPlatform *CreateRetroPlatform() override
-    {
-      return new RetroPlatformWrapper();
-    }
-  };
-
-  WindowsCorePlatformFactory windows_platform_factory;
-  ICorePlatformFactory *platform_factory = &windows_platform_factory;
+  ICorePlatformFactory *platform_factory = DefaultPlatformFactory();
 }
 
 void CoreFactory::SetPlatformFactory(ICorePlatformFactory *factory)
 {
-  platform_factory = factory == nullptr ? &windows_platform_factory : factory;
+  platform_factory = factory == nullptr ? DefaultPlatformFactory() : factory;
 }
 
 ICorePlatformFactory *CoreFactory::GetPlatformFactory()
