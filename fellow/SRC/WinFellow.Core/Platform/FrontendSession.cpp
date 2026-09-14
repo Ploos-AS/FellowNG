@@ -2,6 +2,11 @@
 
 namespace FellowNG::Platform
 {
+  namespace
+  {
+    constexpr unsigned RuntimeSlicesPerPump = 4096;
+  }
+
   FrontendSession::FrontendSession(IEmulatorRuntime &runtime, IInputSource &input, IVideoOutput &video, IAudioOutput &audio)
     : _runtime(runtime), _input(input), _video(video), _audio(audio)
   {
@@ -27,13 +32,23 @@ namespace FellowNG::Platform
       _runtime.HandleInput(*event);
     }
 
-    if (!_runtime.RunSlice())
+    // Keep the frontend responsive while giving runtimes whose RunSlice()
+    // implementation is intentionally conservative enough work per pump to
+    // make forward progress. WinFellowRuntime currently advances one 68k
+    // instruction per slice, so a bounded batch avoids an instruction-at-a-time
+    // SDL event loop without handing control to the legacy blocking busRun().
+    for (unsigned slice = 0; slice < RuntimeSlicesPerPump; ++slice)
     {
-      Stop();
-      return false;
+      if (!_runtime.RunSlice())
+      {
+        Stop();
+        return false;
+      }
+
+      if (!_runtime.IsRunning()) return false;
     }
 
-    return _runtime.IsRunning();
+    return true;
   }
 
   void FrontendSession::Stop()
