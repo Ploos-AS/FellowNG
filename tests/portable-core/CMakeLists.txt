@@ -101,3 +101,18 @@ add_test(
   NAME runtime-factory-smoke
   COMMAND fellowng-runtime-factory-smoke
 )
+
+add_executable(fellowng-portable-core-platform-factory-smoke
+  portable_core_platform_factory_smoke.cpp
+)
+
+target_link_libraries(fellowng-portable-core-platform-factory-smoke
+  PRIVATE FellowNG.Core.Portable
+)
+
+target_compile_features(fellowng-portable-core-platform-factory-smoke PRIVATE cxx_std_20)
+
+add_test(
+  NAME portable-core-platform-factory-smoke
+  COMMAND fellowng-portable-core-platform-factory-smoke
+)
