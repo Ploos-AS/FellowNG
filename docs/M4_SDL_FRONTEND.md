@@ -107,10 +107,19 @@ Completed integration increments:
 - SDL frontend runtime ownership through `IEmulatorRuntimeFactory`;
 - concrete `WinFellowRuntimeFactory` provider, allowing frontend code to request the real Fellow runtime through the portable factory contract without depending on the concrete runtime type.
 
+### M4.5e2 — frontend-neutral module lifecycle ✅
+
+Implemented:
+
+- the canonical Fellow subsystem startup/shutdown sequence now runs through shared lifecycle helpers with optional frontend hooks;
+- the legacy Windows path passes `wguiStartup()` and `wguiShutdown()` as hooks at exactly their previous positions in the lifecycle order;
+- `fellowModulesStartupPortable()` and `fellowModulesShutdownPortable()` execute the same Fellow subsystem order without invoking Windows GUI startup or shutdown;
+- portable graphics-start failure reporting logs to the Fellow log/stderr rather than entering the Windows requester path;
+- `WinFellowRuntimeFactory` selects the portable module lifecycle by default, so runtime instances created for a non-Windows frontend no longer require callers to supply ad-hoc startup/shutdown callbacks.
+
 Remaining work:
 
 - provide an SDL/Linux core-platform provider for file operations, HUD and RetroPlatform services;
-- expose a frontend-neutral Fellow module startup path that skips Windows GUI startup while preserving the legacy Windows frontend;
 - link the required Fellow emulation sources into the SDL/Linux build;
 - instantiate `WinFellowRuntimeFactory` from normal SDL execution;
 - replace the conservative instruction stepping internals with a practical bounded Fellow scheduler slice;
