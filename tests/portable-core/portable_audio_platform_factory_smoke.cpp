@@ -6,10 +6,10 @@
 
 namespace
 {
-  class AudioOutput final : public Platform::IAudioOutput
+  class AudioOutput final : public FellowNG::Platform::IAudioOutput
   {
   public:
-    bool Start(const Platform::AudioFormat &) override { running = true; return true; }
+    bool Start(const FellowNG::Platform::AudioFormat &) override { running = true; return true; }
     void Stop() override { running = false; }
     bool IsRunning() const override { return running; }
     bool SubmitInterleaved(std::span<const std::int16_t>) override { return running; }
