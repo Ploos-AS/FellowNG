@@ -11,6 +11,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/chipset.cpp
   graphics/CycleExactCopper.cpp
   graphics/DIWXStateMachine.cpp
+  graphics/DIWYStateMachine.cpp
 )
 
 target_include_directories(FellowNG.Emulation.Portable
