@@ -9,6 +9,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/LegacyCopper.cpp
   C/LineExactCopper.cpp
   C/chipset.cpp
+  graphics/BitplaneDMA.cpp
   graphics/CycleExactCopper.cpp
   graphics/DDFStateMachine.cpp
   graphics/DIWXStateMachine.cpp
