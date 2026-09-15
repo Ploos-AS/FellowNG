@@ -10,6 +10,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/LineExactCopper.cpp
   C/chipset.cpp
   graphics/CycleExactCopper.cpp
+  graphics/DDFStateMachine.cpp
   graphics/DIWXStateMachine.cpp
   graphics/DIWYStateMachine.cpp
 )
