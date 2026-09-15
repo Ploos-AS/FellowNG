@@ -7,13 +7,16 @@
 add_library(FellowNG.Emulation.Portable OBJECT
   C/CopperRegisters.cpp
   C/LegacyCopper.cpp
+  C/LineExactCopper.cpp
   C/chipset.cpp
+  graphics/CycleExactCopper.cpp
 )
 
 target_include_directories(FellowNG.Emulation.Portable
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics
     ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
 )
 
