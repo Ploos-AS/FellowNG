@@ -6,6 +6,7 @@
 
 add_library(FellowNG.Emulation.Portable OBJECT
   C/CopperRegisters.cpp
+  C/LegacyCopper.cpp
   C/chipset.cpp
 )
 
