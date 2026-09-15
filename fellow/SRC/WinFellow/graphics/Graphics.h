@@ -26,14 +26,14 @@ private:
   void InitializePixelSerializerEvent();
 
 public:
-  DIWXStateMachine DIWXStateMachine;
-  DIWYStateMachine DIWYStateMachine;
-  DDFStateMachine DDFStateMachine;
-  BitplaneDMA BitplaneDMA;
-  PixelSerializer PixelSerializer;
-  Planar2ChunkyDecoder Planar2ChunkyDecoder;
-  BitplaneDraw BitplaneDraw;
-  Logger Logger;
+  ::DIWXStateMachine DIWXStateMachine;
+  ::DIWYStateMachine DIWYStateMachine;
+  ::DDFStateMachine DDFStateMachine;
+  ::BitplaneDMA BitplaneDMA;
+  ::PixelSerializer PixelSerializer;
+  ::Planar2ChunkyDecoder Planar2ChunkyDecoder;
+  ::BitplaneDraw BitplaneDraw;
+  ::Logger Logger;
 
   void Commit(uint32_t untilRasterY, uint32_t untilRasterX);
 
