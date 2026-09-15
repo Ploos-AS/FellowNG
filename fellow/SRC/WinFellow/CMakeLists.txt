@@ -6,6 +6,7 @@
 
 add_library(FellowNG.Emulation.Portable OBJECT
   C/CopperRegisters.cpp
+  C/chipset.cpp
 )
 
 target_include_directories(FellowNG.Emulation.Portable
