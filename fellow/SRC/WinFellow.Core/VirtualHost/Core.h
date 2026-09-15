@@ -19,13 +19,13 @@ class Core
 public:
   CustomChipset::Registers Registers;
   CustomChipset::RegisterUtility RegisterUtility;
-  Sound *Sound;
-  Uart *Uart;
-  RtcOkiMsm6242rs *RtcOkiMsm6242rs;
+  ::Sound *Sound;
+  ::Uart *Uart;
+  ::RtcOkiMsm6242rs *RtcOkiMsm6242rs;
 
   Module::Hardfile::IHardfileHandler *HardfileHandler;
 
-  Drivers Drivers;
+  ::Drivers Drivers;
   Service::ILog *Log;
   Service::IFileops *Fileops;
   Service::IFileInformation *FileInformation;
