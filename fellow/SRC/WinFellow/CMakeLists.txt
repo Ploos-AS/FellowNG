@@ -12,6 +12,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/BitplaneDMA.cpp
   graphics/BitplaneDraw.cpp
   graphics/CycleExactCopper.cpp
+  graphics/CycleExactSprites.cpp
   graphics/DDFStateMachine.cpp
   graphics/DIWXStateMachine.cpp
   graphics/DIWYStateMachine.cpp
