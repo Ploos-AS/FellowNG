@@ -16,6 +16,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/DDFStateMachine.cpp
   graphics/DIWXStateMachine.cpp
   graphics/DIWYStateMachine.cpp
+  graphics/Graphics.cpp
   graphics/PixelSerializer.cpp
   graphics/Planar2ChunkyDecoder.cpp
 )
