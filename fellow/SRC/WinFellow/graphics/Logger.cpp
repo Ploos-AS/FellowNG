@@ -13,7 +13,7 @@ void Logger::Log(uint32_t line, uint32_t cylinder, const char *message)
   {
     if (_logfile == nullptr)
     {
-      char filename[MAX_PATH];
+      char filename[Service::FILEOPS_MAX_FILE_PATH];
       _core.Fileops->GetGenericFileName(filename, "WinFellow", "Graphics.log");
       _logfile = fopen(filename, "w");
     }
