@@ -8,6 +8,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/CopperRegisters.cpp
   C/LegacyCopper.cpp
   C/LineExactCopper.cpp
+  C/SpriteMerger.cpp
   C/SpriteP2CDecoder.cpp
   C/chipset.cpp
   graphics/BitplaneDMA.cpp
