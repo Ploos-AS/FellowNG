@@ -23,6 +23,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/Graphics.cpp
   graphics/GraphicsEvent.cpp
   graphics/GraphicsEventQueue.cpp
+  graphics/Logger.cpp
   graphics/PixelSerializer.cpp
   graphics/Planar2ChunkyDecoder.cpp
 )
