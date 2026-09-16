@@ -169,6 +169,7 @@ void PixelSerializer::OutputCylindersUntil(uint32_t rasterY, uint32_t cylinder)
 
   LogOutput(outputLine, outputUntilCylinder, _lastCylinderOutput + 1, outputUntilCylinder);
 
+#ifdef _WIN32
   if (outputUntilCylinder > 479)
   {
     // For debug
@@ -179,6 +180,7 @@ void PixelSerializer::OutputCylindersUntil(uint32_t rasterY, uint32_t cylinder)
   {
     MessageBox(nullptr, "outputUntilCylinder less than _lastCylinderOutput", "outputUntilCylinder out of range", 0);
   }
+#endif
 
   if (cylinderCount == 0)
   {
