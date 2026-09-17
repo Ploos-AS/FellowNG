@@ -86,6 +86,7 @@ set_source_files_properties(
 )
 
 target_include_directories(FellowNG.Emulation.Portable PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
   ${CMAKE_CURRENT_SOURCE_DIR}/automation
   ${CMAKE_CURRENT_SOURCE_DIR}/graphics
