@@ -117,7 +117,7 @@ void graphLineDescClear()
     for (int line = 0; line < 628; line++)
     {
       graph_frame[frame][line].linetype = graph_linetypes::GRAPH_LINE_BG;
-      graph_frame[frame][line].draw_line_routine = (void *)draw_line_BG_routine;
+      graph_frame[frame][line].draw_line_routine = draw_line_BG_routine;
       graph_frame[frame][line].colors[0] = 0;
       graph_frame[frame][line].frames_left_until_BG_skip = drawGetBufferCount(); /* ie. one more than normal to draw once in each buffer */
       graph_frame[frame][line].sprite_ham_slot = 0xffffffff;
