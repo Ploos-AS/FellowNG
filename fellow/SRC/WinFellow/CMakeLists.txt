@@ -19,6 +19,9 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/CpuModule_Interrupts.c
   C/CpuModule_StackFrameGen.c
   C/FellowList.cpp
+  C/FellowMain.cpp
+  C/FloppyDisk.cpp
+  C/Gameports.cpp
   C/GraphicsPipeline.cpp
   C/Keyboard.cpp
   C/LegacyCopper.cpp
@@ -26,6 +29,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/LineExactSprites.cpp
   C/MemoryInterface.cpp
   C/Renderer.cpp
+  C/Sound.cpp
   C/SpriteMerger.cpp
   C/SpriteP2CDecoder.cpp
   C/SpriteRegisters.cpp
@@ -33,7 +37,9 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/chipset.cpp
   C/draw_interlace_control.cpp
   C/draw_pixelrenderers.cpp
+  C/interrupt.c
   C/rtc.cpp
+  C/uart.cpp
   graphics/BitplaneDMA.cpp
   graphics/BitplaneDraw.cpp
   graphics/CycleExactCopper.cpp
@@ -49,10 +55,10 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/Planar2ChunkyDecoder.cpp
 )
 
-# These historical .c CPU units are part of the WinFellow C++ core in
-# practice: they include shared headers such as Defs.h that use the C++
-# standard library.  Keep their filenames for lineage, but compile them with
-# the C++ frontend on portable hosts instead of treating them as ISO C.
+# These historical .c CPU/interrupt units are part of the WinFellow C++ core
+# in practice: they include shared headers that use the C++ standard library.
+# Keep their filenames for lineage, but compile them with the C++ frontend on
+# portable hosts instead of treating them as ISO C.
 set_source_files_properties(
   C/CpuIntegration.c
   C/CpuModule.c
@@ -63,6 +69,7 @@ set_source_files_properties(
   C/CpuModule_InternalState.c
   C/CpuModule_Interrupts.c
   C/CpuModule_StackFrameGen.c
+  C/interrupt.c
   PROPERTIES LANGUAGE CXX
 )
 
