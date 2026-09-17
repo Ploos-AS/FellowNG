@@ -10,7 +10,6 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/LegacyCopper.cpp
   C/LineExactCopper.cpp
   C/LineExactSprites.cpp
-  C/MemoryInterface.cpp
   C/SpriteMerger.cpp
   C/SpriteP2CDecoder.cpp
   C/SpriteRegisters.cpp
