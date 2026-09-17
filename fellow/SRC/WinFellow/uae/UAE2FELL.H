@@ -156,9 +156,18 @@ extern char warning_buffer[256];
 #include <fcntl.h>
 #include <unistd.h>
 #include <limits.h>
+#ifndef MAX_PATH
+#ifdef PATH_MAX
+#define MAX_PATH PATH_MAX
+#else
+#define MAX_PATH 4096
+#endif
+#endif
 #endif
 
+#ifndef O_NDELAY
 #define O_NDELAY 0
+#endif
 
 /*#define DONT_HAVE_POSIX*/ /* I want Mathias' posixemu_ functions! */
 
@@ -312,4 +321,3 @@ void hardfile_install();
 extern BOOLE CheckRM(char *);
 static int get_volume_name(struct uaedev_mount_info *, char *, char *, int, int, int, int);
 extern int valid_volumename(struct uaedev_mount_info *, char *, int);
-extern void filesys_init(int);
