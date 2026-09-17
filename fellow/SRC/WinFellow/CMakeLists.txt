@@ -43,6 +43,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/rtc.cpp
   C/uart.cpp
   automation/Automator.cpp
+  automation/Script.cpp
   graphics/BitplaneDMA.cpp
   graphics/BitplaneDraw.cpp
   graphics/CycleExactCopper.cpp
@@ -56,6 +57,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/Logger.cpp
   graphics/PixelSerializer.cpp
   graphics/Planar2ChunkyDecoder.cpp
+  ../WinFellow.Core/DebugApi/DebugVM.cpp
   ../WinFellow.Core/IO/RtcOkiMsm6242rs.cpp
   ../WinFellow.Core/VirtualHost/Core.cpp
   zlib/C/crc32.c
