@@ -12,6 +12,7 @@ add_executable(fellowng-sdl
 add_executable(fellowng-sdl-runtime-factory-smoke
   runtime_factory_smoke.cpp
   SdlFrontendSession.cpp
+  $<TARGET_OBJECTS:FellowNG.Emulation.Portable>
 )
 
 target_compile_features(fellowng-sdl PRIVATE cxx_std_20)
