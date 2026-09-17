@@ -29,7 +29,7 @@
 #include "options.h"
 #include "uae.h"
 #include "memory.h"
-#include "autoconf.h"
+#include "AUTOCONF.H"
 #include "picasso96.h"
 #include "savestate.h"
    FELLOW OUT (END)---------------------*/
@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include "UAE2FELL.H"
 #include "MemoryInterface.h"
-#include "autoconf.h"
+#include "AUTOCONF.H"
 
 /* FELLOW IN (END)-----------------------*/
 
