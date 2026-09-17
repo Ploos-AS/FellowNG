@@ -69,6 +69,8 @@ add_library(FellowNG.Emulation.Portable STATIC
 # project layout while exposing a stable CMake interface to new components.
 add_library(FellowNG::Emulation.Portable ALIAS FellowNG.Emulation.Portable)
 
+target_compile_features(FellowNG.Emulation.Portable PUBLIC cxx_std_20)
+
 set_source_files_properties(
   C/CpuIntegration.c
   C/CpuModule.c
