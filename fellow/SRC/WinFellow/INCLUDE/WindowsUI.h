@@ -73,19 +73,22 @@ struct wgui_preset
 };
 
 /*===========================================================================*/
-/* This is the generic interface that must be implemented to create a GUI    */
-/* Fellow                                                                    */
+/* This is the Windows GUI interface. Portable emulator modules may include   */
+/* this header for shared data types, but native window-handle declarations   */
+/* must not leak into non-Windows builds.                                     */
 /*===========================================================================*/
 
+#ifdef _WIN32
 extern BOOLE wguiSaveFile(HWND hwndDlg, const char *filename, uint32_t filenamesize, const char *title, SelectFileFlags selectFileType);
-extern char *wguiExtractPath(char *);
+extern void wguiRequester(const char *szMessage, UINT uType);
+#endif
 
+extern char *wguiExtractPath(char *);
 extern void wguiStartup();
 extern void wguiStartupPost();
 extern void wguiShutdown();
 extern BOOLE wguiCheckEmulationNecessities();
 extern BOOLE wguiEnter();
-extern void wguiRequester(const char *szMessage, UINT uType);
 extern void wguiShowRequester(const char *szMessage, FELLOW_REQUESTER_TYPE requesterType);
 extern void wguiInsertCfgIntoHistory(const char *cfgfilenametoinsert);
 extern void wguiSetProcessDPIAwareness(const char *pszAwareness);
