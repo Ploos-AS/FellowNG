@@ -49,6 +49,23 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/Planar2ChunkyDecoder.cpp
 )
 
+# These historical .c CPU units are part of the WinFellow C++ core in
+# practice: they include shared headers such as Defs.h that use the C++
+# standard library.  Keep their filenames for lineage, but compile them with
+# the C++ frontend on portable hosts instead of treating them as ISO C.
+set_source_files_properties(
+  C/CpuIntegration.c
+  C/CpuModule.c
+  C/CpuModule_EffectiveAddress.c
+  C/CpuModule_Exceptions.c
+  C/CpuModule_Flags.c
+  C/CpuModule_Instructions.c
+  C/CpuModule_InternalState.c
+  C/CpuModule_Interrupts.c
+  C/CpuModule_StackFrameGen.c
+  PROPERTIES LANGUAGE CXX
+)
+
 target_include_directories(FellowNG.Emulation.Portable
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
@@ -57,7 +74,7 @@ target_include_directories(FellowNG.Emulation.Portable
     ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
 )
 
-target_compile_features(FellowNG.Emulation.Portable PRIVATE c_std_99 cxx_std_20)
+target_compile_features(FellowNG.Emulation.Portable PRIVATE cxx_std_20)
 
 if(MSVC)
   target_compile_options(FellowNG.Emulation.Portable PRIVATE /W4)
