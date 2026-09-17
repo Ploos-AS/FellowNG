@@ -8,6 +8,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/Blitter.cpp
   C/BusScheduler.cpp
   C/ComplexInterfaceAdapter.cpp
+  C/Configuration.cpp
   C/CopperRegisters.cpp
   C/CpuIntegration.c
   C/CpuModule.c
@@ -40,6 +41,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/interrupt.c
   C/rtc.cpp
   C/uart.cpp
+  automation/Automator.cpp
   graphics/BitplaneDMA.cpp
   graphics/BitplaneDraw.cpp
   graphics/CycleExactCopper.cpp
@@ -53,6 +55,9 @@ add_library(FellowNG.Emulation.Portable OBJECT
   graphics/Logger.cpp
   graphics/PixelSerializer.cpp
   graphics/Planar2ChunkyDecoder.cpp
+  ../WinFellow.Core/IO/RtcOkiMsm6242rs.cpp
+  ../WinFellow.Core/VirtualHost/Core.cpp
+  zlib/C/crc32.c
 )
 
 # These historical .c CPU/interrupt units are part of the WinFellow C++ core
@@ -78,6 +83,8 @@ target_include_directories(FellowNG.Emulation.Portable
     ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/automation
+    ${CMAKE_CURRENT_SOURCE_DIR}/zlib/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
 )
 
