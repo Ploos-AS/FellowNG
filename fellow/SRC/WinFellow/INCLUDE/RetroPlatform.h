@@ -1,7 +1,9 @@
 #pragma once
 
-// Legacy WinFellow sources still include RetroPlatform.h even though the
-// platform service is now provided through WinFellow.Core/Service/IRetroPlatform.h
-// and ICorePlatformFactory. Keep this compatibility header intentionally empty
-// while the remaining legacy source set is migrated to the frontend-neutral
-// platform interfaces.
+// Legacy WinFellow sources still include RetroPlatform.h from the common
+// include directory. The native Windows build still provides the historical
+// RetroPlatform implementation and expects its RP singleton/API declarations.
+// Portable builds deliberately keep that dependency out of the core.
+#if defined(_WIN32) && defined(RETRO_PLATFORM)
+#include "../Windows/RetroPlatform.h"
+#endif
