@@ -9,6 +9,15 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/BusScheduler.cpp
   C/ComplexInterfaceAdapter.cpp
   C/CopperRegisters.cpp
+  C/CpuIntegration.c
+  C/CpuModule.c
+  C/CpuModule_EffectiveAddress.c
+  C/CpuModule_Exceptions.c
+  C/CpuModule_Flags.c
+  C/CpuModule_Instructions.c
+  C/CpuModule_InternalState.c
+  C/CpuModule_Interrupts.c
+  C/CpuModule_StackFrameGen.c
   C/Keyboard.cpp
   C/LegacyCopper.cpp
   C/LineExactCopper.cpp
@@ -43,7 +52,7 @@ target_include_directories(FellowNG.Emulation.Portable
     ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
 )
 
-target_compile_features(FellowNG.Emulation.Portable PRIVATE cxx_std_20)
+target_compile_features(FellowNG.Emulation.Portable PRIVATE c_std_99 cxx_std_20)
 
 if(MSVC)
   target_compile_options(FellowNG.Emulation.Portable PRIVATE /W4)
@@ -52,5 +61,6 @@ else()
 endif()
 
 set_target_properties(FellowNG.Emulation.Portable PROPERTIES
+  C_EXTENSIONS OFF
   CXX_EXTENSIONS OFF
 )
