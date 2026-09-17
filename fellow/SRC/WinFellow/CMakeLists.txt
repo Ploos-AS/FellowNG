@@ -8,6 +8,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/BusScheduler.cpp
   C/ComplexInterfaceAdapter.cpp
   C/CopperRegisters.cpp
+  C/Keyboard.cpp
   C/LegacyCopper.cpp
   C/LineExactCopper.cpp
   C/LineExactSprites.cpp
