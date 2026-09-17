@@ -41,7 +41,6 @@
 #include "interrupt.h"
 #include "IO/Uart.h"
 #include "../automation/Automator.h"
-#include "GfxDrvCommon.h"
 
 #ifdef RETRO_PLATFORM
 #include "RetroPlatform.h"
