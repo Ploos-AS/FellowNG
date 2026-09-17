@@ -86,6 +86,7 @@ set_source_files_properties(
   C/interrupt.c
   C/modrip.c
   C/xdmswrap.c
+  C/zlibwrap.c
   PROPERTIES LANGUAGE CXX
 )
 
