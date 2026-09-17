@@ -64,6 +64,11 @@ add_library(FellowNG.Emulation.Portable STATIC
   zlib/C/crc32.c
 )
 
+# Frontends and runtime smoke tests consume the portable core through the
+# namespaced target. Keep the concrete target name compatible with the legacy
+# project layout while exposing a stable CMake interface to new components.
+add_library(FellowNG::Emulation.Portable ALIAS FellowNG.Emulation.Portable)
+
 set_source_files_properties(
   C/CpuIntegration.c
   C/CpuModule.c
