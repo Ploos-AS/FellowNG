@@ -6,13 +6,11 @@ add_executable(fellowng-sdl
   SdlInputSource.cpp
   SdlAudioOutput.cpp
   SdlFrontendSession.cpp
-  $<TARGET_OBJECTS:FellowNG.Emulation.Portable>
 )
 
 add_executable(fellowng-sdl-runtime-factory-smoke
   runtime_factory_smoke.cpp
   SdlFrontendSession.cpp
-  $<TARGET_OBJECTS:FellowNG.Emulation.Portable>
 )
 
 target_compile_features(fellowng-sdl PRIVATE cxx_std_20)
@@ -21,11 +19,14 @@ target_compile_features(fellowng-sdl-runtime-factory-smoke PRIVATE cxx_std_20)
 target_link_libraries(fellowng-sdl
   PRIVATE
     FellowNG.Core.Portable
+    FellowNG::Emulation.Portable
     SDL3::SDL3
 )
 
 target_link_libraries(fellowng-sdl-runtime-factory-smoke
-  PRIVATE FellowNG.Core.Portable
+  PRIVATE
+    FellowNG.Core.Portable
+    FellowNG::Emulation.Portable
 )
 
 add_test(
