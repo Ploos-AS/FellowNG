@@ -28,14 +28,14 @@
 #include "custom.h"
 #include "newcpu.h"
 #include "compiler.h"
-#include "autoconf.h"
+#include "AUTOCONF.H"
 #include "osdep/exectasks.h"
    FELLOW OUT (END)------------------ */
 /* FELLOW IN (START)----------------- */
 #include <stdio.h>
 #include <setjmp.h>
 #include "UAE2FELL.H"
-#include "autoconf.h"
+#include "AUTOCONF.H"
 #include "MemoryInterface.h"
 
 /* To support memory get/set in C, assembly stubs are in uaesupp.s */
