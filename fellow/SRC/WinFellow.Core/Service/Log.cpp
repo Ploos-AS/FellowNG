@@ -40,7 +40,7 @@ namespace Service
       char *buffer2 = LogTime(buffer);
 
       va_start(parms, format);
-      vsprintf_s(buffer2, WRITE_LOG_BUF_SIZE - 1 - strlen(buffer), format, parms);
+      vsnprintf(buffer2, WRITE_LOG_BUF_SIZE - 1 - strlen(buffer), format, parms);
       FILE *F = OpenLogFile();
       if (F != nullptr)
       {
@@ -63,7 +63,7 @@ namespace Service
     char *buffer2 = LogTime(buffer);
 
     va_start(parms, format);
-    vsprintf_s(buffer2, WRITE_LOG_BUF_SIZE - 1 - strlen(buffer), format, parms);
+    vsnprintf(buffer2, WRITE_LOG_BUF_SIZE - 1 - strlen(buffer), format, parms);
     FILE *F = OpenLogFile();
     if (F != nullptr)
     {
@@ -86,7 +86,7 @@ namespace Service
     for (const string &msg : messages)
     {
       char *buffer2 = LogTime(buffer);
-      _snprintf(buffer2, WRITE_LOG_BUF_SIZE - 1, "%s\n", msg.c_str());
+      snprintf(buffer2, WRITE_LOG_BUF_SIZE - 1 - strlen(buffer), "%s\n", msg.c_str());
       AddLogInternal(F, buffer);
     }
 
@@ -114,7 +114,8 @@ namespace Service
     va_list parms;
 
     va_start(parms, format);
-    _vsnprintf(buffer, WRITE_LOG_BUF_SIZE - 1, format, parms);
+    vsnprintf(buffer, WRITE_LOG_BUF_SIZE - 1, format, parms);
+    buffer[WRITE_LOG_BUF_SIZE - 1] = '\0';
     va_end(parms);
 
     AddLog2(buffer);
@@ -133,7 +134,11 @@ namespace Service
       // log date/time into buffer
       time_t thetime = time(nullptr);
       struct tm timedata;
+#ifdef _WIN32
       localtime_s(&timedata, &thetime);
+#else
+      localtime_r(&thetime, &timedata);
+#endif
       strftime(buffer, 255, "%c: ", &timedata);
       // move buffer pointer ahead to log additional text after date/time
       return buffer + strlen(buffer);
@@ -153,12 +158,20 @@ namespace Service
       char logfilename[FILEOPS_MAX_FILE_PATH];
       _core.Fileops->GetFellowLogfileName(logfilename);
       _logfilename = logfilename;
+#ifdef _WIN32
       fopen_s(&F, _logfilename.c_str(), "w");
+#else
+      F = fopen(_logfilename.c_str(), "w");
+#endif
       _first_time = false;
     }
     else
     {
+#ifdef _WIN32
       fopen_s(&F, _logfilename.c_str(), "a");
+#else
+      F = fopen(_logfilename.c_str(), "a");
+#endif
     }
     return F;
   }
