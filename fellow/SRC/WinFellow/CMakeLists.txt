@@ -59,9 +59,6 @@ add_library(FellowNG.Emulation.Portable STATIC
   graphics/Planar2ChunkyDecoder.cpp
   ../WinFellow.Core/DebugApi/DebugVM.cpp
   ../WinFellow.Core/IO/RtcOkiMsm6242rs.cpp
-  ../WinFellow.Core/Service/PortableFileops.cpp
-  ../WinFellow.Core/Service/PortableSystemInformation.cpp
-  ../WinFellow.Core/Service/PortableThreading.cpp
   ../WinFellow.Core/VirtualHost/Core.cpp
   VirtualHost/CoreFactory.cpp
   zlib/C/crc32.c
