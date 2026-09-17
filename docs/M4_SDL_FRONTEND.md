@@ -105,7 +105,8 @@ Completed integration increments:
 - host platform factory split;
 - portable runtime-factory contract;
 - SDL frontend runtime ownership through `IEmulatorRuntimeFactory`;
-- concrete `WinFellowRuntimeFactory` provider, allowing frontend code to request the real Fellow runtime through the portable factory contract without depending on the concrete runtime type.
+- concrete `WinFellowRuntimeFactory` provider, allowing frontend code to request the real Fellow runtime through the portable factory contract without depending on the concrete runtime type;
+- normal visible SDL execution now instantiates `WinFellowRuntimeFactory`, starts the real Fellow runtime through `SdlFrontendSession`, and pumps it through the portable frontend lifecycle; user ROM/AmigaOS/configuration inputs remain external.
 
 ### M4.5e2 — frontend-neutral module lifecycle ✅
 
@@ -121,7 +122,6 @@ Remaining work:
 
 - provide an SDL/Linux core-platform provider for file operations, HUD and RetroPlatform services;
 - link the required Fellow emulation sources into the SDL/Linux build;
-- instantiate `WinFellowRuntimeFactory` from normal SDL execution;
 - replace the conservative instruction stepping internals with a practical bounded Fellow scheduler slice;
 - boot a representative classic Amiga configuration interactively.
 
