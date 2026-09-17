@@ -45,10 +45,10 @@
 #include "custom.h"
 #include "events.h"
 #include "newcpu.h"
-#include "filesys.h"
+#include "FILESYS.H"
 #include "AUTOCONF.H"
 #include "compiler.h"
-#include "fsusage.h"
+#include "FSUSAGE.H"
 #include "native2amiga.h"
 #include "scsidev.h"
    FELLOW OUT (END)------------------ */
@@ -82,10 +82,10 @@
 
 #include "UAE2FELL.H"
 #include "PENGUIN.H"
-#include "filesys.h"
+#include "FILESYS.H"
 #include "FilesystemIntegration.h"
 #include "AUTOCONF.H"
-#include "fsusage.h"
+#include "FSUSAGE.H"
 
 /* Taken from cfgfile.c */
 
