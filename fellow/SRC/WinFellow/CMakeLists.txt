@@ -63,6 +63,16 @@ if(MSVC)
   target_compile_options(FellowNG.Emulation.Portable PRIVATE /W4)
 else()
   target_compile_options(FellowNG.Emulation.Portable PRIVATE -Wall -Wextra -Wpedantic)
+
+  # GraphicsPipeline still contains one legacy WinFellow callback assignment
+  # that routes a function pointer through void*. GCC rejects that historical
+  # MSVC-compatible conversion in strict C++ mode. Keep the exception scoped
+  # to this translation unit while the renderer ABI is migrated, rather than
+  # weakening the portable target globally.
+  set_source_files_properties(C/GraphicsPipeline.cpp PROPERTIES
+    COMPILE_OPTIONS "-fpermissive"
+  )
+
   set_source_files_properties(C/Renderer.cpp PROPERTIES
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableRendererCompat.h"
   )
