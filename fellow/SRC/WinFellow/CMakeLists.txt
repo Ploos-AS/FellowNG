@@ -37,7 +37,6 @@ target_include_directories(FellowNG.Emulation.Portable
     ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics
-    ${CMAKE_CURRENT_SOURCE_DIR}/Windows
     ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
 )
 
