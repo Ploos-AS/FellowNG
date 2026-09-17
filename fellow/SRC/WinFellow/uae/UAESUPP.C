@@ -26,6 +26,7 @@
 /*=========================================================================*/
 
 #include <stdio.h>
+#include <stdarg.h>
 
 #ifdef _FELLOW_DEBUG_CRT_MALLOC
 #define _CRTDBG_MAP_ALLOC
