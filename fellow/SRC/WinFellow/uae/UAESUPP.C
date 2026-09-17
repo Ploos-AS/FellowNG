@@ -35,7 +35,7 @@
 #include <crtdbg.h>
 #endif
 
-#include "uae2fell.h"
+#include "UAE2FELL.H"
 #include "MemoryInterface.h"
 #include "VirtualHost/Core.h"
 
