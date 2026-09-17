@@ -84,6 +84,7 @@ set_source_files_properties(
   C/CpuModule_Logging.c
   C/CpuModule_StackFrameGen.c
   C/interrupt.c
+  C/modrip.c
   PROPERTIES LANGUAGE CXX
 )
 
