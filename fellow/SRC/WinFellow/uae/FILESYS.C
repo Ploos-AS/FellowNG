@@ -46,7 +46,7 @@
 #include "events.h"
 #include "newcpu.h"
 #include "filesys.h"
-#include "autoconf.h"
+#include "AUTOCONF.H"
 #include "compiler.h"
 #include "fsusage.h"
 #include "native2amiga.h"
@@ -54,7 +54,16 @@
    FELLOW OUT (END)------------------ */
 
 /* FELLOW IN (START)---------------- */
+#ifdef _WIN32
 #include <windows.h>
+#include <direct.h>
+#include <io.h>
+#include <sys/utime.h>
+#else
+#include <dirent.h>
+#include <unistd.h>
+#include <utime.h>
+#endif
 #include <stdio.h>
 
 #ifdef _FELLOW_DEBUG_CRT_MALLOC
@@ -69,16 +78,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <direct.h>
-#include <io.h>
 #include <string.h>
-#include <sys/utime.h>
 
-#include "uae2fell.h"
+#include "UAE2FELL.H"
 #include "penguin.h"
 #include "filesys.h"
 #include "FilesystemIntegration.h"
-#include "autoconf.h"
+#include "AUTOCONF.H"
 #include "fsusage.h"
 
 /* Taken from cfgfile.c */
