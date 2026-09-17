@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.20)
-
 add_library(FellowNG.Emulation.Portable STATIC
   C/Blitter.cpp
   C/BusScheduler.cpp
@@ -39,38 +37,63 @@ add_library(FellowNG.Emulation.Portable STATIC
   C/draw_interlace_control.cpp
   C/draw_pixelrenderers.cpp
   C/interrupt.c
+  C/modrip.c
   C/rtc.cpp
   C/uart.cpp
   C/xdmswrap.c
   C/zlibwrap.c
   automation/Automator.cpp
   automation/Script.cpp
-  ../WinFellow.Core/Core/Core.cpp
-  ../WinFellow.Core/Core/CoreFactory.cpp
+  graphics/BitplaneDMA.cpp
+  graphics/BitplaneDraw.cpp
+  graphics/CycleExactCopper.cpp
+  graphics/CycleExactSprites.cpp
+  graphics/DDFStateMachine.cpp
+  graphics/DIWXStateMachine.cpp
+  graphics/DIWYStateMachine.cpp
+  graphics/Graphics.cpp
+  graphics/GraphicsEvent.cpp
+  graphics/GraphicsEventQueue.cpp
+  graphics/Logger.cpp
+  graphics/PixelSerializer.cpp
+  graphics/Planar2ChunkyDecoder.cpp
   ../WinFellow.Core/DebugApi/DebugVM.cpp
   ../WinFellow.Core/IO/RtcOkiMsm6242rs.cpp
   ../WinFellow.Core/Service/PortableFileops.cpp
   ../WinFellow.Core/Service/PortableSystemInformation.cpp
   ../WinFellow.Core/Service/PortableThreading.cpp
+  ../WinFellow.Core/VirtualHost/Core.cpp
+  VirtualHost/CoreFactory.cpp
   zlib/C/crc32.c
 )
 
-target_include_directories(FellowNG.Emulation.Portable
-  PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
-    ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core/Driver
-    ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core/Service
-    ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core/VirtualHost
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/automation
-    ${CMAKE_CURRENT_SOURCE_DIR}/xdms/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/zlib/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/zlibwrap/include
+set_source_files_properties(
+  C/CpuIntegration.c
+  C/CpuModule.c
+  C/CpuModule_Disassembler.c
+  C/CpuModule_EffectiveAddress.c
+  C/CpuModule_Exceptions.c
+  C/CpuModule_Flags.c
+  C/CpuModule_Instructions.c
+  C/CpuModule_InternalState.c
+  C/CpuModule_Interrupts.c
+  C/CpuModule_Logging.c
+  C/CpuModule_StackFrameGen.c
+  C/interrupt.c
+  PROPERTIES LANGUAGE CXX
 )
 
-target_compile_features(FellowNG.Emulation.Portable PUBLIC cxx_std_17)
+target_include_directories(FellowNG.Emulation.Portable PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
+  ${CMAKE_CURRENT_SOURCE_DIR}/automation
+  ${CMAKE_CURRENT_SOURCE_DIR}/graphics
+  ${CMAKE_CURRENT_SOURCE_DIR}/uae
+  ${CMAKE_CURRENT_SOURCE_DIR}/xdms/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/zlib/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/zlibwrap/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
+  ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Hardfile
+)
 
 if(MSVC)
   target_compile_definitions(FellowNG.Emulation.Portable PRIVATE _CRT_SECURE_NO_WARNINGS)
@@ -79,44 +102,28 @@ else()
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/include
   )
 
-  # Legacy graphics code still contains a small number of pointer assignments
-  # accepted by the original MSVC build. Keep this workaround narrowly scoped
-  # until the callback cleanup is completed.
   set_source_files_properties(C/GraphicsPipeline.cpp PROPERTIES
     COMPILE_OPTIONS "-fpermissive"
   )
 
-  # The legacy CPU sources use C++ headers/types despite their .c suffixes.
-  set_source_files_properties(
-    C/CpuIntegration.c
-    C/CpuModule.c
-    C/CpuModule_Disassembler.c
-    C/CpuModule_EffectiveAddress.c
-    C/CpuModule_Exceptions.c
-    C/CpuModule_Flags.c
-    C/CpuModule_Instructions.c
-    C/CpuModule_InternalState.c
-    C/CpuModule_Interrupts.c
-    C/CpuModule_Logging.c
-    C/CpuModule_StackFrameGen.c
-    C/interrupt.c
-    PROPERTIES LANGUAGE CXX
-  )
-
-  # Keep the temporary host-trap compatibility local to the instruction core.
   set_source_files_properties(C/CpuModule_Instructions.c PROPERTIES
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableCpuCompat.h"
   )
 
-  # Keep the renderer host compatibility local to the renderer implementation.
   set_source_files_properties(C/Renderer.cpp PROPERTIES
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableRendererCompat.h"
   )
 
-  # Keep the MSVC secure-CRT compatibility local to floppy handling.
   set_source_files_properties(C/FloppyDisk.cpp PROPERTIES
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableCrtCompat.h"
   )
-endif()
 
-add_library(FellowNG::Emulation.Portable ALIAS FellowNG.Emulation.Portable)
+  # The legacy memory translation unit defines its hot public read helpers as
+  # __inline in the .cpp file. MSVC emitted externally callable definitions,
+  # while GCC may discard them because they are not used in that translation
+  # unit. Retain those definitions until the memory API is moved into a proper
+  # portable header/implementation split.
+  set_source_files_properties(C/MemoryInterface.cpp PROPERTIES
+    COMPILE_OPTIONS "-fkeep-inline-functions"
+  )
+endif()
