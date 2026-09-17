@@ -120,6 +120,13 @@ else()
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableCpuCompat.h"
   )
 
+  # FloppyDisk still uses a few MSVC secure-CRT helpers. Supply narrow
+  # non-Windows equivalents for this translation unit instead of leaking
+  # compatibility macros across the portable core.
+  set_source_files_properties(C/FloppyDisk.cpp PROPERTIES
+    COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableCrtCompat.h"
+  )
+
   set_source_files_properties(C/Renderer.cpp PROPERTIES
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableRendererCompat.h"
   )
