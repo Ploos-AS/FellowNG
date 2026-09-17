@@ -1,0 +1,36 @@
+name: M4.5d13 memory portability fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/m4-fix-memory.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: Fix WIN32 guard boundary in MemoryInterface.cpp
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('fellow/SRC/WinFellow/C/MemoryInterface.cpp')
+          s = p.read_text()
+          old = '''      FreeLibrary(hAmigaForeverDLL);\n#endif\n    }\n\n    if (!keybuffer)'''
+          new = '''      FreeLibrary(hAmigaForeverDLL);\n    }\n#endif\n\n    if (!keybuffer)'''
+          if old not in s:
+              raise SystemExit('expected MemoryInterface.cpp guard pattern not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add fellow/SRC/WinFellow/C/MemoryInterface.cpp
+          git commit -m 'M4.5d13: fix Amiga Forever guard on portable builds'
+          git push origin HEAD:master
