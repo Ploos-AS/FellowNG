@@ -17,6 +17,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/SpriteRegisters.cpp
   C/Sprites.cpp
   C/chipset.cpp
+  C/rtc.cpp
   graphics/BitplaneDMA.cpp
   graphics/BitplaneDraw.cpp
   graphics/CycleExactCopper.cpp
