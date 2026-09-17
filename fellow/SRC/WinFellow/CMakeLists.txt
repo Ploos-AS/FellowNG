@@ -85,6 +85,7 @@ set_source_files_properties(
   C/CpuModule_StackFrameGen.c
   C/interrupt.c
   C/modrip.c
+  C/xdmswrap.c
   PROPERTIES LANGUAGE CXX
 )
 
