@@ -34,7 +34,7 @@
 /* FELLOW IN (START)----------------- */
 #include <stdio.h>
 #include <setjmp.h>
-#include "uae2fell.h"
+#include "UAE2FELL.H"
 #include "autoconf.h"
 #include "MemoryInterface.h"
 
@@ -378,7 +378,7 @@ void REGPARAM2 call_calltrap(int func)
   }
 }
 
-/* @$%&ง compiler bugs */
+/* @$%&ยง compiler bugs */
 static volatile int four = 4;
 
 uaecptr libemu_InstallFunctionFlags(TrapFunction f, uaecptr libbase, int offset, int flags, const char *tracename)
