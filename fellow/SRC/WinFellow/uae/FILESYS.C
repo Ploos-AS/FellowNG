@@ -81,7 +81,7 @@
 #include <string.h>
 
 #include "UAE2FELL.H"
-#include "penguin.h"
+#include "PENGUIN.H"
 #include "filesys.h"
 #include "FilesystemIntegration.h"
 #include "AUTOCONF.H"
