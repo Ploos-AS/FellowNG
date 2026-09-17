@@ -25,9 +25,9 @@
 #include "custom.h"
 #include "newcpu.h"
 #include "disk.h"
-#include "autoconf.h"
-#include "filesys.h"
-#include "execlib.h"
+#include "AUTOCONF.H"
+#include "FILESYS.H"
+#include "EXECLIB.H"
    FELLOW OUT (END) */
 
 /* FELLOW IN (START)--------------*/
@@ -36,10 +36,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "uae2fell.h"
-#include "execlib.h"
-#include "autoconf.h"
-#include "filesys.h"
+#include "UAE2FELL.H"
+#include "EXECLIB.H"
+#include "AUTOCONF.H"
+#include "FILESYS.H"
 /* FELLOW IN (END)----------------*/
 
 static int opencount = 0;
