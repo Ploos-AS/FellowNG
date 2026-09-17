@@ -35,6 +35,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/SpriteP2CDecoder.cpp
   C/SpriteRegisters.cpp
   C/Sprites.cpp
+  C/WavFileWriter.cpp
   C/chipset.cpp
   C/draw_interlace_control.cpp
   C/draw_pixelrenderers.cpp
