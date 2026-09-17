@@ -1,6 +1,12 @@
 #ifndef PFILE_H
 #define PFILE_H
 
+#include <stdint.h>
+
+/* xDMS historically inherited USHORT from the Windows build environment.
+ * Keep the on-disk/API width explicit so the decompressor is portable. */
+typedef uint16_t USHORT;
+
 /* Functions return codes */
 #define NO_PROBLEM 0
 #define FILE_END 1
