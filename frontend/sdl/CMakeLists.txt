@@ -6,6 +6,7 @@ add_executable(fellowng-sdl
   SdlInputSource.cpp
   SdlAudioOutput.cpp
   SdlFrontendSession.cpp
+  $<TARGET_OBJECTS:FellowNG.Emulation.Portable>
 )
 
 add_executable(fellowng-sdl-runtime-factory-smoke
