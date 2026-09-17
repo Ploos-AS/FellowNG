@@ -98,6 +98,9 @@ enum class graph_linetypes
   GRAPH_LINE_BPL_SKIP = 3
 };
 
+struct graph_line;
+using graph_draw_line_func = void (*)(graph_line *linedescription, uint32_t linelength);
+
 struct graph_line
 {
   graph_linetypes linetype;
@@ -108,8 +111,8 @@ struct graph_line
   uint32_t DIW_pixel_count;
   uint32_t BG_pad_front;
   uint32_t BG_pad_back;
-  void *draw_line_routine;         /* Actually of type draw_line_func, circular definition */
-  void *draw_line_BPL_res_routine; /* Ditto */
+  graph_draw_line_func draw_line_routine;
+  graph_draw_line_func draw_line_BPL_res_routine;
   uint32_t DDF_start;
   uint32_t frames_left_until_BG_skip;
   uint32_t sprite_ham_slot;
