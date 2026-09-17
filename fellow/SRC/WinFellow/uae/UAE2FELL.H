@@ -124,8 +124,10 @@ extern char warning_buffer[256];
 
 #ifdef _FELLOW_DEBUG_CRT_MALLOC
 #define my_strdup(a) strcpy((char *)malloc(strlen(a) + 1), a)
-#else
+#elif defined(_WIN32)
 #define my_strdup _strdup
+#else
+#define my_strdup strdup
 #endif
 
 /*===================*/
@@ -144,7 +146,18 @@ extern char warning_buffer[256];
 /* Taken from sysdeps.h on WinUAE */
 /*================================*/
 
+#ifdef _WIN32
 #include <windows.h>
+#include <direct.h>
+#include <winbase.h>
+#include <io.h>
+#else
+#include <dirent.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <limits.h>
+#endif
+
 #define O_NDELAY 0
 
 /*#define DONT_HAVE_POSIX*/ /* I want Mathias' posixemu_ functions! */
@@ -154,11 +167,8 @@ extern void gui_message(const char *, ...);
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <direct.h>
-#include <winbase.h>
-#include <io.h>
-#include <direct.h>
 
+#ifdef _WIN32
 #define O_BINARY _O_BINARY
 #define O_WRONLY _O_WRONLY
 #define O_RDONLY _O_RDONLY
@@ -185,6 +195,11 @@ struct dirent *readdir(DIR *dir);
 extern void closedir(DIR *);
 #define W_OK 0x2
 #define R_OK 0x4
+#else
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+#endif
 
 #define FILEFLAG_DIR 0x1
 #define FILEFLAG_ARCHIVE 0x2
@@ -203,10 +218,11 @@ extern void closedir(DIR *);
 #define S_IRUSR FILEFLAG_READ
 #define S_IXUSR FILEFLAG_EXECUTE
 
+#ifdef _WIN32
 #undef L_tmpname
 #define L_tmpname MAX_PATH /* For posixemu_tmpnam() */
-
 #define HAVE_GETTICKCOUNT
+#endif
 
 #ifdef DONT_HAVE_POSIX
 #define access posixemu_access
@@ -251,8 +267,15 @@ extern void closedir(DIR *);
 
 #if defined(SUPPORT_PENGUINS) || defined(UAE_FILESYS_THREADS)
 /* We need posixemu prototypes for the semaphore stuff */
+#ifdef _WIN32
 typedef HANDLE uae_sem_t;
 typedef DWORD penguin_id;
+#else
+#include <semaphore.h>
+#include <pthread.h>
+typedef sem_t uae_sem_t;
+typedef pthread_t penguin_id;
+#endif
 void sem_init(uae_sem_t *, int, int);
 void sem_wait(uae_sem_t *);
 void sem_post(uae_sem_t *);
