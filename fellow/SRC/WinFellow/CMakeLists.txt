@@ -59,6 +59,9 @@ if(MSVC)
   target_compile_options(FellowNG.Emulation.Portable PRIVATE /W4)
 else()
   target_compile_options(FellowNG.Emulation.Portable PRIVATE -Wall -Wextra -Wpedantic)
+  set_source_files_properties(C/Renderer.cpp PROPERTIES
+    COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableRendererCompat.h"
+  )
 endif()
 
 set_target_properties(FellowNG.Emulation.Portable PROPERTIES
