@@ -18,7 +18,7 @@
 
 /* FELLOW IN (START)----------------- */
 
-#include "uae2fell.h"
+#include "UAE2FELL.H"
 /* FELLOW IN (END)------------------- */
 
 #ifndef FSDB_FILE
