@@ -17,7 +17,11 @@ extern uint32_t kbdDrvJoystickReplacementGet(kbd_event event);
 extern void kbdDrvHardReset();
 extern void kbdDrvEmulationStart();
 extern void kbdDrvEmulationStop();
+#ifdef WIN32
 extern void kbdDrvKeypressRaw(uint32_t, BOOL);
+#else
+extern void kbdDrvKeypressRaw(uint32_t, bool);
+#endif
 extern void kbdDrvStartup();
 extern void kbdDrvShutdown();
 extern void kbdDrvStateHasChanged(BOOLE);
