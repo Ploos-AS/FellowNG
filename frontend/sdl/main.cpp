@@ -12,6 +12,7 @@
 #include "SdlFrontendSession.h"
 #include "SdlInputSource.h"
 #include "SdlVideoOutput.h"
+#include "WinFellowRuntimeFactory.h"
 
 namespace
 {
@@ -150,7 +151,30 @@ int main(int argc, char **argv)
     return EXIT_SUCCESS;
   }
 
-  bool running = true;
-  while (running) { while (const auto event = input.Poll()) if (event->type == FellowNG::Platform::InputType::Quit) running = false; SDL_Delay(1); }
+  // Normal execution owns the real Fellow runtime through the portable
+  // runtime-factory/session seam. ROM and AmigaOS paths remain ordinary
+  // user-supplied Fellow command-line/configuration inputs.
+  std::vector<const char *> runtime_argv;
+  runtime_argv.reserve(static_cast<std::size_t>(argc));
+  for (int i = 0; i < argc; ++i) runtime_argv.push_back(argv[i]);
+
+  FellowNG::Runtime::WinFellowRuntimeFactory runtime_factory(
+      argc, runtime_argv.empty() ? nullptr : runtime_argv.data());
+  FellowNG::Frontend::SDL::SdlFrontendSession session(runtime_factory, input, video, audio);
+
+  if (!session.HasRuntime())
+  {
+    std::cerr << "Fellow runtime factory failed to create a runtime\n";
+    video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 20;
+  }
+  if (!session.Start())
+  {
+    std::cerr << "Fellow runtime failed to start; check the external ROM/configuration inputs\n";
+    video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 21;
+  }
+
+  while (session.IsRunning() && session.PumpOnce()) SDL_Delay(1);
+
+  session.Stop();
   audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return EXIT_SUCCESS;
 }
