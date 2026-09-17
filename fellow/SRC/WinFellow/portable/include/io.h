@@ -16,10 +16,3 @@
 #define MAX_PATH 4096
 #endif
 #endif
-
-// Windows headers historically supplied max as a macro to these C-era
-// sources. Preserve that source contract for the portable C++ build without
-// changing the native Windows build.
-#ifndef max
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#endif
