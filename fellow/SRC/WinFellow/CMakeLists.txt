@@ -5,6 +5,7 @@
 # Windows frontend.
 
 add_library(FellowNG.Emulation.Portable OBJECT
+  C/BusScheduler.cpp
   C/ComplexInterfaceAdapter.cpp
   C/CopperRegisters.cpp
   C/LegacyCopper.cpp
