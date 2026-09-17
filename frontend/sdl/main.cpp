@@ -30,39 +30,19 @@ namespace
       ++start_count;
       return true;
     }
-
-    void Stop() override
-    {
-      if (running) ++stop_count;
-      running = false;
-    }
-
+    void Stop() override { if (running) ++stop_count; running = false; }
     bool IsRunning() const override { return running; }
-
     void HandleInput(const FellowNG::Platform::InputEvent &event) override
-    {
-      if (event.type == FellowNG::Platform::InputType::Key) ++key_count;
-    }
-
-    bool RunSlice() override
-    {
-      ++slice_count;
-      return running;
-    }
-
+    { if (event.type == FellowNG::Platform::InputType::Key) ++key_count; }
+    bool RunSlice() override { ++slice_count; return running; }
     bool running = false;
-    int start_count = 0;
-    int stop_count = 0;
-    int key_count = 0;
-    int slice_count = 0;
+    int start_count = 0, stop_count = 0, key_count = 0, slice_count = 0;
   };
 
   void DrainSdlEventQueue()
   {
     SDL_Event event{};
-    while (SDL_PollEvent(&event))
-    {
-    }
+    while (SDL_PollEvent(&event)) {}
   }
 
   std::vector<std::uint32_t> BuildTestFrame()
@@ -81,110 +61,59 @@ namespace
 
   bool PushInputSelfTestEvents()
   {
-    SDL_Event key{};
-    key.type = SDL_EVENT_KEY_DOWN;
-    key.key.scancode = SDL_SCANCODE_A;
-    if (!SDL_PushEvent(&key)) return false;
-
-    SDL_Event mouse{};
-    mouse.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
-    mouse.button.button = SDL_BUTTON_LEFT;
-    if (!SDL_PushEvent(&mouse)) return false;
-
-    SDL_Event gamepad{};
-    gamepad.type = SDL_EVENT_GAMEPAD_AXIS_MOTION;
-    gamepad.gaxis.axis = SDL_GAMEPAD_AXIS_LEFTX;
-    gamepad.gaxis.value = 1234;
-    return SDL_PushEvent(&gamepad);
+    SDL_Event key{}; key.type = SDL_EVENT_KEY_DOWN; key.key.scancode = SDL_SCANCODE_A;
+    if (!SDL_PushEvent(&key)) { std::cerr << "input: push key failed: " << SDL_GetError() << '\n'; return false; }
+    SDL_Event mouse{}; mouse.type = SDL_EVENT_MOUSE_BUTTON_DOWN; mouse.button.button = SDL_BUTTON_LEFT;
+    if (!SDL_PushEvent(&mouse)) { std::cerr << "input: push mouse failed: " << SDL_GetError() << '\n'; return false; }
+    SDL_Event gamepad{}; gamepad.type = SDL_EVENT_GAMEPAD_AXIS_MOTION; gamepad.gaxis.axis = SDL_GAMEPAD_AXIS_LEFTX; gamepad.gaxis.value = 1234;
+    if (!SDL_PushEvent(&gamepad)) { std::cerr << "input: push gamepad failed: " << SDL_GetError() << '\n'; return false; }
+    return true;
   }
 
   bool RunInputSelfTest(FellowNG::Frontend::SDL::SdlInputSource &input)
   {
+    DrainSdlEventQueue();
     if (!PushInputSelfTestEvents()) return false;
-
     const auto key = input.Poll();
-    if (!key || key->type != FellowNG::Platform::InputType::Key ||
-        key->code != static_cast<std::int32_t>(FellowNG::Platform::KeyCode::A) || !key->pressed)
-      return false;
-
+    if (!key || key->type != FellowNG::Platform::InputType::Key || key->code != static_cast<std::int32_t>(FellowNG::Platform::KeyCode::A) || !key->pressed)
+    { std::cerr << "input: key translation failed\n"; return false; }
     const auto mouse = input.Poll();
-    if (!mouse || mouse->type != FellowNG::Platform::InputType::MouseButton ||
-        mouse->code != static_cast<std::int32_t>(FellowNG::Platform::MouseButton::Left) || !mouse->pressed)
-      return false;
-
+    if (!mouse || mouse->type != FellowNG::Platform::InputType::MouseButton || mouse->code != static_cast<std::int32_t>(FellowNG::Platform::MouseButton::Left) || !mouse->pressed)
+    { std::cerr << "input: mouse translation failed\n"; return false; }
     const auto gamepad = input.Poll();
-    return gamepad && gamepad->type == FellowNG::Platform::InputType::JoystickAxis &&
-           gamepad->code == static_cast<std::int32_t>(FellowNG::Platform::JoystickAxis::LeftX) &&
-           gamepad->value == 1234;
+    if (!gamepad || gamepad->type != FellowNG::Platform::InputType::JoystickAxis || gamepad->code != static_cast<std::int32_t>(FellowNG::Platform::JoystickAxis::LeftX) || gamepad->value != 1234)
+    { std::cerr << "input: gamepad translation failed\n"; return false; }
+    return true;
   }
 
   bool RunAudioSelfTest(FellowNG::Frontend::SDL::SdlAudioOutput &audio)
   {
     const FellowNG::Platform::AudioFormat format{.sample_rate = 44100, .channels = 2};
-    if (!audio.Start(format) || !audio.IsRunning()) return false;
+    if (!audio.Start(format)) { std::cerr << "audio: start failed: " << SDL_GetError() << '\n'; return false; }
+    if (!audio.IsRunning()) { std::cerr << "audio: stream not running after start\n"; return false; }
     const std::vector<std::int16_t> silence(512u * format.channels, 0);
-    const bool submitted = audio.SubmitInterleaved(silence);
+    if (!audio.SubmitInterleaved(silence)) { std::cerr << "audio: submit failed: " << SDL_GetError() << '\n'; audio.Stop(); return false; }
     audio.Stop();
-    return submitted && !audio.IsRunning();
+    if (audio.IsRunning()) { std::cerr << "audio: stream still running after stop\n"; return false; }
+    return true;
   }
 
-  bool RunSessionSelfTest(FellowNG::Frontend::SDL::SdlInputSource &input,
-                          FellowNG::Frontend::SDL::SdlVideoOutput &video,
-                          FellowNG::Frontend::SDL::SdlAudioOutput &audio)
+  bool RunSessionSelfTest(FellowNG::Frontend::SDL::SdlInputSource &input, FellowNG::Frontend::SDL::SdlVideoOutput &video, FellowNG::Frontend::SDL::SdlAudioOutput &audio)
   {
-    // SDL owns a process-wide event queue. Previous video/input/audio probes may
-    // leave window or device events behind, so isolate this end-to-end session
-    // test before injecting its deterministic key/quit sequence.
     DrainSdlEventQueue();
-
     SessionSelfTestRuntime runtime;
     FellowNG::Frontend::SDL::SdlFrontendSession session(runtime, input, video, audio);
-    if (!session.Start() || !session.IsRunning())
-    {
-      std::cerr << "runtime-session: start failed\n";
-      return false;
-    }
-
-    SDL_Event key{};
-    key.type = SDL_EVENT_KEY_DOWN;
-    key.key.scancode = SDL_SCANCODE_B;
-    if (!SDL_PushEvent(&key))
-    {
-      std::cerr << "runtime-session: SDL_PushEvent(key) failed: " << SDL_GetError() << '\n';
-      return false;
-    }
-
-    if (!session.PumpOnce())
-    {
-      std::cerr << "runtime-session: key pump stopped unexpectedly\n";
-      return false;
-    }
+    if (!session.Start() || !session.IsRunning()) { std::cerr << "runtime-session: start failed\n"; return false; }
+    SDL_Event key{}; key.type = SDL_EVENT_KEY_DOWN; key.key.scancode = SDL_SCANCODE_B;
+    if (!SDL_PushEvent(&key)) { std::cerr << "runtime-session: SDL_PushEvent(key) failed: " << SDL_GetError() << '\n'; return false; }
+    if (!session.PumpOnce()) { std::cerr << "runtime-session: key pump stopped unexpectedly\n"; return false; }
     if (runtime.start_count != 1 || runtime.key_count != 1 || runtime.slice_count != RuntimeSlicesPerPump)
-    {
-      std::cerr << "runtime-session: counters after key: start=" << runtime.start_count
-                << " key=" << runtime.key_count << " slice=" << runtime.slice_count << '\n';
-      return false;
-    }
-
-    SDL_Event quit{};
-    quit.type = SDL_EVENT_QUIT;
-    if (!SDL_PushEvent(&quit))
-    {
-      std::cerr << "runtime-session: SDL_PushEvent(quit) failed: " << SDL_GetError() << '\n';
-      return false;
-    }
-
-    if (session.PumpOnce())
-    {
-      std::cerr << "runtime-session: quit pump stayed running\n";
-      return false;
-    }
+    { std::cerr << "runtime-session: counters after key: start=" << runtime.start_count << " key=" << runtime.key_count << " slice=" << runtime.slice_count << '\n'; return false; }
+    SDL_Event quit{}; quit.type = SDL_EVENT_QUIT;
+    if (!SDL_PushEvent(&quit)) { std::cerr << "runtime-session: SDL_PushEvent(quit) failed: " << SDL_GetError() << '\n'; return false; }
+    if (session.PumpOnce()) { std::cerr << "runtime-session: quit pump stayed running\n"; return false; }
     if (session.IsRunning() || runtime.running || runtime.stop_count != 1)
-    {
-      std::cerr << "runtime-session: stop state invalid: session=" << session.IsRunning()
-                << " runtime=" << runtime.running << " stop=" << runtime.stop_count << '\n';
-      return false;
-    }
+    { std::cerr << "runtime-session: stop state invalid: session=" << session.IsRunning() << " runtime=" << runtime.running << " stop=" << runtime.stop_count << '\n'; return false; }
     return true;
   }
 }
@@ -192,93 +121,36 @@ namespace
 int main(int argc, char **argv)
 {
   const bool self_test = argc > 1 && std::strcmp(argv[1], "--self-test") == 0;
-
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
-  {
-    std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n';
-    return EXIT_FAILURE;
-  }
-
+  { std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n'; return EXIT_FAILURE; }
   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
   if (self_test) flags |= SDL_WINDOW_HIDDEN;
-
   SDL_Window *window = SDL_CreateWindow("FellowNG SDL3", DefaultWidth, DefaultHeight, flags);
-  if (window == nullptr)
-  {
-    std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << '\n';
-    SDL_Quit();
-    return EXIT_FAILURE;
-  }
-
+  if (window == nullptr) { std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << '\n'; SDL_Quit(); return EXIT_FAILURE; }
   FellowNG::Frontend::SDL::SdlVideoOutput video(window);
   FellowNG::Frontend::SDL::SdlInputSource input;
   FellowNG::Frontend::SDL::SdlAudioOutput audio;
-
-  if (!video.Start(TestWidth, TestHeight))
-  {
-    std::cerr << "SDL video start failed: " << SDL_GetError() << '\n';
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return EXIT_FAILURE;
-  }
-
+  if (!video.Start(TestWidth, TestHeight)) { std::cerr << "SDL video start failed: " << SDL_GetError() << '\n'; SDL_DestroyWindow(window); SDL_Quit(); return EXIT_FAILURE; }
   const auto pixels = BuildTestFrame();
   const auto bytes = std::as_bytes(std::span<const std::uint32_t>(pixels));
-  FellowNG::Platform::VideoFrame frame{
-    .width = TestWidth,
-    .height = TestHeight,
-    .pitch_bytes = TestWidth * 4u,
-    .format = FellowNG::Platform::PixelFormat::Xrgb8888,
-    .pixels = bytes,
-  };
-
-  if (!video.Present(frame))
-  {
-    std::cerr << "SDL video present failed: " << SDL_GetError() << '\n';
-    video.Stop();
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return EXIT_FAILURE;
-  }
+  FellowNG::Platform::VideoFrame frame{.width = TestWidth, .height = TestHeight, .pitch_bytes = TestWidth * 4u, .format = FellowNG::Platform::PixelFormat::Xrgb8888, .pixels = bytes};
+  if (!video.Present(frame)) { std::cerr << "SDL video present failed: " << SDL_GetError() << '\n'; video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return EXIT_FAILURE; }
 
   if (self_test)
   {
-    const bool input_ok = RunInputSelfTest(input);
-    const bool audio_ok = RunAudioSelfTest(audio);
-    const bool session_ok = RunSessionSelfTest(input, video, audio);
-    video.Stop();
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    if (!input_ok)
-    {
-      std::cerr << "FellowNG SDL3 input backend self-test failed\n";
-      return EXIT_FAILURE;
-    }
-    if (!audio_ok)
-    {
-      std::cerr << "FellowNG SDL3 audio backend self-test failed\n";
-      return EXIT_FAILURE;
-    }
-    if (!session_ok)
-    {
-      std::cerr << "FellowNG SDL3 runtime-session self-test failed\n";
-      return EXIT_FAILURE;
-    }
+    std::cout << "self-test: video PASS\n" << std::flush;
+    if (!RunInputSelfTest(input)) { std::cerr << "self-test: input FAIL\n"; video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 11; }
+    std::cout << "self-test: input PASS\n" << std::flush;
+    if (!RunAudioSelfTest(audio)) { std::cerr << "self-test: audio FAIL\n"; video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 12; }
+    std::cout << "self-test: audio PASS\n" << std::flush;
+    if (!RunSessionSelfTest(input, video, audio)) { std::cerr << "self-test: runtime-session FAIL\n"; video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 13; }
+    std::cout << "self-test: runtime-session PASS\n" << std::flush;
+    video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
     std::cout << "FellowNG SDL3 video+input+audio+runtime-session: PASS\n";
     return EXIT_SUCCESS;
   }
 
   bool running = true;
-  while (running)
-  {
-    while (const auto event = input.Poll())
-      if (event->type == FellowNG::Platform::InputType::Quit) running = false;
-    SDL_Delay(1);
-  }
-
-  audio.Stop();
-  video.Stop();
-  SDL_DestroyWindow(window);
-  SDL_Quit();
-  return EXIT_SUCCESS;
+  while (running) { while (const auto event = input.Poll()) if (event->type == FellowNG::Platform::InputType::Quit) running = false; SDL_Delay(1); }
+  audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return EXIT_SUCCESS;
 }
