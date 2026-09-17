@@ -93,6 +93,13 @@ target_compile_features(FellowNG.Emulation.Portable PRIVATE cxx_std_20)
 if(MSVC)
   target_compile_options(FellowNG.Emulation.Portable PRIVATE /W4)
 else()
+  # Legacy WinFellow code includes a few MSVC CRT headers by their historical
+  # names. Resolve portable replacements only for non-MSVC builds; Windows
+  # keeps using the native CRT headers.
+  target_include_directories(FellowNG.Emulation.Portable BEFORE PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/portable/include
+  )
+
   target_compile_options(FellowNG.Emulation.Portable PRIVATE -Wall -Wextra -Wpedantic)
 
   # GraphicsPipeline still contains one legacy WinFellow callback assignment
