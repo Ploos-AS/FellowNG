@@ -4,6 +4,9 @@
 #include "Keyboard.h"
 #include "Gameports.h"
 
+#include <cinttypes>
+#include <cstdlib>
+
 using namespace std;
 
 ScriptLine::ScriptLine(uint64_t frameNumber, uint32_t lineNumber, const string &command, const string &parameters)
@@ -173,7 +176,7 @@ void Script::Load(const string &filename)
       string command = s.substr(secondComma + 1, thirdComma - secondComma - 1);
       string parameters = s.substr(thirdComma + 1, s.length() - thirdComma - 2);
 
-      _lines.emplace_back(_atoi64(frameNumber.c_str()), atoi(lineNumber.c_str()), command, parameters);
+      _lines.emplace_back(strtoull(frameNumber.c_str(), nullptr, 10), atoi(lineNumber.c_str()), command, parameters);
     }
   }
   fclose(F);
@@ -185,7 +188,7 @@ void Script::Save(const string &filename)
 
   for (const ScriptLine &line : _lines)
   {
-    fprintf(F, "%I64d,%d,%s,%s\n", line.FrameNumber, line.LineNumber, line.Command.c_str(), line.Parameters.c_str());
+    fprintf(F, "%" PRIu64 ",%d,%s,%s\n", line.FrameNumber, line.LineNumber, line.Command.c_str(), line.Parameters.c_str());
   }
   fclose(F);
 }
