@@ -116,7 +116,9 @@ void write_log(const char *format, ...)
   /* FELLOW REMOVE: int *blah = (int *)0xdeadbeef; */
 
   va_start(parms, format);
-  count = _vsnprintf(buffer, WRITE_LOG_BUF_SIZE - 1, format, parms);
+  count = vsnprintf(buffer, WRITE_LOG_BUF_SIZE - 1, format, parms);
+  buffer[WRITE_LOG_BUF_SIZE - 1] = '\0';
+  (void)count;
   _core.Log->AddLog(buffer);
   va_end(parms);
 }
