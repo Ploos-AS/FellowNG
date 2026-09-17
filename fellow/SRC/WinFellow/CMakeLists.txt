@@ -18,6 +18,8 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/CpuModule_InternalState.c
   C/CpuModule_Interrupts.c
   C/CpuModule_StackFrameGen.c
+  C/FellowList.cpp
+  C/GraphicsPipeline.cpp
   C/Keyboard.cpp
   C/LegacyCopper.cpp
   C/LineExactCopper.cpp
@@ -29,6 +31,8 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/SpriteRegisters.cpp
   C/Sprites.cpp
   C/chipset.cpp
+  C/draw_interlace_control.cpp
+  C/draw_pixelrenderers.cpp
   C/rtc.cpp
   graphics/BitplaneDMA.cpp
   graphics/BitplaneDraw.cpp
