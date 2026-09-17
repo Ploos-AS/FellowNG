@@ -90,6 +90,13 @@ else()
     COMPILE_OPTIONS "-fpermissive"
   )
 
+  # CpuModule_Instructions contains MSVC x86 profiling assembly plus an
+  # optional host calltrap hook. Keep those legacy host details out of the
+  # Linux build without weakening or forking the 68k instruction core.
+  set_source_files_properties(C/CpuModule_Instructions.c PROPERTIES
+    COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableCpuCompat.h"
+  )
+
   set_source_files_properties(C/Renderer.cpp PROPERTIES
     COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableRendererCompat.h"
   )
