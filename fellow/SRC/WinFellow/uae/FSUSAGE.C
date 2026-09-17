@@ -39,7 +39,7 @@
 #include "UAE2FELL.H"
 /* FELLOW IN END   -------------------*/
 
-#include "fsusage.h"
+#include "FSUSAGE.H"
 
 /* Return the number of TOSIZE-byte blocks used by
    BLOCKS FROMSIZE-byte blocks, rounding away from zero.
