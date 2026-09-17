@@ -11,6 +11,7 @@ add_library(FellowNG.Emulation.Portable OBJECT
   C/LineExactSprites.cpp
   C/SpriteMerger.cpp
   C/SpriteP2CDecoder.cpp
+  C/SpriteRegisters.cpp
   C/Sprites.cpp
   C/chipset.cpp
   graphics/BitplaneDMA.cpp
