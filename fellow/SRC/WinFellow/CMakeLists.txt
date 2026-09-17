@@ -107,6 +107,15 @@ else()
 
   target_compile_options(FellowNG.Emulation.Portable PRIVATE -Wall -Wextra -Wpedantic)
 
+  # The legacy memory translation unit defines its hot public read helpers as
+  # __inline in the .cpp file. MSVC emitted externally callable definitions,
+  # while GCC may discard them because they are not used in that translation
+  # unit. Retain those definitions until the memory API is moved into a proper
+  # portable header/implementation split.
+  set_source_files_properties(C/MemoryInterface.cpp PROPERTIES
+    COMPILE_OPTIONS "-fkeep-inline-functions"
+  )
+
   # GraphicsPipeline still contains one legacy WinFellow callback assignment
   # that routes a function pointer through void*. GCC rejects that historical
   # MSVC-compatible conversion in strict C++ mode. Keep the exception scoped
