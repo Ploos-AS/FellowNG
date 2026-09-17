@@ -1562,8 +1562,8 @@ int memoryKickDecodeAF(char *filename, char *keyfile, uint8_t *memory_kick, cons
       }
 
       FreeLibrary(hAmigaForeverDLL);
-#endif
     }
+#endif
 
     if (!keybuffer)
     {
