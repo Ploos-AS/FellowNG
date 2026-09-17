@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GraphicsDriver.h"
+
 typedef enum
 {
   EVENT_INSERT_DF0,
