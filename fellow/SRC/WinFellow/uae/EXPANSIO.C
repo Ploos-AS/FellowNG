@@ -37,7 +37,7 @@
 /* FELLOW IN (START)----------------------*/
 
 #include <stdio.h>
-#include "uae2fell.h"
+#include "UAE2FELL.H"
 #include "MemoryInterface.h"
 #include "autoconf.h"
 
