@@ -183,12 +183,16 @@ void ffilesysHardReset()
     rtarea_setup(); /* Maps the trap memory area into memory */
     rtarea_init();  /* Sets up a lot of traps */
     hardfile_install();
-    filesys_install();                          /* Sets some traps and information in the trap memory area */
-    filesys_init(ffilesysGetAutomountDrives()); /* Mounts all Windows drives as filesystems */
-    filesys_prepare_reset();                    /* Cleans up mounted filesystems(?) */
-    filesys_reset();                            /* More cleaning up(?) */
-    ffilesysInstall();                          /* Install user defined filesystems */
-    filesys_start_threads();                    /* Installs registered filesystem mounts, this also names the device "<prefix>x" */
+    filesys_install(); /* Sets some traps and information in the trap memory area */
+#ifdef _WIN32
+    /* Legacy drive-letter automount is a Windows host feature. Portable hosts
+       install only filesystems explicitly configured through ffilesysInstall(). */
+    filesys_init(ffilesysGetAutomountDrives());
+#endif
+    filesys_prepare_reset(); /* Cleans up mounted filesystems(?) */
+    filesys_reset();         /* More cleaning up(?) */
+    ffilesysInstall();       /* Install user defined filesystems */
+    filesys_start_threads(); /* Installs registered filesystem mounts, this also names the device "<prefix>x" */
     memoryEmemCardAdd(expamem_init_filesys, expamem_map_filesys);
   }
 }
