@@ -42,6 +42,12 @@ add_library(FellowNG.Emulation.Portable STATIC
   C/uart.cpp
   C/xdmswrap.c
   C/zlibwrap.c
+  uae/AUTOCONF.C
+  uae/EXPANSIO.C
+  uae/FILESYS.C
+  uae/FSUSAGE.C
+  uae/HARDFILE.C
+  uae/UAESUPP.C
   automation/Automator.cpp
   automation/Script.cpp
   graphics/BitplaneDMA.cpp
@@ -57,11 +63,76 @@ add_library(FellowNG.Emulation.Portable STATIC
   graphics/Logger.cpp
   graphics/PixelSerializer.cpp
   graphics/Planar2ChunkyDecoder.cpp
+  ../WinFellow.Core/CustomChipset/RegisterUtility.cpp
+  ../WinFellow.Core/CustomChipset/Registers.cpp
   ../WinFellow.Core/DebugApi/DebugVM.cpp
+  ../WinFellow.Core/Module/Hardfile/HardfileConfiguration.cpp
+  ../WinFellow.Core/Module/Hardfile/HardfileGeometry.cpp
+  ../WinFellow.Core/Service/FileInformation.cpp
+  ../WinFellow.Core/Service/Log.cpp
   ../WinFellow.Core/IO/RtcOkiMsm6242rs.cpp
   ../WinFellow.Core/VirtualHost/Core.cpp
   VirtualHost/CoreFactory.cpp
+  ../WinFellow.Hardfile/hardfile/HardfileHandler.cpp
+  ../WinFellow.Hardfile/hardfile/HardfileDevice.cpp
+  ../WinFellow.Hardfile/hardfile/HardfileFileSystemEntry.cpp
+  ../WinFellow.Hardfile/hardfile/HardfileMountListEntry.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/AdditionalHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/BSSHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/CodeHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/DataHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/EndHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/FileImage.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/HeaderHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/HunkFactory.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/HunkParser.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/HunkRelocator.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/HunkSize.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/InitialHunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/RawDataReader.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/Reloc32Hunk.cpp
+  ../WinFellow.Hardfile/hardfile/hunks/Reloc32OffsetTable.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/ChecksumCalculator.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDB.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDBFileReader.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDBFileSystemHandler.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDBFileSystemHeader.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDBHandler.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDBLSegBlock.cpp
+  ../WinFellow.Hardfile/hardfile/rdb/RDBPartition.cpp
+  uae/AUTOCONF.C
+  uae/EXPANSIO.C
+  uae/FILESYS.C
+  uae/FSUSAGE.C
+  uae/HARDFILE.C
+  uae/UAESUPP.C
+  zlib/C/adler32.c
+  zlib/C/compress.c
   zlib/C/crc32.c
+  zlib/C/deflate.c
+  zlib/C/gzclose.c
+  zlib/C/gzlib.c
+  zlib/C/gzread.c
+  zlib/C/gzwrite.c
+  zlib/C/infback.c
+  zlib/C/inffast.c
+  zlib/C/inflate.c
+  zlib/C/inftrees.c
+  zlib/C/trees.c
+  zlib/C/uncompr.c
+  zlib/C/zutil.c
+  xdms/C/crc_csum.c
+  xdms/C/getbits.c
+  xdms/C/maketbl.c
+  xdms/C/pfile.c
+  xdms/C/tables.c
+  xdms/C/u_deep.c
+  xdms/C/u_heavy.c
+  xdms/C/u_init.c
+  xdms/C/u_medium.c
+  xdms/C/u_quick.c
+  xdms/C/u_rle.c
+  xdms/C/xdms.c
 )
 
 # Frontends and runtime smoke tests consume the portable core through the
