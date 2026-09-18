@@ -1,3 +1,4 @@
+#include <cstdint>
 #pragma once
 
 namespace fellow::hardfile::hunks
