@@ -42,6 +42,14 @@ jobs:
           set -o pipefail
           ./build-m4/frontend/sdl/fellowng-sdl --self-test 2>&1 | tee sdl-self-test.log
 
+      - name: Real runtime smoke without copyrighted ROM
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: |
+          set -o pipefail
+          ./build-m4/frontend/sdl/fellowng-sdl --runtime-smoke 2>&1 | tee sdl-runtime-smoke.log
+
       - name: Upload SDL diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,4 +58,5 @@ jobs:
           path: |
             sdl-build.log
             sdl-self-test.log
+            sdl-runtime-smoke.log
           if-no-files-found: warn
