@@ -25,6 +25,10 @@
 #include "pfile.h"
 #include "crc_csum.h"
 
+#ifndef VERSION
+#define VERSION "1.3.2"
+#endif
+
 #ifdef UNDER_DOS
 #include <io.h>
 #include <fcntl.h>
