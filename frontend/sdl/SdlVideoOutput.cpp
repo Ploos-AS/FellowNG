@@ -1,5 +1,7 @@
 #include "SdlVideoOutput.h"
 
+#include <fstream>
+
 namespace FellowNG::Frontend::SDL
 {
   SdlVideoOutput::SdlVideoOutput(SDL_Window *window)
@@ -83,6 +85,10 @@ namespace FellowNG::Frontend::SDL
     ++_presented_frame_count;
     if (_presented_frame_count == 1 || signature != _last_frame_signature) ++_changed_frame_count;
     _last_frame_signature = signature;
+    _last_frame_width = frame.width;
+    _last_frame_height = frame.height;
+    _last_frame_pitch = frame.pitch_bytes;
+    _last_frame_pixels.assign(data, data + static_cast<std::size_t>(frame.pitch_bytes) * frame.height);
 
     if (!SDL_UpdateTexture(_texture, nullptr, frame.pixels.data(), static_cast<int>(frame.pitch_bytes)))
     {
@@ -100,6 +106,25 @@ namespace FellowNG::Frontend::SDL
     }
 
     return SDL_RenderPresent(_renderer);
+  }
+
+  bool SdlVideoOutput::SaveLastFramePpm(const std::string &path) const
+  {
+    if (_last_frame_pixels.empty() || _last_frame_width == 0 || _last_frame_height == 0) return false;
+    std::ofstream out(path, std::ios::binary);
+    if (!out) return false;
+    out << "P6\n" << _last_frame_width << " " << _last_frame_height << "\n255\n";
+    for (std::uint32_t y = 0; y < _last_frame_height; ++y)
+    {
+      const auto *row = _last_frame_pixels.data() + static_cast<std::size_t>(y) * _last_frame_pitch;
+      for (std::uint32_t x = 0; x < _last_frame_width; ++x)
+      {
+        const auto *pixel = row + static_cast<std::size_t>(x) * 4u;
+        const char rgb[3] = {static_cast<char>(pixel[2]), static_cast<char>(pixel[1]), static_cast<char>(pixel[0])};
+        out.write(rgb, 3);
+      }
+    }
+    return static_cast<bool>(out);
   }
 
   bool SdlVideoOutput::RecreateTexture(std::uint32_t width, std::uint32_t height)
