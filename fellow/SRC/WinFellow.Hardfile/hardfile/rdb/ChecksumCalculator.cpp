@@ -1,4 +1,4 @@
-#include "hardfile/rdb/CheckSumCalculator.h"
+#include "hardfile/rdb/ChecksumCalculator.h"
 
 namespace fellow::hardfile::rdb
 {
