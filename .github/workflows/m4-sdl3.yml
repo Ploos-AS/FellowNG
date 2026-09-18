@@ -98,7 +98,7 @@ jobs:
             args+=(-s "kickstart_rom_file_ext=$EXT")
           fi
           timeout 60s ./build-m4/frontend/sdl/fellowng-sdl "${args[@]}" 2>&1 | tee sdl-aros-m68k-deep-boot.log
-          grep -q "runtime-boot-deep: sustained execution PASS" sdl-aros-m68k-deep-boot.log
+          grep -q "runtime-boot-deep: sustained execution PASS" sdl-aros-m68k-deep-boot.log\n          test -s fellowng-boot-evidence.ppm\n          head -c 2 fellowng-boot-evidence.ppm | grep -q P6
 
       - name: Upload SDL diagnostics
         if: always()
@@ -112,4 +112,5 @@ jobs:
             sdl-aros-m68k.log
             sdl-aros-m68k-boot.log
             sdl-aros-m68k-deep-boot.log
+            fellowng-boot-evidence.ppm
           if-no-files-found: warn
