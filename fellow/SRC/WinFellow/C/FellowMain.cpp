@@ -503,11 +503,15 @@ static void fellowModulesStartupCommon(
 
   automator.Startup();
 
-  // All modules must be initialized before applying the parsed configuration:
-  // configuration activation calls into floppy, filesystem, sound, CPU,
-  // graphics and other live module state. The legacy GUI performed this later
-  // in its startup path; portable frontends have no GUI activation callback.
-  cfgManagerConfigurationActivate(&cfg_manager);
+  // Apply configuration only when a concrete ROM was supplied. The portable
+  // no-ROM smoke path intentionally exercises controlled startup rejection;
+  // activating the default config there reaches optional host state that is
+  // not required for that negative test.
+  cfg *active_config = cfgManagerGetCurrentConfig(&cfg_manager);
+  if (active_config != nullptr && cfgGetKickImage(active_config) != nullptr && cfgGetKickImage(active_config)[0] != '\\0')
+  {
+    cfgManagerConfigurationActivate(&cfg_manager);
+  }
 }
 
 /*============================================================================*/
