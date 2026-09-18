@@ -16,9 +16,9 @@
 #include "u_deep.h"
 #include "getbits.h"
 
-INLINE USHORT DecodeChar(void);
-INLINE USHORT DecodePosition(void);
-INLINE void update(USHORT c);
+static INLINE USHORT DecodeChar(void);
+static INLINE USHORT DecodePosition(void);
+static INLINE void update(USHORT c);
 static void reconst(void);
 
 USHORT deep_text_loc;
@@ -98,7 +98,7 @@ USHORT Unpack_DEEP(UCHAR *in, UCHAR *out, USHORT origsize)
   return 0;
 }
 
-INLINE USHORT DecodeChar(void)
+static INLINE USHORT DecodeChar(void)
 {
   USHORT c;
 
@@ -117,7 +117,7 @@ INLINE USHORT DecodeChar(void)
   return c;
 }
 
-INLINE USHORT DecodePosition(void)
+static INLINE USHORT DecodePosition(void)
 {
   USHORT i, j, c;
 
@@ -179,7 +179,7 @@ static void reconst(void)
 
 /* increment frequency of given code by one, and update tree */
 
-INLINE void update(USHORT c)
+static INLINE void update(USHORT c)
 {
   USHORT i, j, k, l;
 
