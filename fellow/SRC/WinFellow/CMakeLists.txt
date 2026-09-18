@@ -162,8 +162,6 @@ set_source_files_properties(
   C/xdmswrap.c
   C/zlibwrap.c
   uae/fsdb.c
-  xdms/C/u_deep.c
-  xdms/C/u_heavy.c
   PROPERTIES LANGUAGE CXX
 )
 
