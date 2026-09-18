@@ -48,6 +48,7 @@ add_library(FellowNG.Emulation.Portable STATIC
   uae/FSUSAGE.C
   uae/HARDFILE.C
   uae/UAESUPP.C
+  uae/fsdb.c
   automation/Automator.cpp
   automation/Script.cpp
   graphics/BitplaneDMA.cpp
@@ -66,6 +67,8 @@ add_library(FellowNG.Emulation.Portable STATIC
   ../WinFellow.Core/CustomChipset/RegisterUtility.cpp
   ../WinFellow.Core/CustomChipset/Registers.cpp
   ../WinFellow.Core/DebugApi/DebugVM.cpp
+  DebugApi/M68K.cpp
+  DebugApi/MemorySystem.cpp
   ../WinFellow.Core/Module/Hardfile/HardfileConfiguration.cpp
   ../WinFellow.Core/Module/Hardfile/HardfileGeometry.cpp
   ../WinFellow.Core/Service/FileInformation.cpp
@@ -158,6 +161,8 @@ set_source_files_properties(
   C/modrip.c
   C/xdmswrap.c
   C/zlibwrap.c
+  uae/fsdb.c
+  xdms/C/pfile.c
   PROPERTIES LANGUAGE CXX
 )
 
