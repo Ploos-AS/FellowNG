@@ -3,7 +3,7 @@
 from __future__ import annotations
 import html, pathlib, re, subprocess, sys, urllib.parse, urllib.request
 
-INDEX = "https://www.aros.org/cgi-bin/files?lang=en&type=nightly2"
+INDEX = "https://aros.sourceforge.io/cgi-bin/files?lang=en&type=nightly2"
 out = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "build-m4/aros-m68k")
 out.mkdir(parents=True, exist_ok=True)
 
