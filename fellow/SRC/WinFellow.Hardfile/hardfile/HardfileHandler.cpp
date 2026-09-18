@@ -345,7 +345,11 @@ namespace fellow::hardfile
     }
 
     device.Readonly = device.Configuration.Readonly || (!fileProperties->IsWritable);
+#ifdef _WIN32
     fopen_s(&device.F, device.Configuration.Filename.c_str(), device.Readonly ? "rb" : "r+b");
+#else
+    device.F = fopen(device.Configuration.Filename.c_str(), device.Readonly ? "rb" : "r+b");
+#endif
     device.FileSize = (unsigned int)fileProperties->Size;
     delete fileProperties;
 
@@ -2420,7 +2424,11 @@ namespace fellow::hardfile
 
     if (!configuration.Filename.empty() && size != 0)
     {
+#ifdef _WIN32
       fopen_s(&hf, configuration.Filename.c_str(), "wb");
+#else
+      hf = fopen(configuration.Filename.c_str(), "wb");
+#endif
       if (hf != nullptr)
       {
         memset(buffer, 0, sizeof(buffer));
@@ -2456,7 +2464,11 @@ namespace fellow::hardfile
   {
     rdb_status result = rdb_status::RDB_NOT_FOUND;
     FILE *F = nullptr;
+#ifdef _WIN32
     fopen_s(&F, filename.c_str(), "rb");
+#else
+    F = fopen(filename.c_str(), "rb");
+#endif
     if (F != nullptr)
     {
       RDBFileReader reader(F);
@@ -2470,7 +2482,11 @@ namespace fellow::hardfile
   {
     HardfileConfiguration configuration;
     FILE *F = nullptr;
+#ifdef _WIN32
     fopen_s(&F, filename.c_str(), "rb");
+#else
+    F = fopen(filename.c_str(), "rb");
+#endif
     if (F != nullptr)
     {
       RDBFileReader reader(F);
