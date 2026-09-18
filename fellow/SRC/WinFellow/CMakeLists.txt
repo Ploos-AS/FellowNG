@@ -49,6 +49,7 @@ add_library(FellowNG.Emulation.Portable STATIC
   uae/HARDFILE.C
   uae/UAESUPP.C
   uae/fsdb.c
+  uae/fsdb_posix.cpp
   automation/Automator.cpp
   automation/Script.cpp
   graphics/BitplaneDMA.cpp
