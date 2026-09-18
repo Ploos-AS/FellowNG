@@ -1,5 +1,5 @@
 #include "hardfile/rdb/RDBFileSystemHeader.h"
-#include "hardfile/rdb/CheckSumCalculator.h"
+#include "hardfile/rdb/ChecksumCalculator.h"
 #include "VirtualHost/Core.h"
 
 namespace fellow::hardfile::rdb
