@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 #include <span>
+#include <string_view>
 #include <vector>
 
 #include "SdlAudioOutput.h"
@@ -123,10 +124,11 @@ int main(int argc, char **argv)
 {
   const bool self_test = argc > 1 && std::strcmp(argv[1], "--self-test") == 0;
   const bool runtime_smoke = argc > 1 && std::strcmp(argv[1], "--runtime-smoke") == 0;
+  const bool runtime_boot = argc > 1 && std::strcmp(argv[1], "--runtime-boot") == 0;
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
   { std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n'; return EXIT_FAILURE; }
   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
-  if (self_test || runtime_smoke) flags |= SDL_WINDOW_HIDDEN;
+  if (self_test || runtime_smoke || runtime_boot) flags |= SDL_WINDOW_HIDDEN;
   SDL_Window *window = SDL_CreateWindow("FellowNG SDL3", DefaultWidth, DefaultHeight, flags);
   if (window == nullptr) { std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << '\n'; SDL_Quit(); return EXIT_FAILURE; }
   FellowNG::Frontend::SDL::SdlVideoOutput video(window);
@@ -158,7 +160,7 @@ int main(int argc, char **argv)
   std::vector<const char *> runtime_argv;
   runtime_argv.reserve(static_cast<std::size_t>(argc));
   runtime_argv.push_back(argv[0]);
-  for (int i = runtime_smoke ? 2 : 1; i < argc; ++i) runtime_argv.push_back(argv[i]);
+  for (int i = (runtime_smoke || runtime_boot) ? 2 : 1; i < argc; ++i) runtime_argv.push_back(argv[i]);
   const int runtime_argc = static_cast<int>(runtime_argv.size());
 
   FellowNG::Runtime::WinFellowRuntimeFactory runtime_factory(
@@ -179,6 +181,25 @@ int main(int argc, char **argv)
     }
     std::cerr << "Fellow runtime failed to start; check the external ROM/configuration inputs\n";
     video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 21;
+  }
+
+  if (runtime_boot)
+  {
+    constexpr int BootPumps = 256;
+    int completed_pumps = 0;
+    for (; completed_pumps < BootPumps && session.IsRunning(); ++completed_pumps)
+    {
+      if (!session.PumpOnce()) break;
+    }
+    if (completed_pumps != BootPumps || !session.IsRunning())
+    {
+      std::cerr << "runtime-boot: runtime stopped after " << completed_pumps << "/" << BootPumps << " pumps\n";
+      session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
+    }
+    session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
+    std::cout << "FellowNG SDL3 runtime-boot: sustained execution PASS pumps=" << BootPumps
+              << " slices=" << (BootPumps * RuntimeSlicesPerPump) << "\n";
+    return EXIT_SUCCESS;
   }
 
   if (runtime_smoke)
