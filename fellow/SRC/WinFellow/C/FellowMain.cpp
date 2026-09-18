@@ -454,6 +454,8 @@ BOOLE fellowLoadState(char *filename)
   return TRUE;
 }
 
+static bool fellow_portable_config_activation = false;
+
 using FellowModuleHook = void (*)();
 using FellowDrawFailureHook = void (*)();
 
