@@ -50,6 +50,7 @@ add_library(FellowNG.Emulation.Portable STATIC
   uae/UAESUPP.C
   uae/fsdb.c
   uae/fsdb_posix.cpp
+  portable/Timers.cpp
   automation/Automator.cpp
   automation/Script.cpp
   graphics/BitplaneDMA.cpp
