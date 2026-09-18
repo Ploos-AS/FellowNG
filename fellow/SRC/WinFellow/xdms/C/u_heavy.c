@@ -27,8 +27,8 @@ USHORT heavy_text_loc;
 
 static USHORT read_tree_c(void);
 static USHORT read_tree_p(void);
-INLINE USHORT decode_c(void);
-INLINE USHORT decode_p(void);
+static INLINE USHORT decode_c(void);
+static INLINE USHORT decode_p(void);
 
 USHORT Unpack_HEAVY(UCHAR *in, UCHAR *out, UCHAR flags, USHORT origsize)
 {
@@ -77,7 +77,7 @@ USHORT Unpack_HEAVY(UCHAR *in, UCHAR *out, UCHAR flags, USHORT origsize)
   return 0;
 }
 
-INLINE USHORT decode_c(void)
+static INLINE USHORT decode_c(void)
 {
   USHORT i, j, m;
 
@@ -104,7 +104,7 @@ INLINE USHORT decode_c(void)
   return j;
 }
 
-INLINE USHORT decode_p(void)
+static INLINE USHORT decode_p(void)
 {
   USHORT i, j, m;
 
