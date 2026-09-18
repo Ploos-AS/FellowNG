@@ -55,6 +55,9 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
   - [x] M4.5b: detach Win32 host-service/driver construction behind an injectable platform factory while preserving the Windows default backend.
   - [x] M4.5c: implement `WinFellowRuntime` behind `IEmulatorRuntime`, with injectable module startup/shutdown callbacks and bounded frontend-safe execution slices.
   - [ ] M4.5d: wire SDL video/input/audio to the real Fellow runtime, replace the conservative instruction slice with a practical bounded scheduler slice, and complete an interactive Amiga boot.
+    - [x] M4.5d94: qualify the real portable Linux/SDL3 runtime with redistributable AROS m68k ROMs in CI (start → bounded CPU pump → stop), without storing copyrighted Amiga ROM/OS assets.
+    - [x] M4.5d95: activate explicit portable ROM configuration after module startup while preserving the intentional no-ROM smoke rejection path.
+    - [ ] M4.5d96: extend AROS qualification from bounded runtime smoke to a sustained boot run with deterministic progress evidence.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
