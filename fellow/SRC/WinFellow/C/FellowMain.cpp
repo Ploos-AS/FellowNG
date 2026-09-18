@@ -492,11 +492,6 @@ static void fellowModulesStartupCommon(
   floppyStartup();
   ciaStartup();
   memoryStartup();
-  // Apply the parsed configuration only after memoryStartup() has initialized
-  // the live memory/ROM state. The legacy Windows GUI normally performs this
-  // activation before running; the portable frontend has no GUI activation
-  // path, so do it here for frontend-neutral startup.
-  cfgManagerConfigurationActivate(&cfg_manager);
   interruptStartup();
   graphStartup();
   cpuIntegrationStartup();
@@ -507,6 +502,12 @@ static void fellowModulesStartupCommon(
   if (drawGetGraphicsEmulationMode() == GRAPHICSEMULATIONMODE::GRAPHICSEMULATIONMODE_CYCLEEXACT) GraphicsContext.Startup();
 
   automator.Startup();
+
+  // All modules must be initialized before applying the parsed configuration:
+  // configuration activation calls into floppy, filesystem, sound, CPU,
+  // graphics and other live module state. The legacy GUI performed this later
+  // in its startup path; portable frontends have no GUI activation callback.
+  cfgManagerConfigurationActivate(&cfg_manager);
 }
 
 /*============================================================================*/
