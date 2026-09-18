@@ -196,9 +196,20 @@ int main(int argc, char **argv)
       std::cerr << "runtime-boot: runtime stopped after " << completed_pumps << "/" << BootPumps << " pumps\n";
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
     }
+    const auto presented_frames = video.PresentedFrameCount();
+    const auto changed_frames = video.ChangedFrameCount();
+    const auto last_signature = video.LastFrameSignature();
+    if (presented_frames == 0 || changed_frames == 0)
+    {
+      std::cerr << "runtime-boot: no observable framebuffer progress frames=" << presented_frames
+                << " changed=" << changed_frames << "\n";
+      session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 24;
+    }
     session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
     std::cout << "FellowNG SDL3 runtime-boot: sustained execution PASS pumps=" << BootPumps
-              << " slices=" << (BootPumps * RuntimeSlicesPerPump) << "\n";
+              << " slices=" << (BootPumps * RuntimeSlicesPerPump)
+              << " frames=" << presented_frames << " changed=" << changed_frames
+              << " signature=" << last_signature << "\n";
     return EXIT_SUCCESS;
   }
 
