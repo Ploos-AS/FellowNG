@@ -19,6 +19,10 @@ namespace FellowNG::Frontend::SDL
     bool IsRunning() const override;
     bool Present(const Platform::VideoFrame &frame) override;
 
+    std::uint64_t PresentedFrameCount() const { return _presented_frame_count; }
+    std::uint64_t ChangedFrameCount() const { return _changed_frame_count; }
+    std::uint64_t LastFrameSignature() const { return _last_frame_signature; }
+
   private:
     bool RecreateTexture(std::uint32_t width, std::uint32_t height);
 
@@ -27,5 +31,8 @@ namespace FellowNG::Frontend::SDL
     SDL_Texture *_texture = nullptr;
     std::uint32_t _width = 0;
     std::uint32_t _height = 0;
+    std::uint64_t _presented_frame_count = 0;
+    std::uint64_t _changed_frame_count = 0;
+    std::uint64_t _last_frame_signature = 0;
   };
 }
