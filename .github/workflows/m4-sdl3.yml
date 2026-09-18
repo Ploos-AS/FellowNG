@@ -70,6 +70,21 @@ jobs:
           ./build-m4/frontend/sdl/fellowng-sdl "${args[@]}" 2>&1 | tee sdl-aros-m68k.log
           grep -q "real runtime start+pump+stop PASS" sdl-aros-m68k.log
 
+      - name: AROS m68k sustained boot qualification
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: |
+          set -o pipefail
+          ROM="$(cat build-m4/aros-m68k/rom-path.txt)"
+          EXT="$(cat build-m4/aros-m68k/ext-path.txt)"
+          args=(--runtime-boot -s "kickstart_rom_file=$ROM" -s "cpu_type=68020")
+          if [ -n "$EXT" ]; then
+            args+=(-s "kickstart_rom_file_ext=$EXT")
+          fi
+          timeout 30s ./build-m4/frontend/sdl/fellowng-sdl "${args[@]}" 2>&1 | tee sdl-aros-m68k-boot.log
+          grep -q "runtime-boot: sustained execution PASS" sdl-aros-m68k-boot.log
+
       - name: Upload SDL diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -80,4 +95,5 @@ jobs:
             sdl-self-test.log
             sdl-runtime-smoke.log
             sdl-aros-m68k.log
+            sdl-aros-m68k-boot.log
           if-no-files-found: warn
