@@ -1,6 +1,6 @@
 #include "Defs.h"
 #include "hardfile/rdb/RDB.h"
-#include "hardfile/rdb/CheckSumCalculator.h"
+#include "hardfile/rdb/ChecksumCalculator.h"
 #include "VirtualHost/Core.h"
 
 using namespace std;
