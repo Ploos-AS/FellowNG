@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <vector>
 
 #include <SDL3/SDL.h>
 
@@ -22,6 +24,7 @@ namespace FellowNG::Frontend::SDL
     std::uint64_t PresentedFrameCount() const { return _presented_frame_count; }
     std::uint64_t ChangedFrameCount() const { return _changed_frame_count; }
     std::uint64_t LastFrameSignature() const { return _last_frame_signature; }
+    bool SaveLastFramePpm(const std::string &path) const;
 
   private:
     bool RecreateTexture(std::uint32_t width, std::uint32_t height);
@@ -34,5 +37,9 @@ namespace FellowNG::Frontend::SDL
     std::uint64_t _presented_frame_count = 0;
     std::uint64_t _changed_frame_count = 0;
     std::uint64_t _last_frame_signature = 0;
+    std::vector<std::uint8_t> _last_frame_pixels;
+    std::uint32_t _last_frame_width = 0;
+    std::uint32_t _last_frame_height = 0;
+    std::uint32_t _last_frame_pitch = 0;
   };
 }
