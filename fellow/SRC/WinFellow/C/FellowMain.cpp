@@ -492,6 +492,11 @@ static void fellowModulesStartupCommon(
   floppyStartup();
   ciaStartup();
   memoryStartup();
+  // Apply the parsed configuration only after memoryStartup() has initialized
+  // the live memory/ROM state. The legacy Windows GUI normally performs this
+  // activation before running; the portable frontend has no GUI activation
+  // path, so do it here for frontend-neutral startup.
+  cfgManagerConfigurationActivate(&cfg_manager);
   interruptStartup();
   graphStartup();
   cpuIntegrationStartup();
