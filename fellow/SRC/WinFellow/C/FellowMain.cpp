@@ -590,3 +590,4 @@ int __cdecl main(int argc, const char *argv[])
 
   return EXIT_SUCCESS;
 }
+#endif
