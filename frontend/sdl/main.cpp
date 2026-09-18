@@ -122,10 +122,11 @@ namespace
 int main(int argc, char **argv)
 {
   const bool self_test = argc > 1 && std::strcmp(argv[1], "--self-test") == 0;
+  const bool runtime_smoke = argc > 1 && std::strcmp(argv[1], "--runtime-smoke") == 0;
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
   { std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n'; return EXIT_FAILURE; }
   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
-  if (self_test) flags |= SDL_WINDOW_HIDDEN;
+  if (self_test || runtime_smoke) flags |= SDL_WINDOW_HIDDEN;
   SDL_Window *window = SDL_CreateWindow("FellowNG SDL3", DefaultWidth, DefaultHeight, flags);
   if (window == nullptr) { std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << '\n'; SDL_Quit(); return EXIT_FAILURE; }
   FellowNG::Frontend::SDL::SdlVideoOutput video(window);
@@ -156,10 +157,12 @@ int main(int argc, char **argv)
   // user-supplied Fellow command-line/configuration inputs.
   std::vector<const char *> runtime_argv;
   runtime_argv.reserve(static_cast<std::size_t>(argc));
-  for (int i = 0; i < argc; ++i) runtime_argv.push_back(argv[i]);
+  runtime_argv.push_back(argv[0]);
+  for (int i = runtime_smoke ? 2 : 1; i < argc; ++i) runtime_argv.push_back(argv[i]);
+  const int runtime_argc = static_cast<int>(runtime_argv.size());
 
   FellowNG::Runtime::WinFellowRuntimeFactory runtime_factory(
-      argc, runtime_argv.empty() ? nullptr : runtime_argv.data());
+      runtime_argc, runtime_argv.empty() ? nullptr : runtime_argv.data());
   FellowNG::Frontend::SDL::SdlFrontendSession session(runtime_factory, input, video, audio);
 
   if (!session.HasRuntime())
@@ -169,8 +172,25 @@ int main(int argc, char **argv)
   }
   if (!session.Start())
   {
+    if (runtime_smoke)
+    {
+      std::cout << "FellowNG SDL3 runtime-smoke: expected startup rejection without external ROM PASS\n";
+      video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return EXIT_SUCCESS;
+    }
     std::cerr << "Fellow runtime failed to start; check the external ROM/configuration inputs\n";
     video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 21;
+  }
+
+  if (runtime_smoke)
+  {
+    if (!session.PumpOnce())
+    {
+      std::cerr << "runtime-smoke: runtime stopped during first bounded pump\n";
+      session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 22;
+    }
+    session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
+    std::cout << "FellowNG SDL3 runtime-smoke: real runtime start+pump+stop PASS\n";
+    return EXIT_SUCCESS;
   }
 
   while (session.IsRunning() && session.PumpOnce()) SDL_Delay(1);
