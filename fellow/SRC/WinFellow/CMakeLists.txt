@@ -162,7 +162,6 @@ set_source_files_properties(
   C/xdmswrap.c
   C/zlibwrap.c
   uae/fsdb.c
-  xdms/C/pfile.c
   PROPERTIES LANGUAGE CXX
 )
 
