@@ -507,8 +507,7 @@ static void fellowModulesStartupCommon(
   // no-ROM smoke path intentionally exercises controlled startup rejection;
   // activating the default config there reaches optional host state that is
   // not required for that negative test.
-  cfg *active_config = cfgManagerGetCurrentConfig(&cfg_manager);
-  if (active_config != nullptr && cfgGetKickImage(active_config) != nullptr && cfgGetKickImage(active_config)[0] != '\\0')
+  if (fellow_portable_config_activation)
   {
     cfgManagerConfigurationActivate(&cfg_manager);
   }
@@ -554,6 +553,15 @@ static void fellowModulesShutdownCommon(FellowModuleHook frontend_shutdown)
 
 void fellowModulesStartupPortable(int argc, const char **argv)
 {
+  fellow_portable_config_activation = false;
+  for (int i = 1; i < argc; ++i)
+  {
+    if (argv[i] != nullptr && std::strncmp(argv[i], "kickstart_rom_file=", 19) == 0)
+    {
+      fellow_portable_config_activation = true;
+      break;
+    }
+  }
   fellowModulesStartupCommon(argc, argv, nullptr, &fellowDrawFailedPortable);
 }
 
