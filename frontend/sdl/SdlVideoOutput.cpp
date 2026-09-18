@@ -71,6 +71,19 @@ namespace FellowNG::Frontend::SDL
       }
     }
 
+    std::uint64_t signature = 1469598103934665603ull;
+    const auto *data = reinterpret_cast<const std::uint8_t *>(frame.pixels.data());
+    const std::size_t size = frame.pixels.size();
+    const std::size_t stride = size > 4096 ? size / 4096 : 1;
+    for (std::size_t i = 0; i < size; i += stride)
+    {
+      signature ^= data[i];
+      signature *= 1099511628211ull;
+    }
+    ++_presented_frame_count;
+    if (_presented_frame_count == 1 || signature != _last_frame_signature) ++_changed_frame_count;
+    _last_frame_signature = signature;
+
     if (!SDL_UpdateTexture(_texture, nullptr, frame.pixels.data(), static_cast<int>(frame.pitch_bytes)))
     {
       return false;
