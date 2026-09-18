@@ -54,6 +54,7 @@ add_library(FellowNG.Emulation.Portable STATIC
   portable/IniFile.cpp
   portable/FrontendLifecycle.cpp
   portable/InputDriverLifecycle.cpp
+  portable/GraphicsDriver.cpp
   automation/Automator.cpp
   automation/Script.cpp
   graphics/BitplaneDMA.cpp
