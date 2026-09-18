@@ -207,7 +207,13 @@ int main(int argc, char **argv)
                 << " changed=" << changed_frames << " required_changed=" << minimum_changed_frames << "\n";
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 24;
     }
-    if (runtime_boot_deep && !video.SaveLastFramePpm("fellowng-boot-evidence.ppm"))\n    {\n      std::cerr << "runtime-boot-deep: failed to save final framebuffer evidence\\n";\n      session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 25;\n    }\n    session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();\n    std::cout << "FellowNG SDL3 " << (runtime_boot_deep ? "runtime-boot-deep" : "runtime-boot")
+    if (runtime_boot_deep && !video.SaveLastFramePpm("fellowng-boot-evidence.ppm"))
+    {
+      std::cerr << "runtime-boot-deep: failed to save final framebuffer evidence\n";
+      session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 25;
+    }
+    session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
+    std::cout << "FellowNG SDL3 " << (runtime_boot_deep ? "runtime-boot-deep" : "runtime-boot")
               << ": sustained execution PASS pumps=" << BootPumps
               << " slices=" << (BootPumps * RuntimeSlicesPerPump)
               << " frames=" << presented_frames << " changed=" << changed_frames
