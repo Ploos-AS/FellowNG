@@ -43,8 +43,16 @@ typedef uint16_t USHORT;
 #define OPT_VERBOSE 1
 #define OPT_QUIET 2
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int OverrideErrors;
 
 USHORT Process_File(char *, char *, USHORT, USHORT, USHORT, USHORT);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ndef PFILE_H */
