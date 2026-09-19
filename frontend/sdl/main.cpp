@@ -200,7 +200,7 @@ int main(int argc, char **argv)
       ++completed_pumps;
       if (runtime_boot_desktop &&
           video.ChangedFrameCount() >= DesktopChangedFrameTarget &&
-          video.NonBlackPixelCount() >= DesktopVisiblePixelTarget)
+          video.NonBackgroundPixelCount() >= DesktopVisiblePixelTarget)
       {
         if (!video.SaveLastFramePpm("fellowng-desktop-evidence.ppm"))
         {
