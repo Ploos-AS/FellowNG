@@ -85,22 +85,16 @@ void ffilesysClear()
 
 void ffilesysDumpConfig()
 {
-  char filename[MAX_PATH];
-  _core.Fileops->GetGenericFileName(filename, "WinFellow", "fsysdump.txt");
-  FILE *F = fopen(filename, "w");
   for (uint32_t i = 0; i < FFILESYS_MAX_DEVICES; i++)
   {
     if (ffilesys_devs[i].status == ffilesys_status::FFILESYS_INSERTED)
     {
-      fprintf(F, "Slot: %u, %s, %s, %s\n", i, ffilesys_devs[i].volumename, ffilesys_devs[i].rootpath, (ffilesys_devs[i].readonly) ? "R" : "RW");
-      fprintf(stderr, "filesystem: Slot: %u, %s, %s, %s\n", i, ffilesys_devs[i].volumename, ffilesys_devs[i].rootpath, (ffilesys_devs[i].readonly) ? "R" : "RW");
-    }
-    else
-    {
-      fprintf(F, "Slot: %u, No filesystem defined.\n", i);
+      fprintf(stderr, "filesystem: Slot: %u, %s, %s, %s\\n",
+              i, ffilesys_devs[i].volumename, ffilesys_devs[i].rootpath,
+              (ffilesys_devs[i].readonly) ? "R" : "RW");
     }
   }
-  fclose(F);
+  fflush(stderr);
 }
 
 void ffilesysInstall()
