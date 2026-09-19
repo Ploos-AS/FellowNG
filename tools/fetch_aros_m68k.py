@@ -31,5 +31,14 @@ if rom is None:
     raise SystemExit("AROS m68k main ROM not found after extraction")
 (out / "rom-path.txt").write_text(str(rom.resolve()) + "\n")
 (out / "ext-path.txt").write_text((str(ext.resolve()) if ext else "") + "\n")
+
+# The boot ISO also carries bootable Amiga media.  Prefer an ADF that can be
+# attached directly to Fellow as DF0; keep discovery deterministic and fail
+# loudly if the official nightly layout stops exposing one.
+adfs = sorted((p for p in files if p.suffix.lower() == ".adf"), key=lambda p: (len(str(p)), str(p).lower()))
+boot_adf = next((p for p in adfs if "boot" in p.name.lower()), adfs[0] if adfs else None)
+(out / "boot-adf-path.txt").write_text((str(boot_adf.resolve()) if boot_adf else "") + "\n")
+
 print(f"AROS main ROM: {rom}")
 print(f"AROS extended ROM: {ext if ext else 'not present'}")
+print(f"AROS boot ADF: {boot_adf if boot_adf else 'not present'}")
