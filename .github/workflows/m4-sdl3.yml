@@ -102,7 +102,7 @@ jobs:
           test -s fellowng-boot-evidence.ppm
           head -c 2 fellowng-boot-evidence.ppm | grep -q P6
 
-      - name: AROS m68k extended desktop boot qualification
+      - name: AROS m68k framebuffer-progress boot qualification
         env:
           SDL_VIDEODRIVER: dummy
           SDL_AUDIODRIVER: dummy
@@ -114,7 +114,7 @@ jobs:
           if [ -n "$EXT" ]; then
             args+=(-s "kickstart_rom_file_ext=$EXT")
           fi
-          timeout 90s ./build-m4/frontend/sdl/fellowng-sdl "${args[@]}" 2>&1 | tee sdl-aros-m68k-desktop.log
+          timeout 90s ./build-m4/frontend/sdl/fellowng-sdl "${args[@]}" 2>&1 | tee sdl-aros-m68k-desktop.log\n          grep -Eq "runtime-boot-desktop: sustained execution PASS .*changed=([1-9][2-9][0-9][0-9]|[2-9][0-9]{3,})" sdl-aros-m68k-desktop.log
           grep -q "runtime-boot-desktop: sustained execution PASS" sdl-aros-m68k-desktop.log
           test -s fellowng-desktop-evidence.ppm
           head -c 2 fellowng-desktop-evidence.ppm | grep -q P6
