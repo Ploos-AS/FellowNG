@@ -157,6 +157,13 @@ static void fellowRuntimeErrorCheck()
 
 void fellowSoftReset()
 {
+  static uint64_t soft_reset_count = 0;
+  ++soft_reset_count;
+  fprintf(stderr, "runtime: fellowSoftReset count=%llu pre_start=%d pc=%08x\n",
+          static_cast<unsigned long long>(soft_reset_count),
+          fellowGetPreStartReset() ? 1 : 0,
+          cpuGetPC());
+  fflush(stderr);
   memorySoftReset();
   interruptSoftReset();
   _core.HardfileHandler->HardReset();
