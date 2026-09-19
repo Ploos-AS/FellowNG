@@ -35,6 +35,7 @@ extern const std::string &ffilesysGetDeviceNamePrefix();
 
 /* Starting and stopping the filesys */
 
+extern void ffilesysDumpConfig();
 extern void ffilesysHardReset();
 extern void ffilesysEmulationStart();
 extern void ffilesysEmulationStop();
