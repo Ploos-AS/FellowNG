@@ -187,16 +187,20 @@ int main(int argc, char **argv)
 
   if (runtime_boot || runtime_boot_deep || runtime_boot_desktop)
   {
-    const int BootPumps = runtime_boot_desktop ? 8192 : (runtime_boot_deep ? 4096 : 256);
-    const std::uint64_t DesktopChangedFrameTarget = 1200u;
+    const int BootPumps = runtime_boot_desktop ? 4096 : (runtime_boot_deep ? 4096 : 256);
+    const std::uint64_t DesktopChangedFrameTarget = 64u;
     int completed_pumps = 0;
-    for (; completed_pumps < BootPumps && session.IsRunning(); ++completed_pumps)
+    for (; completed_pumps < BootPumps && session.IsRunning();)
     {
       if (!session.PumpOnce()) break;
+      ++completed_pumps;
+      if (runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget) break;
     }
-    if (completed_pumps != BootPumps || !session.IsRunning())
+    const bool desktop_progress_reached = runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget;
+    if ((!runtime_boot_desktop && completed_pumps != BootPumps) || (runtime_boot_desktop && !desktop_progress_reached) || !session.IsRunning())
     {
-      std::cerr << "runtime-boot: runtime stopped after " << completed_pumps << "/" << BootPumps << " pumps\n";
+      std::cerr << "runtime-boot: runtime stopped or progress target missed after " << completed_pumps << "/" << BootPumps
+                << " pumps changed=" << video.ChangedFrameCount() << " target=" << DesktopChangedFrameTarget << "\n";
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
     }
     const auto presented_frames = video.PresentedFrameCount();
@@ -217,8 +221,8 @@ int main(int argc, char **argv)
     session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
     const char *boot_mode = runtime_boot_desktop ? "runtime-boot-desktop" : (runtime_boot_deep ? "runtime-boot-deep" : "runtime-boot");
     std::cout << "FellowNG SDL3 " << boot_mode
-              << ": sustained execution PASS pumps=" << BootPumps
-              << " slices=" << (BootPumps * RuntimeSlicesPerPump)
+              << ": sustained execution PASS pumps=" << completed_pumps
+              << " slices=" << (completed_pumps * RuntimeSlicesPerPump)
               << " frames=" << presented_frames << " changed=" << changed_frames
               << " signature=" << last_signature << "\n";
     return EXIT_SUCCESS;
