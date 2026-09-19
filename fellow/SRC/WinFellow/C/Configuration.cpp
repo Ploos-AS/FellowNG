@@ -2294,7 +2294,7 @@ static BOOLE cfgParseCommandLine(cfg *config, int argc, const char *argv[])
       i++;
       if (i < argc)
       {
-        if (!cfgSetOption(config, argv[i])) _core.Log->AddLog("cfg: -s option, unrecognized setting %s\n");
+        if (!cfgSetOption(config, argv[i])) _core.Log->AddLog("cfg: -s option, unrecognized setting %s\n", argv[i]);
         else cfgSetConfigAppliedOnce(config, true);
         i++;
       else
