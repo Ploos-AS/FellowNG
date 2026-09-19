@@ -197,7 +197,15 @@ int main(int argc, char **argv)
     {
       if (!session.PumpOnce()) break;
       ++completed_pumps;
-      if (runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget) break;
+      if (runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget)
+      {
+        if (!video.SaveLastFramePpm("fellowng-desktop-evidence.ppm"))
+        {
+          std::cerr << "runtime-boot: failed to save desktop target framebuffer evidence\n";
+          session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 25;
+        }
+        break;
+      }
     }
     const bool desktop_progress_reached = runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget;
     if ((!runtime_boot_desktop && completed_pumps != BootPumps) || (runtime_boot_desktop && !desktop_progress_reached) || !session.IsRunning())
