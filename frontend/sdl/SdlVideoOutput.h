@@ -24,7 +24,7 @@ namespace FellowNG::Frontend::SDL
     std::uint64_t PresentedFrameCount() const { return _presented_frame_count; }
     std::uint64_t ChangedFrameCount() const { return _changed_frame_count; }
     std::uint64_t LastFrameSignature() const { return _last_frame_signature; }
-    std::uint64_t NonBlackPixelCount() const;
+    std::uint64_t NonBackgroundPixelCount() const;
     bool SaveLastFramePpm(const std::string &path) const;
 
   private:
