@@ -57,7 +57,11 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
   - [ ] M4.5d: wire SDL video/input/audio to the real Fellow runtime, replace the conservative instruction slice with a practical bounded scheduler slice, and complete an interactive Amiga boot.
     - [x] M4.5d94: qualify the real portable Linux/SDL3 runtime with redistributable AROS m68k ROMs in CI (start → bounded CPU pump → stop), without storing copyrighted Amiga ROM/OS assets.
     - [x] M4.5d95: activate explicit portable ROM configuration after module startup while preserving the intentional no-ROM smoke rejection path.
-    - [x] M4.5d96: extend AROS qualification from bounded runtime smoke to sustained execution (1,048,576 runtime slices).\n    - [x] M4.5d97: require observable portable framebuffer progress during the sustained AROS m68k run.\n    - [x] M4.5d98: deepen AROS m68k boot qualification to 16,777,216 runtime slices and require multiple framebuffer state changes.\n    - [x] M4.5d99: archive the final emulated framebuffer as CI evidence; qualified output reaches the AROS graphical boot splash at 640x400.\n    - [ ] M4.5d100: extend qualification beyond the AROS splash toward a usable Workbench/Desktop state and define a deterministic functional boot-state check.
+    - [x] M4.5d96: extend AROS qualification from bounded runtime smoke to sustained execution (1,048,576 runtime slices).
+    - [x] M4.5d97: require observable portable framebuffer progress during the sustained AROS m68k run.
+    - [x] M4.5d98: deepen AROS m68k boot qualification to 16,777,216 runtime slices and require multiple framebuffer state changes.
+    - [x] M4.5d99: archive the final emulated framebuffer as CI evidence; qualified output reaches the AROS graphical boot splash at 640x400.
+    - [ ] M4.5d100: extend qualification beyond the AROS splash toward a usable Workbench/Desktop state and define a deterministic functional boot-state check.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
