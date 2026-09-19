@@ -201,7 +201,7 @@ int main(int argc, char **argv)
     const auto presented_frames = video.PresentedFrameCount();
     const auto changed_frames = video.ChangedFrameCount();
     const auto last_signature = video.LastFrameSignature();
-    const auto minimum_changed_frames = runtime_boot_desktop ? 1200u : (runtime_boot_deep ? 4u : 1u);
+    const auto minimum_changed_frames = runtime_boot_desktop ? DesktopChangedFrameTarget : (runtime_boot_deep ? 4u : 1u);
     if (presented_frames == 0 || changed_frames < minimum_changed_frames)
     {
       std::cerr << "runtime-boot: insufficient framebuffer progress frames=" << presented_frames
