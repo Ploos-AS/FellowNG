@@ -99,18 +99,28 @@ void ffilesysDumpConfig()
 
 void ffilesysInstall()
 {
+  fprintf(stderr, "filesystem: install begin mount_units=%d\\n", mountinfo.num_units);
   for (uint32_t i = 0; i < FFILESYS_MAX_DEVICES; i++)
     if (ffilesys_devs[i].status == ffilesys_status::FFILESYS_INSERTED)
     {
       size_t len = strlen(ffilesys_devs[i].rootpath) - 1;
       if (ffilesys_devs[i].rootpath[len] == '\\') ffilesys_devs[i].rootpath[len] = '\0';
       add_filesys_unit(&mountinfo, ffilesys_devs[i].volumename, ffilesys_devs[i].rootpath, ffilesys_devs[i].readonly, 0, 0, 0, 0);
+      fprintf(stderr, "filesystem: installed slot=%u volume=%s mount_units=%d\\n",
+              i, ffilesys_devs[i].volumename, mountinfo.num_units);
     }
+  fprintf(stderr, "filesystem: install end mount_units=%d\\n", mountinfo.num_units);
+  fflush(stderr);
 }
 
 void ffilesysHardReset()
 {
-  if ((!ffilesysHasZeroDevices()) && ffilesysGetEnabled() && (memoryGetKickImageVersion() > 36))
+  const BOOLE zero_devices = ffilesysHasZeroDevices();
+  const BOOLE enabled = ffilesysGetEnabled();
+  const uint32_t kick_version = memoryGetKickImageVersion();
+  fprintf(stderr, "filesystem: hard-reset zero_devices=%d enabled=%d kick_version=%u mount_units=%d\\n",
+          zero_devices, enabled, kick_version, mountinfo.num_units);
+  if ((!zero_devices) && enabled && (kick_version > 36))
   {
     rtarea_setup();
     rtarea_init();
