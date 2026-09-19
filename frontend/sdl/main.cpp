@@ -199,8 +199,15 @@ int main(int argc, char **argv)
     const bool desktop_progress_reached = runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget;
     if ((!runtime_boot_desktop && completed_pumps != BootPumps) || (runtime_boot_desktop && !desktop_progress_reached) || !session.IsRunning())
     {
+      if (runtime_boot_desktop && !video.SaveLastFramePpm("fellowng-desktop-evidence.ppm"))
+      {
+        std::cerr << "runtime-boot: failed to save diagnostic framebuffer evidence\n";
+      }
       std::cerr << "runtime-boot: runtime stopped or progress target missed after " << completed_pumps << "/" << BootPumps
-                << " pumps changed=" << video.ChangedFrameCount() << " target=" << DesktopChangedFrameTarget << "\n";
+                << " pumps frames=" << video.PresentedFrameCount()
+                << " changed=" << video.ChangedFrameCount()
+                << " signature=" << video.LastFrameSignature()
+                << " target=" << DesktopChangedFrameTarget << "\n";
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
     }
     const auto presented_frames = video.PresentedFrameCount();
