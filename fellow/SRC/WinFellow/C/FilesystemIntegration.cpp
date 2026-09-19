@@ -130,6 +130,10 @@ void ffilesysHardReset()
        Explicitly configured units are installed below through ffilesysInstall(). */
     filesys_prepare_reset();
     filesys_reset();
+
+    // A hard reset rebuilds the UAE filesystem configuration. Do not append
+    // the configured Fellow units to mountinfo repeatedly across resets.
+    ffilesysClearMountinfo();
     ffilesysInstall();
     filesys_start_threads();
     memoryEmemCardAdd(expamem_init_filesys, expamem_map_filesys);
