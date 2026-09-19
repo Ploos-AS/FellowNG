@@ -39,6 +39,13 @@ adfs = sorted((p for p in files if p.suffix.lower() == ".adf"), key=lambda p: (l
 boot_adf = next((p for p in adfs if "boot" in p.name.lower()), adfs[0] if adfs else None)
 (out / "boot-adf-path.txt").write_text((str(boot_adf.resolve()) if boot_adf else "") + "\n")
 
+# Preserve the extracted Live CD filesystem as a host directory. Fellow's
+# filesystem integration can expose this read-only to the guest under the
+# volume name expected by Emergency-Boot.adf.
+live_root = out / "iso"
+(out / "live-root-path.txt").write_text((str(live_root.resolve()) if live_root.is_dir() else "") + "\n")
+
 print(f"AROS main ROM: {rom}")
 print(f"AROS extended ROM: {ext if ext else 'not present'}")
 print(f"AROS boot ADF: {boot_adf if boot_adf else 'not present'}")
+print(f"AROS Live CD root: {live_root if live_root.is_dir() else 'not present'}")
