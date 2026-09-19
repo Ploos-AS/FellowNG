@@ -125,8 +125,6 @@ jobs:
           rc=${PIPESTATUS[0]}
           set -e
           test -s fellowng-desktop-evidence.ppm
-          test -s fsysdump.txt
-          cat fsysdump.txt
           head -c 2 fellowng-desktop-evidence.ppm | grep -q P6
           if [ "$rc" -ne 0 ]; then
             echo "AROS desktop qualification failed after preserving framebuffer evidence (rc=$rc)"
