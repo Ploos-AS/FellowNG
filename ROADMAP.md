@@ -61,7 +61,7 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
     - [x] M4.5d97: require observable portable framebuffer progress during the sustained AROS m68k run.
     - [x] M4.5d98: deepen AROS m68k boot qualification to 16,777,216 runtime slices and require multiple framebuffer state changes.
     - [x] M4.5d99: archive the final emulated framebuffer as CI evidence; qualified output reaches the AROS graphical boot splash at 640x400.
-    - [ ] M4.5d100: extend qualification beyond the AROS splash toward a usable Workbench/Desktop state and define a deterministic functional boot-state check.
+    - [ ] M4.5d100: extend qualification beyond the AROS splash toward a usable Workbench/Desktop state and define a deterministic functional boot-state check. Current 33,554,432-slice evidence reaches the AROS "Waiting for bootable media" screen, so framebuffer activity alone is not sufficient.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
