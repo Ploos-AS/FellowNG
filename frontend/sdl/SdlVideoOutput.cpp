@@ -111,6 +111,31 @@ namespace FellowNG::Frontend::SDL
   std::uint64_t SdlVideoOutput::NonBackgroundPixelCount() const
   {
     if (_last_frame_pixels.empty() || _last_frame_width == 0 || _last_frame_height == 0) return 0;
+
+    // Treat the most common RGB value as the current background colour.
+    // This makes the qualification independent of whether a blank guest
+    // framebuffer is black, dark grey, or another palette-derived colour.
+    std::uint32_t histogram[4096] = {};
+    for (std::uint32_t y = 0; y < _last_frame_height; ++y)
+    {
+      const auto *row = _last_frame_pixels.data() + static_cast<std::size_t>(y) * _last_frame_pitch;
+      for (std::uint32_t x = 0; x < _last_frame_width; ++x)
+      {
+        const auto *pixel = row + static_cast<std::size_t>(x) * 4u;
+        const std::uint32_t key =
+          (static_cast<std::uint32_t>(pixel[2] >> 4u) << 8u) |
+          (static_cast<std::uint32_t>(pixel[1] >> 4u) << 4u) |
+          static_cast<std::uint32_t>(pixel[0] >> 4u);
+        ++histogram[key];
+      }
+    }
+
+    std::uint32_t background_key = 0;
+    for (std::uint32_t key = 1; key < 4096; ++key)
+    {
+      if (histogram[key] > histogram[background_key]) background_key = key;
+    }
+
     std::uint64_t count = 0;
     for (std::uint32_t y = 0; y < _last_frame_height; ++y)
     {
@@ -118,9 +143,11 @@ namespace FellowNG::Frontend::SDL
       for (std::uint32_t x = 0; x < _last_frame_width; ++x)
       {
         const auto *pixel = row + static_cast<std::size_t>(x) * 4u;
-        // XRGB8888 black is 0x00000000. Count only pixels that contain
-        // visible RGB information in the actual final framebuffer.
-        if (pixel[0] != 0 || pixel[1] != 0 || pixel[2] != 0) ++count;
+        const std::uint32_t key =
+          (static_cast<std::uint32_t>(pixel[2] >> 4u) << 8u) |
+          (static_cast<std::uint32_t>(pixel[1] >> 4u) << 4u) |
+          static_cast<std::uint32_t>(pixel[0] >> 4u);
+        if (key != background_key) ++count;
       }
     }
     return count;
