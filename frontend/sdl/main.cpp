@@ -212,7 +212,7 @@ int main(int argc, char **argv)
     }
     const bool desktop_progress_reached = runtime_boot_desktop &&
       video.ChangedFrameCount() >= DesktopChangedFrameTarget &&
-      video.NonBlackPixelCount() >= DesktopVisiblePixelTarget;
+      video.NonBackgroundPixelCount() >= DesktopVisiblePixelTarget;
     if ((!runtime_boot_desktop && completed_pumps != BootPumps) || (runtime_boot_desktop && !desktop_progress_reached) || !session.IsRunning())
     {
       if (runtime_boot_desktop && !video.SaveLastFramePpm("fellowng-desktop-evidence.ppm"))
@@ -224,7 +224,7 @@ int main(int argc, char **argv)
                 << " changed=" << video.ChangedFrameCount()
                 << " signature=" << video.LastFrameSignature()
                 << " target=" << DesktopChangedFrameTarget
-                << " visible_pixels=" << video.NonBlackPixelCount()
+                << " visible_pixels=" << video.NonBackgroundPixelCount()
                 << " visible_target=" << DesktopVisiblePixelTarget << "\n";
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
     }
