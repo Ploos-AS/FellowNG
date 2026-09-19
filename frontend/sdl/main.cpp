@@ -125,7 +125,8 @@ int main(int argc, char **argv)
   const bool self_test = argc > 1 && std::strcmp(argv[1], "--self-test") == 0;
   const bool runtime_smoke = argc > 1 && std::strcmp(argv[1], "--runtime-smoke") == 0;
   const bool runtime_boot = argc > 1 && std::strcmp(argv[1], "--runtime-boot") == 0;
-  const bool runtime_boot_deep = argc > 1 && std::strcmp(argv[1], "--runtime-boot-deep") == 0;\n  const bool runtime_boot_desktop = argc > 1 && std::strcmp(argv[1], "--runtime-boot-desktop") == 0;
+  const bool runtime_boot_deep = argc > 1 && std::strcmp(argv[1], "--runtime-boot-deep") == 0;
+  const bool runtime_boot_desktop = argc > 1 && std::strcmp(argv[1], "--runtime-boot-desktop") == 0;
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
   { std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n'; return EXIT_FAILURE; }
   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
@@ -213,7 +214,8 @@ int main(int argc, char **argv)
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 25;
     }
     session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
-    const char *boot_mode = runtime_boot_desktop ? "runtime-boot-desktop" : (runtime_boot_deep ? "runtime-boot-deep" : "runtime-boot");\n    std::cout << "FellowNG SDL3 " << boot_mode
+    const char *boot_mode = runtime_boot_desktop ? "runtime-boot-desktop" : (runtime_boot_deep ? "runtime-boot-deep" : "runtime-boot");
+    std::cout << "FellowNG SDL3 " << boot_mode
               << ": sustained execution PASS pumps=" << BootPumps
               << " slices=" << (BootPumps * RuntimeSlicesPerPump)
               << " frames=" << presented_frames << " changed=" << changed_frames
