@@ -192,22 +192,27 @@ int main(int argc, char **argv)
   {
     const int BootPumps = runtime_boot_desktop ? 16384 : (runtime_boot_deep ? 4096 : 256);
     const std::uint64_t DesktopChangedFrameTarget = 64u;
+    const std::uint64_t DesktopVisiblePixelTarget = 1024u;
     int completed_pumps = 0;
     for (; completed_pumps < BootPumps && session.IsRunning();)
     {
       if (!session.PumpOnce()) break;
       ++completed_pumps;
-      if (runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget)
+      if (runtime_boot_desktop &&
+          video.ChangedFrameCount() >= DesktopChangedFrameTarget &&
+          video.NonBlackPixelCount() >= DesktopVisiblePixelTarget)
       {
         if (!video.SaveLastFramePpm("fellowng-desktop-evidence.ppm"))
         {
-          std::cerr << "runtime-boot: failed to save desktop target framebuffer evidence\n";
+          std::cerr << "runtime-boot: failed to save visible desktop framebuffer evidence\n";
           session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 25;
         }
         break;
       }
     }
-    const bool desktop_progress_reached = runtime_boot_desktop && video.ChangedFrameCount() >= DesktopChangedFrameTarget;
+    const bool desktop_progress_reached = runtime_boot_desktop &&
+      video.ChangedFrameCount() >= DesktopChangedFrameTarget &&
+      video.NonBlackPixelCount() >= DesktopVisiblePixelTarget;
     if ((!runtime_boot_desktop && completed_pumps != BootPumps) || (runtime_boot_desktop && !desktop_progress_reached) || !session.IsRunning())
     {
       if (runtime_boot_desktop && !video.SaveLastFramePpm("fellowng-desktop-evidence.ppm"))
@@ -218,7 +223,9 @@ int main(int argc, char **argv)
                 << " pumps frames=" << video.PresentedFrameCount()
                 << " changed=" << video.ChangedFrameCount()
                 << " signature=" << video.LastFrameSignature()
-                << " target=" << DesktopChangedFrameTarget << "\n";
+                << " target=" << DesktopChangedFrameTarget
+                << " visible_pixels=" << video.NonBlackPixelCount()
+                << " visible_target=" << DesktopVisiblePixelTarget << "\n";
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
     }
     const auto presented_frames = video.PresentedFrameCount();
