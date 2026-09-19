@@ -175,8 +175,6 @@ int main(int argc, char **argv)
     std::cerr << "Fellow runtime factory failed to create a runtime\n";
     video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 20;
   }
-  if (runtime_boot_desktop) ffilesysDumpConfig();
-
   if (!session.Start())
   {
     if (runtime_smoke)
@@ -187,6 +185,8 @@ int main(int argc, char **argv)
     std::cerr << "Fellow runtime failed to start; check the external ROM/configuration inputs\n";
     video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 21;
   }
+
+  if (runtime_boot_desktop) ffilesysDumpConfig();
 
   if (runtime_boot || runtime_boot_deep || runtime_boot_desktop)
   {
