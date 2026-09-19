@@ -117,10 +117,13 @@ void ffilesysInstall()
 
 void ffilesysHardReset()
 {
+  static uint64_t filesystem_hard_reset_count = 0;
+  ++filesystem_hard_reset_count;
   const BOOLE zero_devices = ffilesysHasZeroDevices();
   const BOOLE enabled = ffilesysGetEnabled();
   const uint32_t kick_version = memoryGetKickImageVersion();
-  fprintf(stderr, "filesystem: hard-reset zero_devices=%d enabled=%d kick_version=%u mount_units=%d\\n",
+  fprintf(stderr, "filesystem: hard-reset count=%llu zero_devices=%d enabled=%d kick_version=%u mount_units=%d\n",
+          static_cast<unsigned long long>(filesystem_hard_reset_count),
           zero_devices, enabled, kick_version, mountinfo.num_units);
   if ((!zero_devices) && enabled && (kick_version > 36))
   {
