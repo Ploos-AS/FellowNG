@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include "FilesystemIntegration.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -174,6 +175,8 @@ int main(int argc, char **argv)
     std::cerr << "Fellow runtime factory failed to create a runtime\n";
     video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 20;
   }
+  if (runtime_boot_desktop) ffilesysDumpConfig();
+
   if (!session.Start())
   {
     if (runtime_smoke)
