@@ -97,6 +97,8 @@ void ffilesysDumpConfig()
   fflush(stderr);
 }
 
+void ffilesysClearMountinfo();
+
 void ffilesysInstall()
 {
   fprintf(stderr, "filesystem: install begin mount_units=%d\\n", mountinfo.num_units);
