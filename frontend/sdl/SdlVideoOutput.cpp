@@ -108,6 +108,22 @@ namespace FellowNG::Frontend::SDL
     return SDL_RenderPresent(_renderer);
   }
 
+  std::uint64_t SdlVideoOutput::NonBlackPixelCount() const
+  {
+    if (_last_frame_pixels.empty() || _last_frame_width == 0 || _last_frame_height == 0) return 0;
+    std::uint64_t count = 0;
+    for (std::uint32_t y = 0; y < _last_frame_height; ++y)
+    {
+      const auto *row = _last_frame_pixels.data() + static_cast<std::size_t>(y) * _last_frame_pitch;
+      for (std::uint32_t x = 0; x < _last_frame_width; ++x)
+      {
+        const auto *pixel = row + static_cast<std::size_t>(x) * 4u;
+        if (pixel[0] != 0 || pixel[1] != 0 || pixel[2] != 0) ++count;
+      }
+    }
+    return count;
+  }
+
   bool SdlVideoOutput::SaveLastFramePpm(const std::string &path) const
   {
     if (_last_frame_pixels.empty() || _last_frame_width == 0 || _last_frame_height == 0) return false;
