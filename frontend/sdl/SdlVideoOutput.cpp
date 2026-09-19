@@ -108,7 +108,7 @@ namespace FellowNG::Frontend::SDL
     return SDL_RenderPresent(_renderer);
   }
 
-  std::uint64_t SdlVideoOutput::NonBlackPixelCount() const
+  std::uint64_t SdlVideoOutput::NonBackgroundPixelCount() const
   {
     if (_last_frame_pixels.empty() || _last_frame_width == 0 || _last_frame_height == 0) return 0;
     std::uint64_t count = 0;
@@ -118,7 +118,7 @@ namespace FellowNG::Frontend::SDL
       for (std::uint32_t x = 0; x < _last_frame_width; ++x)
       {
         const auto *pixel = row + static_cast<std::size_t>(x) * 4u;
-        if (pixel[0] != 0 || pixel[1] != 0 || pixel[2] != 0) ++count;
+        if (pixel[0] != 16 || pixel[1] != 16 || pixel[2] != 16) ++count;
       }
     }
     return count;
