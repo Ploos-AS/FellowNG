@@ -185,9 +185,9 @@ int main(int argc, char **argv)
     video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 21;
   }
 
-  if (runtime_boot || runtime_boot_deep)
+  if (runtime_boot || runtime_boot_deep || runtime_boot_desktop)
   {
-    const int BootPumps = runtime_boot_deep ? 4096 : 256;
+    const int BootPumps = runtime_boot_desktop ? 8192 : (runtime_boot_deep ? 4096 : 256);\n    const std::uint64_t DesktopChangedFrameTarget = 1200u;
     int completed_pumps = 0;
     for (; completed_pumps < BootPumps && session.IsRunning(); ++completed_pumps)
     {
