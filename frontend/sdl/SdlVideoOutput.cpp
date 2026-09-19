@@ -118,7 +118,9 @@ namespace FellowNG::Frontend::SDL
       for (std::uint32_t x = 0; x < _last_frame_width; ++x)
       {
         const auto *pixel = row + static_cast<std::size_t>(x) * 4u;
-        if (pixel[0] != 16 || pixel[1] != 16 || pixel[2] != 16) ++count;
+        // XRGB8888 black is 0x00000000. Count only pixels that contain
+        // visible RGB information in the actual final framebuffer.
+        if (pixel[0] != 0 || pixel[1] != 0 || pixel[2] != 0) ++count;
       }
     }
     return count;
