@@ -190,7 +190,7 @@ int main(int argc, char **argv)
 
   if (runtime_boot || runtime_boot_deep || runtime_boot_desktop)
   {
-    const int BootPumps = runtime_boot_desktop ? 4096 : (runtime_boot_deep ? 4096 : 256);
+    const int BootPumps = runtime_boot_desktop ? 16384 : (runtime_boot_deep ? 4096 : 256);
     const std::uint64_t DesktopChangedFrameTarget = 64u;
     int completed_pumps = 0;
     for (; completed_pumps < BootPumps && session.IsRunning();)
