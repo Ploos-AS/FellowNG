@@ -111,9 +111,12 @@ jobs:
           ROM="$(cat build-m4/aros-m68k/rom-path.txt)"
           EXT="$(cat build-m4/aros-m68k/ext-path.txt)"
           ADF="$(cat build-m4/aros-m68k/boot-adf-path.txt)"
+          LIVE_ROOT="$(cat build-m4/aros-m68k/live-root-path.txt)"
           test -n "$ADF"
           test -s "$ADF"
-          args=(--runtime-boot-desktop -s "kickstart_rom_file=$ROM" -s "cpu_type=68020" -s "floppy0=$ADF" -s "floppy0_enabled=yes" -s "floppy0_readonly=yes")
+          test -n "$LIVE_ROOT"
+          test -d "$LIVE_ROOT"
+          args=(--runtime-boot-desktop -s "kickstart_rom_file=$ROM" -s "cpu_type=68020" -s "floppy0=$ADF" -s "floppy0_enabled=yes" -s "floppy0_readonly=yes" -s "autoconfig=yes" -s "filesystem=ro,AROS Live CD:$LIVE_ROOT")
           if [ -n "$EXT" ]; then
             args+=(-s "kickstart_rom_file_ext=$EXT")
           fi
