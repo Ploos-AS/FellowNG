@@ -117,10 +117,17 @@ jobs:
           if [ -n "$EXT" ]; then
             args+=(-s "kickstart_rom_file_ext=$EXT")
           fi
+          set +e
           timeout 90s ./build-m4/frontend/sdl/fellowng-sdl "${args[@]}" 2>&1 | tee sdl-aros-m68k-desktop.log
-          grep -q "runtime-boot-desktop: sustained execution PASS" sdl-aros-m68k-desktop.log
+          rc=${PIPESTATUS[0]}
+          set -e
           test -s fellowng-desktop-evidence.ppm
           head -c 2 fellowng-desktop-evidence.ppm | grep -q P6
+          if [ "$rc" -ne 0 ]; then
+            echo "AROS desktop qualification failed after preserving framebuffer evidence (rc=$rc)"
+            exit "$rc"
+          fi
+          grep -q "runtime-boot-desktop: sustained execution PASS" sdl-aros-m68k-desktop.log
 
       - name: Upload SDL diagnostics
         if: always()
