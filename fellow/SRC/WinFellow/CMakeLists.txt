@@ -143,9 +143,9 @@ add_library(FellowNG.Emulation.Portable STATIC
   xdms/C/xdms.c
 )
 
-if(APPLE)
+if(UNIX)
   # The bundled legacy zlib/xDMS sources use POSIX read/write/lseek/close.
-  # Modern Apple Clang no longer accepts their historical implicit declarations.
+  # Modern C/C++ compilers no longer accept their historical implicit declarations.
   set(FELLOWNG_POSIX_IO_SOURCES
     zlib/C/gzlib.c
     zlib/C/gzread.c
