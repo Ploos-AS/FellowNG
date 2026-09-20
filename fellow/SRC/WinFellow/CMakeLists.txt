@@ -175,11 +175,7 @@ if(WIN32)
     uae/fsdb_win32.c
     uae/filesys_win32.c
     Windows/ModripWin32.cpp
-    Windows/Driver/Sound/DirectSoundDriver.cpp
-    Windows/Service/FileopsWin32.cpp
-    Windows/Service/Hud.cpp
-    Windows/Service/RetroPlatformWrapper.cpp
-  )
+   )
   set_source_files_properties(
     uae/fsdb_win32.c
     uae/filesys_win32.c
