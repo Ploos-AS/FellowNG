@@ -1,0 +1,59 @@
+name: M6 Portable macOS SDL3
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  macos-sdl3:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SDL3
+        uses: libsdl-org/setup-sdl@main
+        with:
+          version: 3.4.16
+
+      - name: Configure portable SDL3 frontend
+        shell: bash
+        run: |
+          cmake -S . -B build-m6 -DFELLOWNG_BUILD_SDL_FRONTEND=ON -DFELLOWNG_BUILD_TESTS=ON
+
+      - name: Build portable SDL3 frontend
+        shell: bash
+        run: |
+          cmake --build build-m6 --config Release --parallel
+
+      - name: Locate frontend
+        id: frontend
+        shell: bash
+        run: |
+          exe="$(find build-m6 -type f -name fellowng-sdl | head -n 1)"
+          test -n "$exe"
+          echo "exe=$exe" >> "$GITHUB_OUTPUT"
+
+      - name: Qualify CLI discovery
+        shell: bash
+        run: |
+          exe="${{ steps.frontend.outputs.exe }}"
+          "$exe" --help 2>&1 | tee m6-macos-help.log
+          "$exe" --version 2>&1 | tee m6-macos-version.log
+          SDL_AUDIODRIVER=dummy "$exe" --self-test 2>&1 | tee m6-macos-self-test.log
+
+      - name: Portable tests
+        shell: bash
+        run: |
+          ctest --test-dir build-m6 --output-on-failure
+
+      - name: Upload macOS portable diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m6-macos-sdl3
+          path: |
+            m6-macos-help.log
+            m6-macos-version.log
+            m6-macos-self-test.log
