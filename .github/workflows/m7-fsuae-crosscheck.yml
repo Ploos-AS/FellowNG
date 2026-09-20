@@ -18,7 +18,7 @@ jobs:
       - name: Install FS-UAE
         run: |
           sudo apt-get update
-          sudo apt-get install -y fs-uae xvfb xdotool
+          sudo apt-get install -y fs-uae xvfb imagemagick
           fs-uae --version
 
       - name: Fetch official AROS m68k assets
@@ -34,16 +34,22 @@ jobs:
           ROM="$(cat build-m7/aros-m68k/rom-path.txt)"
           ADF="$(cat build-m7/aros-m68k/boot-adf-path.txt)"
           mkdir -p build-m7/fsuae-screenshots build-m7/fsuae-base
+          set -e
+          Xvfb :99 -screen 0 1280x800x24 > build-m7/xvfb.log 2>&1 &
+          xvfb_pid=$!
+          export DISPLAY=:99
+          sleep 2
           set +e
-          timeout 20s xvfb-run -a fs-uae             --base-dir="$PWD/build-m7/fsuae-base"             --fullscreen=0             --window-hidden=0             --sound-card=none             --kickstart-file="$ROM"             --floppy-drive-0="$ADF"             --chip-memory=2             --cpu=68020             --warp-mode=1             --screenshots-output-dir="$PWD/build-m7/fsuae-screenshots"             --screenshots-output-mask=1             > build-m7/fsuae.log 2>&1 &
+          timeout 20s fs-uae             --base-dir="$PWD/build-m7/fsuae-base"             --fullscreen=0             --window-hidden=0             --sound-card=none             --kickstart-file="$ROM"             --floppy-drive-0="$ADF"             --chip-memory=2             --cpu=68020             --warp-mode=1             > build-m7/fsuae.log 2>&1 &
           pid=$!
           sleep 5
-          window=$(xdotool search --name "FS-UAE" | head -n 1 || true)
-          if [ -n "$window" ]; then xdotool key --window "$window" alt+s || true; fi
+          import -window root build-m7/fsuae-screenshots/boot.png
           wait $pid
           rc=$?
           set -e
+          kill "$xvfb_pid" 2>/dev/null || true
           test "$rc" -eq 124 -o "$rc" -eq 0
+          test -s build-m7/fsuae-screenshots/boot.png
           if grep -Eqi "kickstart.*(not found|invalid|error)|failed to load|panic|fatal" build-m7/fsuae.log; then
             cat build-m7/fsuae.log
             exit 1
@@ -58,4 +64,5 @@ jobs:
           name: m7-fsuae-aros-crosscheck
           path: |
             build-m7/fsuae.log
+            build-m7/xvfb.log
             build-m7/fsuae-screenshots/
