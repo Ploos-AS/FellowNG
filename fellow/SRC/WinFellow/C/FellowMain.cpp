@@ -603,7 +603,7 @@ static void fellowModulesShutdown()
 /* main....                                                                   */
 /*============================================================================*/
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(FELLOWNG_PORTABLE_FRONTEND)
 int __cdecl main(int argc, const char *argv[])
 {
   fellowSetPreStartReset(true);
