@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FellowNG runtime result v1",
+  "type": "object",
+  "required": ["schema", "status"],
+  "properties": {
+    "schema": {"const": "fellowng.runtime-result.v1"},
+    "status": {"enum": ["pass", "fail"]},
+    "mode": {"type": "string"},
+    "reason": {"type": "string"},
+    "pumps": {"type": "integer", "minimum": 0},
+    "pump_target": {"type": "integer", "minimum": 0},
+    "slices": {"type": "integer", "minimum": 0},
+    "frames": {"type": "integer", "minimum": 0},
+    "changed_frames": {"type": "integer", "minimum": 0},
+    "changed_target": {"type": "integer", "minimum": 0},
+    "frame_signature": {"type": "integer", "minimum": 0},
+    "visible_pixels": {"type": "integer", "minimum": 0},
+    "visible_target": {"type": "integer", "minimum": 0}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "pass"}}, "required": ["status"]},
+     "then": {"required": ["mode", "pumps", "slices", "frames", "changed_frames", "frame_signature", "visible_pixels"]}},
+    {"if": {"properties": {"status": {"const": "fail"}}, "required": ["status"]},
+     "then": {"required": ["reason"]}}
+  ],
+  "additionalProperties": false
+}
