@@ -9,7 +9,7 @@
 #include "DebugApi/M68K.h"
 #include "DebugApi/MemorySystem.h"
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(FELLOWNG_PORTABLE_FRONTEND)
 #include "VirtualHost/WindowsCorePlatformFactory.h"
 #else
 #include "VirtualHost/PortableBootstrapPlatformFactory.h"
@@ -23,7 +23,7 @@ namespace
 {
   ICorePlatformFactory *DefaultPlatformFactory()
   {
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(FELLOWNG_PORTABLE_FRONTEND)
     return GetWindowsCorePlatformFactory();
 #else
     return FellowNG::VirtualHost::GetPortableBootstrapPlatformFactory();
