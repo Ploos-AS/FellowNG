@@ -245,13 +245,27 @@ int main(int argc, char **argv)
       {
         std::cerr << "runtime-boot: failed to save diagnostic framebuffer evidence\n";
       }
-      std::cerr << "runtime-boot: runtime stopped or progress target missed after " << completed_pumps << "/" << BootPumps
-                << " pumps frames=" << video.PresentedFrameCount()
-                << " changed=" << video.ChangedFrameCount()
-                << " signature=" << video.LastFrameSignature()
-                << " target=" << DesktopChangedFrameTarget
-                << " visible_pixels=" << video.NonBackgroundPixelCount()
-                << " visible_target=" << DesktopVisiblePixelTarget << "\n";
+      if (result_json)
+      {
+        std::cout << "{\"schema\":\"fellowng.runtime-result.v1\",\"status\":\"fail\",\"reason\":\"progress-target-missed\",\"pumps\":"
+                  << completed_pumps << ",\"pump_target\":" << BootPumps
+                  << ",\"frames\":" << video.PresentedFrameCount()
+                  << ",\"changed_frames\":" << video.ChangedFrameCount()
+                  << ",\"changed_target\":" << DesktopChangedFrameTarget
+                  << ",\"frame_signature\":" << video.LastFrameSignature()
+                  << ",\"visible_pixels\":" << video.NonBackgroundPixelCount()
+                  << ",\"visible_target\":" << DesktopVisiblePixelTarget << "}\n";
+      }
+      else
+      {
+        std::cerr << "runtime-boot: runtime stopped or progress target missed after " << completed_pumps << "/" << BootPumps
+                  << " pumps frames=" << video.PresentedFrameCount()
+                  << " changed=" << video.ChangedFrameCount()
+                  << " signature=" << video.LastFrameSignature()
+                  << " target=" << DesktopChangedFrameTarget
+                  << " visible_pixels=" << video.NonBackgroundPixelCount()
+                  << " visible_target=" << DesktopVisiblePixelTarget << "\n";
+      }
       session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit(); return 23;
     }
     const auto presented_frames = video.PresentedFrameCount();
