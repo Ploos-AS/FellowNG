@@ -52,6 +52,7 @@ jobs:
           $versionExit = $LASTEXITCODE
           if ($versionExit -ne 0) { throw "fellowng-sdl --version failed with exit code $versionExit" }
 
+          $env:SDL_AUDIODRIVER = "dummy"
           & $exe --self-test 2>&1 | Tee-Object -FilePath m6-windows-self-test.log
           $selfTestExit = $LASTEXITCODE
           if ($selfTestExit -ne 0) { throw "fellowng-sdl --self-test failed with exit code $selfTestExit" }
