@@ -256,7 +256,15 @@ else()
   # while GCC may discard them because they are not used in that translation
   # unit. Retain those definitions until the memory API is moved into a proper
   # portable header/implementation split.
-  set_source_files_properties(C/MemoryInterface.cpp PROPERTIES
-    COMPILE_OPTIONS "-fkeep-inline-functions"
-  )
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set_source_files_properties(C/MemoryInterface.cpp PROPERTIES
+      COMPILE_OPTIONS "-fkeep-inline-functions"
+    )
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Clang has no -fkeep-inline-functions equivalent. Ensure the legacy
+    # externally-used inline memory helpers are emitted for portable hosts.
+    set_source_files_properties(C/MemoryInterface.cpp PROPERTIES
+      COMPILE_OPTIONS "-fno-inline"
+    )
+  endif()
 endif()
