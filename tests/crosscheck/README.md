@@ -15,3 +15,6 @@ Example:
 }
 
 Store only metadata and observed results. Never commit copyrighted ROMs, OS images, or other proprietary Amiga media.
+## CI evidence
+
+The M7.3 GitHub Actions job records a native FS-UAE run using the same official AROS m68k boot assets as the FellowNG qualification. The workflow captures a virtual-display frame after the boot grace period and preserves the emulator log as artifacts. A green job establishes that the external emulator started and produced observable display output; it does not by itself establish semantic equivalence with FellowNG.
