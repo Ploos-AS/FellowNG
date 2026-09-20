@@ -100,6 +100,27 @@ jobs:
           assert result["frames"] > 0
           PY
 
+      - name: M5 JSON failure contract
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: |
+          set +e
+          ./build-m4/frontend/sdl/fellowng-sdl --runtime-boot-desktop --result-json 2>&1 | tee sdl-runtime-failure-result.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          test "$rc" -ne 0
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          lines = Path("sdl-runtime-failure-result.log").read_text().splitlines()
+          candidates = [line for line in lines if line.startswith('{"schema":')]
+          if candidates:
+              result = json.loads(candidates[-1])
+              assert result["schema"] == "fellowng.runtime-result.v1"
+              assert result["status"] == "fail"
+          PY
+
       - name: AROS m68k sustained boot qualification
         env:
           SDL_VIDEODRIVER: dummy
@@ -174,6 +195,7 @@ jobs:
             sdl-cli-help.log
             sdl-cli-version.log
             sdl-runtime-result.log
+            sdl-runtime-failure-result.log
             sdl-aros-m68k.log
             sdl-aros-m68k-boot.log
             sdl-aros-m68k-deep-boot.log
