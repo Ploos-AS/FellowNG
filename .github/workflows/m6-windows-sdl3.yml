@@ -38,10 +38,19 @@ jobs:
       - name: Qualify CLI discovery
         shell: pwsh
         run: |
-          & "${{ steps.frontend.outputs.exe }}" --help | Tee-Object -FilePath m6-windows-help.log
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          & "${{ steps.frontend.outputs.exe }}" --version | Tee-Object -FilePath m6-windows-version.log
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $exe = "${{ steps.frontend.outputs.exe }}"
+          $exeDir = Split-Path $exe
+          $sdlDll = Get-ChildItem $env:SDL3_ROOT -Recurse -Filter SDL3.dll | Select-Object -First 1
+          if (-not $sdlDll) { throw "SDL3.dll not found under SDL3_ROOT" }
+          Copy-Item $sdlDll.FullName $exeDir -Force
+
+          & $exe --help 2>&1 | Tee-Object -FilePath m6-windows-help.log
+          $helpExit = $LASTEXITCODE
+          if ($helpExit -ne 0) { throw "fellowng-sdl --help failed with exit code $helpExit" }
+
+          & $exe --version 2>&1 | Tee-Object -FilePath m6-windows-version.log
+          $versionExit = $LASTEXITCODE
+          if ($versionExit -ne 0) { throw "fellowng-sdl --version failed with exit code $versionExit" }
 
       - name: Portable tests
         shell: pwsh
