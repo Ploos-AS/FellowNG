@@ -92,6 +92,11 @@ jobs:
           from pathlib import Path
           lines = Path("sdl-runtime-result.log").read_text().splitlines()
           result = json.loads(next(line for line in reversed(lines) if line.startswith('{"schema":')))
+          schema = json.loads(Path("docs/schema/runtime-result-v1.schema.json").read_text())
+          assert schema["properties"]["schema"]["const"] == result["schema"]
+          assert set(result) <= set(schema["properties"])
+          for key in schema["required"]:
+              assert key in result
           assert result["schema"] == "fellowng.runtime-result.v1"
           assert result["status"] == "pass"
           assert result["mode"] == "runtime-boot"
@@ -117,6 +122,11 @@ jobs:
           candidates = [line for line in lines if line.startswith('{"schema":')]
           assert candidates, "expected machine-readable failure result"
           result = json.loads(candidates[-1])
+          schema = json.loads(Path("docs/schema/runtime-result-v1.schema.json").read_text())
+          assert schema["properties"]["schema"]["const"] == result["schema"]
+          assert set(result) <= set(schema["properties"])
+          for key in schema["required"]:
+              assert key in result
           assert result["schema"] == "fellowng.runtime-result.v1"
           assert result["status"] == "fail"
           assert result["reason"] == "startup-failed" or result["reason"] == "progress-target-missed"
