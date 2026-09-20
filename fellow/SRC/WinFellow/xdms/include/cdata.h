@@ -29,7 +29,7 @@
 #ifdef __cplusplus
 #define INLINE inline
 #else
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(_MSC_VER)
 #define INLINE inline
 #else
 #ifdef __SASC
