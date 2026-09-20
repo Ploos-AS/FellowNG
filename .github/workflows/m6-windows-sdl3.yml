@@ -1,0 +1,53 @@
+name: M6 Portable Windows SDL3
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  windows-sdl3:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure portable SDL3 frontend
+        shell: pwsh
+        run: |
+          cmake -S . -B build-m6 -DFELLOWNG_BUILD_SDL_FRONTEND=ON -DFELLOWNG_BUILD_TESTS=ON
+
+      - name: Build portable SDL3 frontend
+        shell: pwsh
+        run: |
+          cmake --build build-m6 --config Release --parallel
+
+      - name: Locate frontend
+        id: frontend
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem build-m6 -Recurse -Filter fellowng-sdl.exe | Select-Object -First 1
+          if (-not $exe) { throw "fellowng-sdl.exe not found" }
+          "exe=$($exe.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Qualify CLI discovery
+        shell: pwsh
+        run: |
+          & "${{ steps.frontend.outputs.exe }}" --help | Tee-Object -FilePath m6-windows-help.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "${{ steps.frontend.outputs.exe }}" --version | Tee-Object -FilePath m6-windows-version.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Portable tests
+        shell: pwsh
+        run: |
+          ctest --test-dir build-m6 -C Release --output-on-failure
+
+      - name: Upload Windows portable diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m6-windows-sdl3
+          path: |
+            m6-windows-help.log
+            m6-windows-version.log
