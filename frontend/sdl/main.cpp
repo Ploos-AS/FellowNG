@@ -131,8 +131,12 @@ int main(int argc, char **argv)
   const bool show_help = argc > 1 && (std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0);
   const bool show_version = argc > 1 && std::strcmp(argv[1], "--version") == 0;
   bool result_json = false;
+  int max_pumps = -1;
   for (int i = 1; i < argc; ++i)
+  {
     if (std::strcmp(argv[i], "--result-json") == 0) result_json = true;
+    else if (std::strcmp(argv[i], "--max-pumps") == 0 && i + 1 < argc) max_pumps = std::atoi(argv[++i]);
+  }
 
   if (show_help)
   {
@@ -144,7 +148,8 @@ int main(int argc, char **argv)
               << "  --runtime-boot          Run bounded boot qualification\n"
               << "  --runtime-boot-deep     Run deep boot qualification\n"
               << "  --runtime-boot-desktop  Run visible desktop qualification\n"
-              << "  --result-json           Emit machine-readable JSON for successful boot modes\n"
+              << "  --result-json           Emit machine-readable JSON for boot results\n"
+              << "  --max-pumps N           Bound boot execution for automation\n"
               << "  --version               Print version identity and exit\n"
               << "  -h, --help              Show this help\n";
     return EXIT_SUCCESS;
@@ -189,7 +194,12 @@ int main(int argc, char **argv)
   std::vector<const char *> runtime_argv;
   runtime_argv.reserve(static_cast<std::size_t>(argc));
   runtime_argv.push_back(argv[0]);
-  for (int i = (runtime_smoke || runtime_boot || runtime_boot_deep || runtime_boot_desktop) ? 2 : 1; i < argc; ++i) runtime_argv.push_back(argv[i]);
+  for (int i = (runtime_smoke || runtime_boot || runtime_boot_deep || runtime_boot_desktop) ? 2 : 1; i < argc; ++i)
+  {
+    if (std::strcmp(argv[i], "--result-json") == 0) continue;
+    if (std::strcmp(argv[i], "--max-pumps") == 0 && i + 1 < argc) { ++i; continue; }
+    runtime_argv.push_back(argv[i]);
+  }
   const int runtime_argc = static_cast<int>(runtime_argv.size());
 
   FellowNG::Runtime::WinFellowRuntimeFactory runtime_factory(
@@ -216,7 +226,8 @@ int main(int argc, char **argv)
 
   if (runtime_boot || runtime_boot_deep || runtime_boot_desktop)
   {
-    const int BootPumps = runtime_boot_desktop ? 16384 : (runtime_boot_deep ? 4096 : 256);
+    const int DefaultBootPumps = runtime_boot_desktop ? 16384 : (runtime_boot_deep ? 4096 : 256);
+    const int BootPumps = max_pumps >= 0 ? max_pumps : DefaultBootPumps;
     const std::uint64_t DesktopChangedFrameTarget = 16u;
     const std::uint64_t DesktopVisiblePixelTarget = 1024u;
     int completed_pumps = 0;
