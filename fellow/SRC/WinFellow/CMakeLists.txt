@@ -202,6 +202,15 @@ endif()
 
 if(MSVC)
   target_compile_definitions(FellowNG.Emulation.Portable PRIVATE _CRT_SECURE_NO_WARNINGS)
+  # The portable Windows target is x64. Select the existing non-inline-asm CPU
+  # path and provide the narrow renderer host shim used by SDL hosts.
+  target_compile_definitions(FellowNG.Emulation.Portable PRIVATE X64=1)
+  set_source_files_properties(C/CpuModule_Instructions.c PROPERTIES
+    COMPILE_OPTIONS "/FI${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableCpuCompat.h"
+  )
+  set_source_files_properties(C/Renderer.cpp PROPERTIES
+    COMPILE_OPTIONS "/FI${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE/PortableRendererCompat.h"
+  )
 else()
   target_include_directories(FellowNG.Emulation.Portable PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/portable/include
