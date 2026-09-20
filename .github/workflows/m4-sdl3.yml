@@ -200,6 +200,21 @@ jobs:
           fi
           grep -q "runtime-boot-desktop: sustained execution PASS" sdl-aros-m68k-desktop.log
 
+      - name: M7 AROS qualification profiles
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: |
+          set -o pipefail
+          python3 tools/run_qualification_profile.py \
+            profiles/qualification/aros-m68k-020.json \
+            --fellowng ./build-m4/frontend/sdl/fellowng-sdl \
+            --assets build-m4/aros-m68k 2>&1 | tee m7-aros-m68k-020.log
+          python3 tools/run_qualification_profile.py \
+            profiles/qualification/aros-m68k-020-desktop.json \
+            --fellowng ./build-m4/frontend/sdl/fellowng-sdl \
+            --assets build-m4/aros-m68k 2>&1 | tee m7-aros-m68k-020-desktop.log
+
       - name: Upload SDL diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -218,6 +233,8 @@ jobs:
             sdl-aros-m68k-deep-boot.log
             fellowng-boot-evidence.ppm
             sdl-aros-m68k-desktop.log
+            m7-aros-m68k-020.log
+            m7-aros-m68k-020-desktop.log
             fellowng-desktop-evidence.ppm
             fsysdump.txt
           if-no-files-found: warn
