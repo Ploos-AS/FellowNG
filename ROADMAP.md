@@ -65,7 +65,7 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
-## M5 — CLI and automation
+## M5 — CLI and automation ✅
 
 - [x] M5.1: add stable CLI discovery through `--help` and `--version`.
 - [x] M5.2: add machine-readable `--result-json` boot results using `fellowng.runtime-result.v1`.
@@ -74,7 +74,7 @@ See `docs/M4_SDL_FRONTEND.md`.
 - [x] M5.7–M5.9: document the automation interface, formalize its JSON schema, and validate emitted fields against it in CI.
 - [x] M5.10–M5.12: add deterministic `--max-pumps N` execution bounds, keep frontend-only options out of the Fellow argument parser, and qualify the failure contract with a real AROS boot.
 - [x] M5.13: publish a concise CLI/automation integration guide for external runners such as amiga-runtime. See `docs/M5_CLI_AUTOMATION.md`.
-- [ ] M5.14: complete M5 qualification and freeze the v1 automation contract.
+- [x] M5.14: complete M5 qualification and freeze the `fellowng.runtime-result.v1` automation contract. The final M5 CI baseline passes Linux SDL3/AROS runtime qualification, portable-core checks, repository checks, and Windows MSBuild.
 
 ## M6 — Cross-platform expansion
 
