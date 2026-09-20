@@ -1,0 +1,56 @@
+name: M6 Portable Linux ARM64 SDL3
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  linux-arm64-sdl3:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SDL3 build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libasound2-dev libpulse-dev libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev
+
+      - name: Setup SDL3
+        uses: libsdl-org/setup-sdl@main
+        with:
+          version: 3.4.16
+
+      - name: Configure portable SDL3 frontend
+        run: cmake -S . -B build-m6-arm64 -G Ninja -DFELLOWNG_BUILD_SDL_FRONTEND=ON -DFELLOWNG_BUILD_TESTS=ON
+
+      - name: Build portable SDL3 frontend
+        run: cmake --build build-m6-arm64 --parallel
+
+      - name: Locate frontend
+        id: frontend
+        run: |
+          exe="$(find build-m6-arm64 -type f -name fellowng-sdl | head -n 1)"
+          test -n "$exe"
+          echo "exe=$exe" >> "$GITHUB_OUTPUT"
+
+      - name: Qualify CLI and self-test
+        run: |
+          exe="${{ steps.frontend.outputs.exe }}"
+          "$exe" --help 2>&1 | tee m6-linux-arm64-help.log
+          "$exe" --version 2>&1 | tee m6-linux-arm64-version.log
+          SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy "$exe" --self-test 2>&1 | tee m6-linux-arm64-self-test.log
+
+      - name: Portable tests
+        run: ctest --test-dir build-m6-arm64 --output-on-failure
+
+      - name: Upload Linux ARM64 diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m6-linux-arm64-sdl3
+          path: |
+            m6-linux-arm64-help.log
+            m6-linux-arm64-version.log
+            m6-linux-arm64-self-test.log
