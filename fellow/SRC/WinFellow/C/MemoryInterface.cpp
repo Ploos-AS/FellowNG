@@ -1952,7 +1952,7 @@ uint8_t memoryReadByteViaBankHandler(uint32_t address)
   return memory_bank_readbyte[address >> 16](address);
 }
 
-__inline uint8_t memoryReadByte(uint32_t address)
+uint8_t memoryReadByte(uint32_t address)
 {
   uint8_t *memory_ptr = memory_bank_pointer[address >> 16];
 
@@ -1972,7 +1972,7 @@ uint16_t memoryReadWordViaBankHandler(uint32_t address)
   return memory_bank_readword[address >> 16](address);
 }
 
-__inline uint16_t memoryReadWord(uint32_t address)
+uint16_t memoryReadWord(uint32_t address)
 {
   uint8_t *memory_ptr = memory_bank_pointer[address >> 16];
 
@@ -1985,7 +1985,7 @@ __inline uint16_t memoryReadWord(uint32_t address)
   return memoryReadWordViaBankHandler(address);
 }
 
-__inline uint32_t memoryReadLong(uint32_t address)
+uint32_t memoryReadLong(uint32_t address)
 {
   return ((uint32_t)memoryReadWord(address) << 16) | ((uint32_t)memoryReadWord(address + 2));
 }
