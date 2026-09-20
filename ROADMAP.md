@@ -86,7 +86,7 @@ See `docs/M4_SDL_FRONTEND.md`.
 
 - [x] M7.1: define separate classic/reference and redistributable AROS/CI qualification profile families; seed classic A500/A500+/A1200 profiles and known-working AROS m68k 68020 boot/desktop baselines.
 - [x] M7.2: implement deterministic FellowNG runs for the initial AROS/CI profiles using the frozen runtime-result v1 contract. Both the boot/deep-boot and desktop profiles pass end-to-end in public GitHub Actions through the machine-readable profile runner.
-- [ ] M7.3: cross-check selected probes against an independent UAE implementation. The probe/record contract is defined; the GitHub gate remains disabled until a reproducible FS-UAE CI installation and asset workflow are established.
+- [x] M7.3: cross-check the initial AROS sustained-boot probe against FS-UAE in public GitHub Actions. The job uses the same official AROS m68k assets, native FS-UAE 3.1.66, a dedicated Xvfb display, and archived boot-frame/log evidence. This establishes an external runtime/display baseline; deeper semantic probe comparison remains part of M7.4.
 - [ ] M7.4: publish a reproducible compatibility matrix including known timing and compatibility differences.
 
 See `docs/M7_EMULATOR_QUALIFICATION.md`.
