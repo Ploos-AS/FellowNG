@@ -80,7 +80,7 @@ See `docs/M4_SDL_FRONTEND.md`.
 
 - [x] M6.1: validate Windows through both the legacy frontend and portable SDL3 frontend. The portable frontend builds on Windows CI and passes CLI discovery, frontend self-test (using SDL dummy audio on the headless runner), and portable CTest coverage while legacy MSBuild remains green.
 - [x] M6.2: add macOS portable SDL3 build support and qualify CLI/self-test behavior. Native Apple Silicon (arm64) CI builds the portable frontend and passes CLI discovery, SDL3 self-test, and portable CTest coverage.
-- [ ] M6.3: evaluate ARM64 Linux support and establish reproducible build/test coverage where practical.
+- [x] M6.3: validate native ARM64 Linux support with reproducible SDL3 build/test coverage. GitHub Actions `ubuntu-24.04-arm` builds the portable frontend and passes CLI discovery, headless SDL3 self-test, and portable CTest coverage.
 
 ## M7 — Emulator qualification
 
