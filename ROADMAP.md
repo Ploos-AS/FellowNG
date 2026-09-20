@@ -54,14 +54,14 @@ See `docs/M3_PLATFORM_ABSTRACTION.md`.
   - [x] M4.5a: portable emulator-runtime contract and frontend session/lifecycle pump.
   - [x] M4.5b: detach Win32 host-service/driver construction behind an injectable platform factory while preserving the Windows default backend.
   - [x] M4.5c: implement `WinFellowRuntime` behind `IEmulatorRuntime`, with injectable module startup/shutdown callbacks and bounded frontend-safe execution slices.
-  - [ ] M4.5d: wire SDL video/input/audio to the real Fellow runtime, replace the conservative instruction slice with a practical bounded scheduler slice, and complete an interactive Amiga boot.
+  - [x] M4.5d: wire SDL video/input/audio to the real Fellow runtime, replace the conservative instruction slice with a practical bounded scheduler slice, and complete an interactive Amiga boot.
     - [x] M4.5d94: qualify the real portable Linux/SDL3 runtime with redistributable AROS m68k ROMs in CI (start → bounded CPU pump → stop), without storing copyrighted Amiga ROM/OS assets.
     - [x] M4.5d95: activate explicit portable ROM configuration after module startup while preserving the intentional no-ROM smoke rejection path.
     - [x] M4.5d96: extend AROS qualification from bounded runtime smoke to sustained execution (1,048,576 runtime slices).
     - [x] M4.5d97: require observable portable framebuffer progress during the sustained AROS m68k run.
     - [x] M4.5d98: deepen AROS m68k boot qualification to 16,777,216 runtime slices and require multiple framebuffer state changes.
     - [x] M4.5d99: archive the final emulated framebuffer as CI evidence; qualified output reaches the AROS graphical boot splash at 640x400.
-    - [ ] M4.5d100: extend qualification beyond the AROS splash toward a usable Workbench/Desktop state and define a deterministic functional boot-state check. Current 33,554,432-slice evidence reaches the AROS "Waiting for bootable media" screen, so framebuffer activity alone is not sufficient.
+    - [x] M4.5d100: extend qualification beyond the AROS splash toward a usable Workbench/Desktop state and define a deterministic functional boot-state check. AROS Live CD filesystem/autoconfig boot now reaches qualified visible desktop progress in CI (>=16 changed frames and >=1024 non-background pixels), with framebuffer evidence archived. Guest 68k RESET no longer rebuilds host filesystem/autoconfig state.
 
 See `docs/M4_SDL_FRONTEND.md`.
 
