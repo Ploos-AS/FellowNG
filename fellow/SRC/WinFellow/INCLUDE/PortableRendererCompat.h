@@ -4,7 +4,7 @@
 // its output-scale helpers even when RETRO_PLATFORM is not enabled. Portable
 // SDL hosts are normal interactive hosts, so provide only the narrow legacy
 // queries required while the renderer is being detached from RetroPlatform.
-#if !defined(_WIN32) && !defined(RETRO_PLATFORM)
+#if !defined(RETRO_PLATFORM)
 struct FellowNGPortableRendererHostMode
 {
   constexpr bool GetHeadlessMode() const noexcept
