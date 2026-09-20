@@ -143,6 +143,20 @@ add_library(FellowNG.Emulation.Portable STATIC
   xdms/C/xdms.c
 )
 
+if(APPLE)
+  # The bundled legacy zlib/xDMS sources use POSIX read/write/lseek/close.
+  # Modern Apple Clang no longer accepts their historical implicit declarations.
+  set(FELLOWNG_POSIX_IO_SOURCES
+    zlib/C/gzlib.c
+    zlib/C/gzread.c
+    zlib/C/gzwrite.c
+    xdms/C/xdms.c
+  )
+  set_source_files_properties(${FELLOWNG_POSIX_IO_SOURCES} PROPERTIES
+    COMPILE_OPTIONS "-include;unistd.h"
+  )
+endif()
+
 # Frontends and runtime smoke tests consume the portable core through the
 # namespaced target. Keep the concrete target name compatible with the legacy
 # project layout while exposing a stable CMake interface to new components.
