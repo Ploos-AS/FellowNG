@@ -73,7 +73,7 @@ See `docs/M4_SDL_FRONTEND.md`.
 - [x] M5.4–M5.6: emit and require machine-readable failure results.
 - [x] M5.7–M5.9: document the automation interface, formalize its JSON schema, and validate emitted fields against it in CI.
 - [x] M5.10–M5.12: add deterministic `--max-pumps N` execution bounds, keep frontend-only options out of the Fellow argument parser, and qualify the failure contract with a real AROS boot.
-- [ ] M5.13: publish a concise CLI/automation integration guide for external runners such as amiga-runtime.
+- [x] M5.13: publish a concise CLI/automation integration guide for external runners such as amiga-runtime. See `docs/M5_CLI_AUTOMATION.md`.
 - [ ] M5.14: complete M5 qualification and freeze the v1 automation contract.
 
 ## M6 — Cross-platform expansion
