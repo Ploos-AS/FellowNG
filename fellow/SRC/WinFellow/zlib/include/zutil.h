@@ -128,7 +128,7 @@ void *_Cdecl farmalloc(unsigned long nbytes);
 #endif
 #endif
 
-#if defined(MACOS) || defined(TARGET_OS_MAC)
+#if defined(MACOS) || (defined(TARGET_OS_MAC) && !defined(__APPLE__))
 #define OS_CODE 7
 #ifndef Z_SOLO
 #if defined(__MWERKS__) && __dest_os != __be_os && __dest_os != __win32_os
@@ -158,6 +158,9 @@ void *_Cdecl farmalloc(unsigned long nbytes);
 #endif
 
 #ifdef __APPLE__
+#ifdef OS_CODE
+#undef OS_CODE
+#endif
 #define OS_CODE 19
 #endif
 
