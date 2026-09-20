@@ -178,7 +178,10 @@ void fellowSoftReset()
   floppyHardReset();
   ciaHardReset();
   graphHardReset();
-  ffilesysHardReset();
+  /* Guest RESET resets external Amiga hardware, but must not rebuild the
+     host-integrated filesystem/expansion subsystem. Reinstalling filesystem
+     autoconfig here removes and recreates expansion cards on every RESET
+     instruction and can trap guests in a reboot loop. */
   memoryHardResetPost();
   fellowSetPreStartReset(false);
   if (drawGetGraphicsEmulationMode() == GRAPHICSEMULATIONMODE::GRAPHICSEMULATIONMODE_CYCLEEXACT) GraphicsContext.SoftReset();
