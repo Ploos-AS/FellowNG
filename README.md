@@ -8,7 +8,7 @@ FellowNG starts from the existing WinFellow source tree and aims to make Fellow 
 
 The immediate focus is portability: separate the reusable emulator core from Windows-specific host code, establish a portable build, add a modern SDL-based frontend, and make deterministic command-line automation a first-class capability.
 
-> **Project status:** M4.5 — SDL3 runtime integration. Linux now builds and links the real Fellow runtime through the portable SDL3 frontend. CI qualifies startup, bounded CPU execution, and shutdown with official redistributable AROS m68k ROMs; sustained interactive boot qualification is the next step.
+> **Project status:** M5 — CLI and automation. Linux now builds and links the real Fellow runtime through the portable SDL3 frontend. CI qualifies AROS m68k boot through visible desktop progress, and the frontend exposes a stable CLI plus machine-readable runtime-result JSON for automation.
 
 ## Why FellowNG?
 
