@@ -49,7 +49,6 @@ add_library(FellowNG.Emulation.Portable STATIC
   uae/HARDFILE.C
   uae/UAESUPP.C
   uae/fsdb.c
-  uae/fsdb_posix.cpp
   portable/Timers.cpp
   portable/IniFile.cpp
   portable/FrontendLifecycle.cpp
@@ -171,6 +170,16 @@ set_source_files_properties(
   PROPERTIES LANGUAGE CXX
 )
 
+if(WIN32)
+  target_sources(FellowNG.Emulation.Portable PRIVATE
+    uae/fsdb_win32.c
+    Windows/ModripWin32.cpp
+  )
+  set_source_files_properties(uae/fsdb_win32.c PROPERTIES LANGUAGE CXX)
+else()
+  target_sources(FellowNG.Emulation.Portable PRIVATE uae/fsdb_posix.cpp)
+endif()
+
 target_include_directories(FellowNG.Emulation.Portable PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/INCLUDE
@@ -183,6 +192,13 @@ target_include_directories(FellowNG.Emulation.Portable PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Core
   ${CMAKE_CURRENT_SOURCE_DIR}/../WinFellow.Hardfile
 )
+
+if(WIN32)
+  target_include_directories(FellowNG.Emulation.Portable PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Windows
+    ${CMAKE_CURRENT_SOURCE_DIR}/Windows/Driver/Sound
+  )
+endif()
 
 if(MSVC)
   target_compile_definitions(FellowNG.Emulation.Portable PRIVATE _CRT_SECURE_NO_WARNINGS)
