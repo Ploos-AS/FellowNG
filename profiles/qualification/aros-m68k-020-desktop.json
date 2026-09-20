@@ -1,0 +1,10 @@
+{
+  "schema": "fellowng.qualification-profile.v1",
+  "id": "aros-m68k-020-desktop",
+  "revision": 1,
+  "family": "aros-ci",
+  "machine": {"cpu": "68020"},
+  "assets": {"provider": "official-aros-m68k", "fetcher": "tools/fetch_aros_m68k.py", "rom": true, "extended_rom": "optional", "boot_adf": true, "live_root": true},
+  "filesystem": {"autoconfig": true, "live_volume": "AROS Live CD", "read_only": true},
+  "qualification": {"mode": "runtime-boot-desktop", "max_pumps": 16384, "result_schema": "fellowng.runtime-result.v1", "framebuffer_evidence": true}
+}
