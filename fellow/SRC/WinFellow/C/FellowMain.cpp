@@ -489,7 +489,11 @@ static void fellowModulesStartupCommon(
   CoreFactory::CreateServices();
 
 #if !defined(FELLOWNG_PORTABLE_FRONTEND)
+#if defined(_WIN32) && defined(FELLOWNG_PORTABLE_FRONTEND)
+  // Legacy Windows sysinfo belongs to the Win32 frontend; portable SDL avoids it.
+#else
   sysinfoLogSysInfo();
+#endif
 #endif
 
   CoreFactory::CreateDrivers();
