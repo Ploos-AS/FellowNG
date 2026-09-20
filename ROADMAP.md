@@ -82,12 +82,12 @@ See `docs/M4_SDL_FRONTEND.md`.
 - [x] M6.2: add macOS portable SDL3 build support and qualify CLI/self-test behavior. Native Apple Silicon (arm64) CI builds the portable frontend and passes CLI discovery, SDL3 self-test, and portable CTest coverage.
 - [x] M6.3: validate native ARM64 Linux support with reproducible SDL3 build/test coverage. GitHub Actions `ubuntu-24.04-arm` builds the portable frontend and passes CLI discovery, headless SDL3 self-test, and portable CTest coverage.
 
-## M7 — Emulator qualification
+## M7 — Emulator qualification ✅
 
 - [x] M7.1: define separate classic/reference and redistributable AROS/CI qualification profile families; seed classic A500/A500+/A1200 profiles and known-working AROS m68k 68020 boot/desktop baselines.
 - [x] M7.2: implement deterministic FellowNG runs for the initial AROS/CI profiles using the frozen runtime-result v1 contract. Both the boot/deep-boot and desktop profiles pass end-to-end in public GitHub Actions through the machine-readable profile runner.
 - [x] M7.3: cross-check the initial AROS sustained-boot probe against FS-UAE in public GitHub Actions. The job uses the same official AROS m68k assets, native FS-UAE 3.1.66, a dedicated Xvfb display, and archived boot-frame/log evidence. This establishes an external runtime/display baseline; deeper semantic probe comparison remains part of M7.4.
-- [ ] M7.4: publish a reproducible compatibility matrix including known timing and compatibility differences.
+- [x] M7.4: publish a reproducible compatibility matrix including the public AROS qualification baselines, classic/local profiles, independent FS-UAE evidence, and explicitly documented timing/semantic limitations. See `docs/M7_COMPATIBILITY_MATRIX.md`.
 
 See `docs/M7_EMULATOR_QUALIFICATION.md`.
 
