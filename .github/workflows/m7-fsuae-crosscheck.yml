@@ -1,0 +1,56 @@
+name: M7 Independent FS-UAE Cross-check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  fsuae-aros-crosscheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install FS-UAE
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fs-uae xvfb
+          fs-uae --version
+
+      - name: Fetch official AROS m68k assets
+        run: |
+          python3 tools/fetch_aros_m68k.py build-m7/aros-m68k
+          test -s build-m7/aros-m68k/rom-path.txt
+          test -s build-m7/aros-m68k/boot-adf-path.txt
+
+      - name: Run reproducible FS-UAE sustained-boot probe
+        env:
+          SDL_AUDIODRIVER: dummy
+        run: |
+          ROM="$(cat build-m7/aros-m68k/rom-path.txt)"
+          ADF="$(cat build-m7/aros-m68k/boot-adf-path.txt)"
+          mkdir -p build-m7/fsuae-screenshots build-m7/fsuae-base
+          set +e
+          timeout 20s xvfb-run -a fs-uae             --base-dir="$PWD/build-m7/fsuae-base"             --fullscreen=0             --window-hidden=1             --sound-card=none             --kickstart-file="$ROM"             --floppy-drive-0="$ADF"             --chip-memory=2             --cpu=68020             --warp-mode=1             --screenshots-output-dir="$PWD/build-m7/fsuae-screenshots"             --screenshots-output-mask=1             > build-m7/fsuae.log 2>&1
+          rc=$?
+          set -e
+          test "$rc" -eq 124
+          if grep -Eqi "kickstart.*(not found|invalid|error)|failed to load|panic|fatal" build-m7/fsuae.log; then
+            cat build-m7/fsuae.log
+            exit 1
+          fi
+          test -s build-m7/fsuae.log
+          find build-m7/fsuae-screenshots -type f -print -quit | grep -q .
+
+      - name: Upload FS-UAE cross-check evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m7-fsuae-aros-crosscheck
+          path: |
+            build-m7/fsuae.log
+            build-m7/fsuae-screenshots/
