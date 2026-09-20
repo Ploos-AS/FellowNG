@@ -84,7 +84,7 @@ See `docs/M4_SDL_FRONTEND.md`.
 
 ## M7 — Emulator qualification
 
-- [x] M7.1: define the qualification profile format and initial A500 1.x, A500+ 2.x, and A1200/020 profile set.
+- [x] M7.1: define separate classic/reference and redistributable AROS/CI qualification profile families; seed classic A500/A500+/A1200 profiles and known-working AROS m68k 68020 boot/desktop baselines.
 - [ ] M7.2: implement deterministic FellowNG runs for the initial profiles using the frozen runtime-result v1 contract.
 - [ ] M7.3: cross-check selected probes against at least one independent emulator implementation.
 - [ ] M7.4: publish a reproducible compatibility matrix including known timing and compatibility differences.
