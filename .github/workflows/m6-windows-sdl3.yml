@@ -52,6 +52,10 @@ jobs:
           $versionExit = $LASTEXITCODE
           if ($versionExit -ne 0) { throw "fellowng-sdl --version failed with exit code $versionExit" }
 
+          & $exe --self-test 2>&1 | Tee-Object -FilePath m6-windows-self-test.log
+          $selfTestExit = $LASTEXITCODE
+          if ($selfTestExit -ne 0) { throw "fellowng-sdl --self-test failed with exit code $selfTestExit" }
+
       - name: Portable tests
         shell: pwsh
         run: |
@@ -65,3 +69,4 @@ jobs:
           path: |
             m6-windows-help.log
             m6-windows-version.log
+            m6-windows-self-test.log
