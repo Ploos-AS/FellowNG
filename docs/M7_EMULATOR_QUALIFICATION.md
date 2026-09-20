@@ -10,13 +10,34 @@ Each profile describes a classic Amiga configuration independently of copyrighte
 ROM or OS media. Profiles are intended for local runs, CI with redistributable
 AROS assets, and external runners such as `amiga-runtime`.
 
-Initial profile set:
+Profiles are split into two families. Classic/reference profiles describe
+historical Amiga configurations and require user-supplied licensed ROM/OS media.
+CI profiles use redistributable AROS m68k assets and are the authoritative public
+GitHub Actions qualification path.
+
+### Classic/reference profiles
 
 | Profile | CPU | Chipset | Chip RAM | Fast RAM | Purpose |
 | --- | --- | --- | --- | --- | --- |
 | A500-1.x | 68000 | OCS | 512 KiB | 0 | baseline OCS/68000 |
 | A500Plus-2.x | 68000 | ECS | 1 MiB | 0 | ECS baseline |
 | A1200-020 | 68020 | AGA | 2 MiB | 8 MiB | representative AGA system |
+
+### AROS/CI profiles
+
+The first CI profile is derived from the configuration already qualified by the
+M4 workflow rather than assuming a one-to-one AROS equivalent for every classic
+machine.
+
+| Profile | CPU | Boot assets | Qualification | Purpose |
+| --- | --- | --- | --- | --- |
+| AROS-m68k-020 | 68020 | official AROS m68k ROM + extended ROM | runtime boot/deep boot | redistributable core CI baseline |
+| AROS-m68k-020-desktop | 68020 | official AROS m68k ROM + extended ROM + boot ADF + Live CD root | desktop framebuffer progress | redistributable end-to-end CI baseline |
+
+The AROS asset fetcher is `tools/fetch_aros_m68k.py`. The existing M4 CI is the
+reference for asset provenance and known-working Fellow arguments. Additional
+AROS profiles must first demonstrate a working configuration before becoming
+qualification baselines.
 
 A qualification record must capture at least:
 
@@ -51,6 +72,4 @@ profile revision.
 
 ## Completion criteria
 
-M7 is complete when the initial three profiles have deterministic FellowNG
-qualification, selected probes have an independently recorded cross-check, and
-the compatibility report is reproducible from documented inputs.
+M7 is complete when the AROS/CI profiles have deterministic public FellowNG qualification, the classic/reference profiles have documented local qualification paths, selected probes have an independently recorded cross-check, and the compatibility report is reproducible from documented inputs.
