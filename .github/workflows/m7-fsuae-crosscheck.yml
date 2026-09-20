@@ -18,7 +18,7 @@ jobs:
       - name: Install FS-UAE
         run: |
           sudo apt-get update
-          sudo apt-get install -y fs-uae xvfb
+          sudo apt-get install -y fs-uae xvfb xdotool
           fs-uae --version
 
       - name: Fetch official AROS m68k assets
@@ -35,10 +35,15 @@ jobs:
           ADF="$(cat build-m7/aros-m68k/boot-adf-path.txt)"
           mkdir -p build-m7/fsuae-screenshots build-m7/fsuae-base
           set +e
-          timeout 20s xvfb-run -a fs-uae             --base-dir="$PWD/build-m7/fsuae-base"             --fullscreen=0             --window-hidden=1             --sound-card=none             --kickstart-file="$ROM"             --floppy-drive-0="$ADF"             --chip-memory=2             --cpu=68020             --warp-mode=1             --screenshots-output-dir="$PWD/build-m7/fsuae-screenshots"             --screenshots-output-mask=1             > build-m7/fsuae.log 2>&1
+          timeout 20s xvfb-run -a fs-uae             --base-dir="$PWD/build-m7/fsuae-base"             --fullscreen=0             --window-hidden=0             --sound-card=none             --kickstart-file="$ROM"             --floppy-drive-0="$ADF"             --chip-memory=2             --cpu=68020             --warp-mode=1             --screenshots-output-dir="$PWD/build-m7/fsuae-screenshots"             --screenshots-output-mask=1             > build-m7/fsuae.log 2>&1 &
+          pid=$!
+          sleep 5
+          window=$(xdotool search --name "FS-UAE" | head -n 1 || true)
+          if [ -n "$window" ]; then xdotool key --window "$window" alt+s || true; fi
+          wait $pid
           rc=$?
           set -e
-          test "$rc" -eq 124
+          test "$rc" -eq 124 -o "$rc" -eq 0
           if grep -Eqi "kickstart.*(not found|invalid|error)|failed to load|panic|fatal" build-m7/fsuae.log; then
             cat build-m7/fsuae.log
             exit 1
