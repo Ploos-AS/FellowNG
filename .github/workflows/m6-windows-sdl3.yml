@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup SDL3
+        uses: libsdl-org/setup-sdl@main
+        with:
+          version: 3.4.16
+
       - name: Configure portable SDL3 frontend
         shell: pwsh
         run: |
