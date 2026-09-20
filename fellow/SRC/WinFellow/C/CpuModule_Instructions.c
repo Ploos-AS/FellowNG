@@ -1882,6 +1882,12 @@ static void cpuStop(uint16_t flags)
 /// </summary>
 static void cpuReset()
 {
+  if (!cpuGetFlagSupervisor())
+  {
+    cpuThrowPrivilegeViolationException();
+    return;
+  }
+
   cpuCallResetExceptionFunc();
   cpuSetInstructionTime(132);
 }
