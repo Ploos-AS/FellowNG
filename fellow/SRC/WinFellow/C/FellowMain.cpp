@@ -488,7 +488,9 @@ static void fellowModulesStartupCommon(
 {
   CoreFactory::CreateServices();
 
+#if !defined(FELLOWNG_PORTABLE_FRONTEND)
   sysinfoLogSysInfo();
+#endif
 
   CoreFactory::CreateDrivers();
   CoreFactory::CreateDebugVM();
