@@ -128,6 +128,28 @@ int main(int argc, char **argv)
   const bool runtime_boot = argc > 1 && std::strcmp(argv[1], "--runtime-boot") == 0;
   const bool runtime_boot_deep = argc > 1 && std::strcmp(argv[1], "--runtime-boot-deep") == 0;
   const bool runtime_boot_desktop = argc > 1 && std::strcmp(argv[1], "--runtime-boot-desktop") == 0;
+  const bool show_help = argc > 1 && (std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0);
+  const bool show_version = argc > 1 && std::strcmp(argv[1], "--version") == 0;
+
+  if (show_help)
+  {
+    std::cout << "FellowNG SDL3 frontend\n\n"
+              << "Usage: fellowng-sdl [mode] [Fellow options]\n\n"
+              << "Modes:\n"
+              << "  --self-test             Run frontend self-tests and exit\n"
+              << "  --runtime-smoke         Start, pump once, stop\n"
+              << "  --runtime-boot          Run bounded boot qualification\n"
+              << "  --runtime-boot-deep     Run deep boot qualification\n"
+              << "  --runtime-boot-desktop  Run visible desktop qualification\n"
+              << "  --version               Print version identity and exit\n"
+              << "  -h, --help              Show this help\n";
+    return EXIT_SUCCESS;
+  }
+  if (show_version)
+  {
+    std::cout << "FellowNG SDL3 frontend (M5)\n";
+    return EXIT_SUCCESS;
+  }
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
   { std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n'; return EXIT_FAILURE; }
   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
