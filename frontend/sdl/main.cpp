@@ -130,6 +130,9 @@ int main(int argc, char **argv)
   const bool runtime_boot_desktop = argc > 1 && std::strcmp(argv[1], "--runtime-boot-desktop") == 0;
   const bool show_help = argc > 1 && (std::strcmp(argv[1], "--help") == 0 || std::strcmp(argv[1], "-h") == 0);
   const bool show_version = argc > 1 && std::strcmp(argv[1], "--version") == 0;
+  bool result_json = false;
+  for (int i = 1; i < argc; ++i)
+    if (std::strcmp(argv[i], "--result-json") == 0) result_json = true;
 
   if (show_help)
   {
@@ -141,6 +144,7 @@ int main(int argc, char **argv)
               << "  --runtime-boot          Run bounded boot qualification\n"
               << "  --runtime-boot-deep     Run deep boot qualification\n"
               << "  --runtime-boot-desktop  Run visible desktop qualification\n"
+              << "  --result-json           Emit machine-readable JSON for successful boot modes\n"
               << "  --version               Print version identity and exit\n"
               << "  -h, --help              Show this help\n";
     return EXIT_SUCCESS;
@@ -267,11 +271,24 @@ int main(int argc, char **argv)
     }
     session.Stop(); audio.Stop(); video.Stop(); SDL_DestroyWindow(window); SDL_Quit();
     const char *boot_mode = runtime_boot_desktop ? "runtime-boot-desktop" : (runtime_boot_deep ? "runtime-boot-deep" : "runtime-boot");
-    std::cout << "FellowNG SDL3 " << boot_mode
-              << ": sustained execution PASS pumps=" << completed_pumps
-              << " slices=" << (completed_pumps * RuntimeSlicesPerPump)
-              << " frames=" << presented_frames << " changed=" << changed_frames
-              << " signature=" << last_signature << "\n";
+    if (result_json)
+    {
+      std::cout << "{\"schema\":\"fellowng.runtime-result.v1\",\"status\":\"pass\",\"mode\":\""
+                << boot_mode << "\",\"pumps\":" << completed_pumps
+                << ",\"slices\":" << (completed_pumps * RuntimeSlicesPerPump)
+                << ",\"frames\":" << presented_frames
+                << ",\"changed_frames\":" << changed_frames
+                << ",\"frame_signature\":" << last_signature
+                << ",\"visible_pixels\":" << video.NonBackgroundPixelCount() << "}\n";
+    }
+    else
+    {
+      std::cout << "FellowNG SDL3 " << boot_mode
+                << ": sustained execution PASS pumps=" << completed_pumps
+                << " slices=" << (completed_pumps * RuntimeSlicesPerPump)
+                << " frames=" << presented_frames << " changed=" << changed_frames
+                << " signature=" << last_signature << "\n";
+    }
     return EXIT_SUCCESS;
   }
 
