@@ -84,9 +84,12 @@ See `docs/M4_SDL_FRONTEND.md`.
 
 ## M7 — Emulator qualification
 
-- Add reproducible compatibility profiles for representative classic Amiga systems.
-- Cross-check selected tests against independent emulator implementations.
-- Document timing and compatibility differences rather than hiding them.
+- [x] M7.1: define the qualification profile format and initial A500 1.x, A500+ 2.x, and A1200/020 profile set.
+- [ ] M7.2: implement deterministic FellowNG runs for the initial profiles using the frozen runtime-result v1 contract.
+- [ ] M7.3: cross-check selected probes against at least one independent emulator implementation.
+- [ ] M7.4: publish a reproducible compatibility matrix including known timing and compatibility differences.
+
+See `docs/M7_EMULATOR_QUALIFICATION.md`.
 
 ## Principles
 
