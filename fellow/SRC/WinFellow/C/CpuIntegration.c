@@ -176,9 +176,11 @@ void cpuIntegrationResetExceptionFunc()
 {
   static uint64_t reset_exception_count = 0;
   ++reset_exception_count;
-  fprintf(stderr, "cpu: RESET exception count=%llu pc=%08x\n",
+  fprintf(stderr, "cpu: RESET exception count=%llu pc=%08x sr=%04x supervisor=%d\n",
           (unsigned long long)reset_exception_count,
-          cpuGetPC());
+          cpuGetPC(),
+          cpuGetSR(),
+          cpuGetFlagSupervisor() ? 1 : 0);
   fflush(stderr);
   fellowSoftReset();
 }
