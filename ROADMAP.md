@@ -44,13 +44,13 @@ M3 provides the portable host contracts required for an SDL frontend without rew
 
 See `docs/M3_PLATFORM_ABSTRACTION.md`.
 
-## M4 — SDL frontend
+## M4 — SDL frontend ✅
 
 - [x] M4.1: SDL3 build/bootstrap, visible window/event loop, and CI self-test.
 - [x] M4.2: SDL3 video backend implementing `IVideoOutput` with XRGB8888 streaming textures.
 - [x] M4.3: SDL3 keyboard/mouse/gamepad backend implementing `IInputSource`.
 - [x] M4.4: SDL3 audio backend implementing `IAudioOutput` for interleaved signed 16-bit PCM.
-- [ ] M4.5: connect SDL backends to the Fellow runtime and boot a representative Amiga configuration interactively.
+- [x] M4.5: connect SDL backends to the Fellow runtime and boot a representative Amiga configuration interactively.
   - [x] M4.5a: portable emulator-runtime contract and frontend session/lifecycle pump.
   - [x] M4.5b: detach Win32 host-service/driver construction behind an injectable platform factory while preserving the Windows default backend.
   - [x] M4.5c: implement `WinFellowRuntime` behind `IEmulatorRuntime`, with injectable module startup/shutdown callbacks and bounded frontend-safe execution slices.
@@ -76,7 +76,7 @@ See `docs/M4_SDL_FRONTEND.md`.
 - [x] M5.13: publish a concise CLI/automation integration guide for external runners such as amiga-runtime. See `docs/M5_CLI_AUTOMATION.md`.
 - [x] M5.14: complete M5 qualification and freeze the `fellowng.runtime-result.v1` automation contract. The final M5 CI baseline passes Linux SDL3/AROS runtime qualification, portable-core checks, repository checks, and Windows MSBuild.
 
-## M6 — Cross-platform expansion
+## M6 — Cross-platform expansion ✅
 
 - [x] M6.1: validate Windows through both the legacy frontend and portable SDL3 frontend. The portable frontend builds on Windows CI and passes CLI discovery, frontend self-test (using SDL dummy audio on the headless runner), and portable CTest coverage while legacy MSBuild remains green.
 - [x] M6.2: add macOS portable SDL3 build support and qualify CLI/self-test behavior. Native Apple Silicon (arm64) CI builds the portable frontend and passes CLI discovery, SDL3 self-test, and portable CTest coverage.
