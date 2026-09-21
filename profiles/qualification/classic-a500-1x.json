@@ -1,0 +1,9 @@
+{
+  "schema": "fellowng.qualification-profile.v1",
+  "id": "classic-a500-1x",
+  "revision": 1,
+  "family": "classic-local",
+  "machine": {"model": "A500", "cpu": "68000", "chipset": "OCS", "chip_ram_kib": 512, "fast_ram_kib": 0},
+  "assets": {"provider": "user-supplied", "kickstart": "1.x", "workbench": "optional", "redistributable": false},
+  "qualification": {"mode": "runtime-boot-deep", "max_pumps": 16384, "result_schema": "fellowng.runtime-result.v1"}
+}
