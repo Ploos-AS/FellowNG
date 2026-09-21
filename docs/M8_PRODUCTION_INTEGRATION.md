@@ -6,9 +6,29 @@ M8 begins after completion of the M0–M7 modernization and emulator-qualificati
 
 M8 focuses on integration and usability rather than a new emulator-core rewrite. The frozen `fellowng.runtime-result.v1` result contract remains the compatibility boundary unless a separately versioned successor is justified.
 
-### M8.1 — amiga-runtime adapter
+### M8.1 — amiga-runtime adapter ✅
 
-Define the command-line, profile, asset, timeout/bound, result, and evidence mapping needed for an external runtime orchestrator to invoke FellowNG deterministically.
+The FellowNG side of the external-runner contract is now defined. An orchestrator such as `amiga-runtime` should treat FellowNG as a process backend with the following mapping:
+
+| Runner concept | FellowNG mapping |
+| --- | --- |
+| executable | `fellowng-sdl` |
+| smoke/boot mode | `--runtime-boot` |
+| sustained boot mode | `--runtime-boot-deep` |
+| desktop mode | `--runtime-boot-desktop` |
+| structured result | `--result-json` / `fellowng.runtime-result.v1` |
+| deterministic bound | `--max-pumps N` |
+| emulator configuration | normal Fellow options after frontend options |
+| success/failure | process exit status plus runtime-result `status` |
+| evidence | stdout, stderr, result JSON and framebuffer evidence where requested |
+
+The external runner owns asset discovery and staging. ROM, filesystem and OS paths are passed to FellowNG through normal Fellow configuration options; they are never embedded in the adapter contract. Public automation must use redistributable assets. Local qualification may use user-supplied licensed assets.
+
+The runner must select exactly one runtime boot mode, request JSON output, provide an explicit pump bound, impose an outer process timeout as a hang/crash guard, preserve stdout/stderr, validate the emitted result against `docs/schema/runtime-result-v1.schema.json`, and archive applicable framebuffer evidence.
+
+Profile translation is intentionally explicit rather than inferred. The runner selects a FellowNG qualification profile or maps its own machine profile to equivalent Fellow configuration. Existing public baselines are `profiles/qualification/aros-m68k-020.json` and `profiles/qualification/aros-m68k-020-desktop.json`. Classic profiles remain local/reference profiles because their ROM/OS assets are not redistributable.
+
+The `fellowng.runtime-result.v1` schema remains frozen. External integration must adapt to that contract rather than introducing runner-specific fields into v1.
 
 The integration must not require copyrighted Kickstart ROMs, AmigaOS/Workbench media, or other proprietary assets to be committed to FellowNG.
 
