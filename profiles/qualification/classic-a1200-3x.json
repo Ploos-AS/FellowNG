@@ -1,0 +1,9 @@
+{
+  "schema": "fellowng.qualification-profile.v1",
+  "id": "classic-a1200-3x",
+  "revision": 1,
+  "family": "classic-local",
+  "machine": {"model": "A1200", "cpu": "68020", "chipset": "AGA", "chip_ram_kib": 2048, "fast_ram_kib": 8192},
+  "assets": {"provider": "user-supplied", "kickstart": "3.x", "workbench": "optional", "redistributable": false},
+  "qualification": {"mode": "runtime-boot-deep", "max_pumps": 16384, "result_schema": "fellowng.runtime-result.v1"}
+}
