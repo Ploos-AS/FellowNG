@@ -8,7 +8,7 @@ FellowNG starts from the existing WinFellow source tree and aims to make Fellow 
 
 The immediate focus is portability: separate the reusable emulator core from Windows-specific host code, establish a portable build, add a modern SDL-based frontend, and make deterministic command-line automation a first-class capability.
 
-> **Project status:** M5 — CLI and automation. Linux now builds and links the real Fellow runtime through the portable SDL3 frontend. CI qualifies AROS m68k boot through visible desktop progress, and the frontend exposes a stable CLI plus machine-readable runtime-result JSON for automation.
+> **Project status:** M7 complete — emulator qualification. FellowNG now has a portable SDL3 frontend on Linux, Windows, and macOS, deterministic CLI/JSON automation, reproducible classic and AROS m68k qualification profiles, public AROS runtime/desktop qualification, and an independent FS-UAE CI cross-check. See [ROADMAP.md](ROADMAP.md) and [docs/M7_COMPATIBILITY_MATRIX.md](docs/M7_COMPATIBILITY_MATRIX.md).
 
 ## Why FellowNG?
 
@@ -44,7 +44,7 @@ The imported WinFellow source lives primarily under:
 fellow/SRC
 ```
 
-The generic emulation engine and Windows-specific implementations are currently intermingled in the historical layout. M1 will inventory these dependencies before structural changes begin.
+The historical source layout still contains intermingled generic emulation and Windows-specific code, but FellowNG now provides portable host abstractions and an SDL3 frontend around the real Fellow runtime.
 
 The existing Visual Studio solution is:
 
@@ -52,19 +52,19 @@ The existing Visual Studio solution is:
 fellow/SRC/WinFellow.sln
 ```
 
-## Building the current baseline
+## Building and qualification
 
-The current functional baseline is still WinFellow and requires Microsoft Visual Studio 2022. GitHub Actions also builds this baseline and runs the existing core and hardfile unit tests.
+The legacy WinFellow Visual Studio build remains supported, while the portable CMake/SDL3 path is qualified on Linux, Windows, macOS Apple Silicon, and Linux ARM64. GitHub Actions exercises the portable core, frontend/CLI behavior, AROS m68k runtime profiles, and the legacy Windows build.
 
-Portable Linux build instructions will be added when the M2 portable-core build exists.
+FellowNG's automation interface emits the frozen `fellowng.runtime-result.v1` JSON contract and supports deterministic bounded runs suitable for external runners such as `amiga-runtime`. See [docs/M5_CLI_AUTOMATION.md](docs/M5_CLI_AUTOMATION.md) for the automation interface and [docs/M7_EMULATOR_QUALIFICATION.md](docs/M7_EMULATOR_QUALIFICATION.md) for qualification.
 
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md).
 
-The planned progression is:
+The first modernization and qualification sequence is complete:
 
-**M0 foundation → M1 portability inventory → M2 portable core → M3 platform abstraction → M4 SDL frontend → M5 CLI/automation → M6 cross-platform expansion → M7 emulator qualification.**
+**M0 foundation ✅ → M1 portability inventory ✅ → M2 portable core ✅ → M3 platform abstraction ✅ → M4 SDL frontend ✅ → M5 CLI/automation ✅ → M6 cross-platform expansion ✅ → M7 emulator qualification ✅.**
 
 ## Upstream and provenance
 
