@@ -60,15 +60,31 @@ if family == "classic-local":
 env = os.environ.copy()
 env.setdefault("SDL_VIDEODRIVER", "dummy")
 env.setdefault("SDL_AUDIODRIVER", "dummy")
+evidence_dir = pathlib.Path(args.evidence_dir)
+evidence_dir.mkdir(parents=True, exist_ok=True)
 print("profile:", profile["id"], "revision", profile["revision"], "family", family)
 proc = subprocess.run(cmd, env=env, text=True, stdout=subprocess.PIPE,
                       stderr=subprocess.STDOUT)
 print(proc.stdout, end="")
+(evidence_dir / "fellowng.log").write_text(proc.stdout)
+(evidence_dir / "exit-status.txt").write_text(str(proc.returncode) + "\n")
 lines = proc.stdout.splitlines()
 results = [json.loads(x) for x in lines if x.startswith('{"schema":')]
 if not results:
     raise SystemExit("FellowNG emitted no runtime result")
 result = results[-1]
+(evidence_dir / "runtime-result.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+metadata = {
+    "schema": "fellowng.qualification-evidence.v1",
+    "profile": profile["id"],
+    "profile_revision": profile["revision"],
+    "family": family,
+    "mode": q["mode"],
+    "max_pumps": q["max_pumps"],
+    "cpu": profile["machine"]["cpu"],
+}
+(evidence_dir / "qualification-metadata.json").write_text(
+    json.dumps(metadata, indent=2, sort_keys=True) + "\n")
 if result.get("schema") != q["result_schema"]:
     raise SystemExit("unexpected runtime result schema")
 if result.get("status") != "pass" or proc.returncode != 0:
