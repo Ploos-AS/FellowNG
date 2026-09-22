@@ -47,11 +47,41 @@ The evidence files contain runtime/profile results, not ROM or Workbench content
 Do not commit an evidence set if emulator output unexpectedly contains private
 local paths or proprietary data.
 
+
+## A500+ / Kickstart 2.x
+
+The A500+ baseline uses `classic-a500plus-2x.json`: 68000, ECS and 1 MiB Chip
+RAM. Create a separate asset directory so ROM/Workbench generations cannot be
+mixed accidentally:
+
+```text
+$HOME/.local/share/fellowng/qualification/a500plus-2x/
+  rom-path.txt
+  workbench-path.txt        # optional
+  boot-adf-path.txt         # optional
+```
+
+Run:
+
+```sh
+python3 tools/run_qualification_profile.py \
+  profiles/qualification/classic-a500plus-2x.json \
+  --fellowng /path/to/fellowng-sdl \
+  --assets "$HOME/.local/share/fellowng/qualification/a500plus-2x" \
+  --evidence-dir ./evidence/classic-a500plus-2x
+```
+
+The required ROM is a user-supplied licensed Kickstart 2.x image appropriate for
+the A500+ baseline. Workbench 2.x media is optional for the bounded ROM/runtime
+probe and is added only when guest OS behavior is part of the qualification.
+
+The pass gate is identical to the A500 baseline: process exit status zero plus a
+passing `fellowng.runtime-result.v1` result. Evidence remains asset-free.
+
 ## Remaining classic baselines
 
 The same mechanism is used for:
 
-- `classic-a500plus-2x.json`
 - `classic-a1200-3x.json`
 
 M8.2 is complete only after all three profiles have been exercised with
