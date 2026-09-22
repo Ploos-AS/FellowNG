@@ -61,3 +61,50 @@ ARexx evidence is additive to the frozen `fellowng.runtime-result.v1` emulator
 result. A qualification bundle should retain the emulator result plus raw probe
 output and a separate parsed ARexx result. This avoids adding FellowNG-specific
 guest-test fields to the frozen runtime schema.
+
+
+## M8.3f — Cross-emulator contract
+
+The same guest probe and parser are the interoperability boundary for FellowNG,
+FS-UAE and Amiberry. An external orchestrator such as `amiga-runtime` must not
+rewrite the probe per emulator.
+
+Each backend is responsible only for:
+
+1. presenting the staged `arexx-baseline-v1.rexx` file to the same licensed
+   m68k Workbench guest;
+2. invoking `RX T:FellowNG-ARexx-Probe.rexx` (or an equivalent staged guest
+   path recorded in `fellowng.arexx-stage.v1`);
+3. capturing the probe's plain-ASCII output without altering its records;
+4. preserving emulator/runtime evidence independently from guest ARexx evidence;
+5. parsing the captured output with `tools/parse_arexx_probe.py`.
+
+A comparable result tuple is:
+
+```text
+emulator
+emulator_version
+machine_profile
+guest_os_profile
+probe_sha256
+fellowng.arexx-result.v1
+emulator_runtime_result
+```
+
+`probe_sha256` must match across compared runs. A PASS from one emulator does
+not imply PASS for another; every backend records its own observed result.
+
+The external runner may wrap these fields in its own versioned result envelope,
+but must preserve the raw `fellowng.arexx-result.v1` document and must not add
+backend-specific semantics to the guest probe.
+
+### Qualification state
+
+| Backend | Contract | Local m68k execution |
+| --- | --- | --- |
+| FellowNG | READY | NOT RUN |
+| FS-UAE | READY for amiga-runtime adapter | NOT RUN |
+| Amiberry | READY for amiga-runtime adapter | NOT RUN |
+
+These rows become PASS only after the identical probe has actually executed in
+the corresponding m68k guest and produced passing evidence.
