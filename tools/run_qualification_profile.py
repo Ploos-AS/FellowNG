@@ -1,27 +1,31 @@
 #!/usr/bin/env python3
-"""Run a FellowNG AROS qualification profile."""
+"""Run a FellowNG qualification profile."""
 from __future__ import annotations
-import argparse, json, os, pathlib, subprocess, sys
+import argparse, json, os, pathlib, subprocess
 
 def read_path(root: pathlib.Path, name: str, required: bool = True) -> str:
     p = root / name
     value = p.read_text().strip() if p.exists() else ""
     if required and not value:
-        raise SystemExit(f"required AROS asset missing: {name}")
+        raise SystemExit(f"required qualification asset missing: {name}")
+    if value and not pathlib.Path(value).exists():
+        raise SystemExit(f"qualification asset path does not exist ({name}): {value}")
     return value
 
 ap = argparse.ArgumentParser()
 ap.add_argument("profile")
 ap.add_argument("--fellowng", required=True)
-ap.add_argument("--assets", required=True)
+ap.add_argument("--assets", required=True,
+                help="directory containing asset path files; assets themselves remain outside the repository")
 ap.add_argument("--evidence-dir", default=".")
 args = ap.parse_args()
 
 profile = json.loads(pathlib.Path(args.profile).read_text())
 if profile.get("schema") != "fellowng.qualification-profile.v1":
     raise SystemExit("unsupported qualification profile schema")
-if profile.get("family") != "aros-ci":
-    raise SystemExit("profile is not an AROS CI profile")
+family = profile.get("family")
+if family not in ("aros-ci", "classic-local"):
+    raise SystemExit(f"unsupported qualification profile family: {family}")
 
 assets = pathlib.Path(args.assets)
 q = profile["qualification"]
@@ -34,7 +38,7 @@ ext = read_path(assets, "ext-path.txt", False)
 if ext:
     cmd += ["-s", "kickstart_rom_file_ext=" + ext]
 
-if q["mode"] == "runtime-boot-desktop":
+if family == "aros-ci" and q["mode"] == "runtime-boot-desktop":
     adf = read_path(assets, "boot-adf-path.txt")
     live = read_path(assets, "live-root-path.txt")
     fs = profile["filesystem"]
@@ -42,10 +46,21 @@ if q["mode"] == "runtime-boot-desktop":
             "-s", "floppy0_readonly=yes", "-s", "autoconfig=yes",
             "-s", f"filesystem=ro,{fs['live_volume']}:{live}"]
 
+if family == "classic-local":
+    # Optional licensed boot media/filesystem. Path files contain only local
+    # references; copyrighted assets must never be copied into the repository.
+    workbench = read_path(assets, "workbench-path.txt", False)
+    boot_adf = read_path(assets, "boot-adf-path.txt", False)
+    if workbench:
+        cmd += ["-s", "autoconfig=yes", "-s", f"filesystem=rw,Workbench:{workbench}"]
+    if boot_adf:
+        cmd += ["-s", "floppy0=" + boot_adf, "-s", "floppy0_enabled=yes",
+                "-s", "floppy0_readonly=yes"]
+
 env = os.environ.copy()
 env.setdefault("SDL_VIDEODRIVER", "dummy")
 env.setdefault("SDL_AUDIODRIVER", "dummy")
-print("profile:", profile["id"], "revision", profile["revision"])
+print("profile:", profile["id"], "revision", profile["revision"], "family", family)
 proc = subprocess.run(cmd, env=env, text=True, stdout=subprocess.PIPE,
                       stderr=subprocess.STDOUT)
 print(proc.stdout, end="")
