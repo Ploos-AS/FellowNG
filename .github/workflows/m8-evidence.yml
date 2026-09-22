@@ -1,0 +1,24 @@
+name: M8 Evidence Contract
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "tools/build_evidence_manifest.py"
+      - "tools/validate_evidence_bundle.py"
+      - "tools/test_evidence_tools.py"
+      - ".github/workflows/m8-evidence.yml"
+  pull_request:
+    paths:
+      - "tools/build_evidence_manifest.py"
+      - "tools/validate_evidence_bundle.py"
+      - "tools/test_evidence_tools.py"
+      - ".github/workflows/m8-evidence.yml"
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run evidence regression tests
+        run: python3 tools/test_evidence_tools.py
