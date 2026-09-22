@@ -78,11 +78,41 @@ probe and is added only when guest OS behavior is part of the qualification.
 The pass gate is identical to the A500 baseline: process exit status zero plus a
 passing `fellowng.runtime-result.v1` result. Evidence remains asset-free.
 
+
+## A1200 / Kickstart 3.x
+
+The A1200 baseline uses `classic-a1200-3x.json`: 68020, AGA, 2 MiB Chip RAM
+and 8 MiB Fast RAM. Keep its licensed assets in a dedicated directory:
+
+```text
+$HOME/.local/share/fellowng/qualification/a1200-3x/
+  rom-path.txt
+  workbench-path.txt        # optional
+  boot-adf-path.txt         # optional
+```
+
+Run:
+
+```sh
+python3 tools/run_qualification_profile.py \
+  profiles/qualification/classic-a1200-3x.json \
+  --fellowng /path/to/fellowng-sdl \
+  --assets "$HOME/.local/share/fellowng/qualification/a1200-3x" \
+  --evidence-dir ./evidence/classic-a1200-3x
+```
+
+The required ROM is a user-supplied licensed Kickstart 3.x image appropriate for
+the A1200 baseline. Workbench 3.x media is optional for the bounded ROM/runtime
+probe and is supplied only for guest OS qualification.
+
+The pass gate remains process exit status zero plus a passing
+`fellowng.runtime-result.v1` result. Evidence must not contain ROM, Workbench or
+other proprietary content.
+
 ## Remaining classic baselines
 
 The same mechanism is used for:
 
-- `classic-a1200-3x.json`
 
 M8.2 is complete only after all three profiles have been exercised with
 appropriate licensed local assets and their results have been recorded without
