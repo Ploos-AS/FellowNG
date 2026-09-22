@@ -109,6 +109,28 @@ The pass gate remains process exit status zero plus a passing
 `fellowng.runtime-result.v1` result. Evidence must not contain ROM, Workbench or
 other proprietary content.
 
+
+## Classic qualification matrix
+
+`READY` means the profile, runner mapping, asset boundary and evidence procedure
+are implemented and ready for a licensed local run. `PASS` is reserved for a
+profile that has actually been executed successfully with the appropriate local
+assets.
+
+| Profile | Machine baseline | Assets | Procedure | Local result |
+| --- | --- | --- | --- | --- |
+| `classic-a500-1x` | A500, 68000, OCS, 512 KiB Chip | user-supplied Kickstart 1.x | READY | NOT RUN |
+| `classic-a500plus-2x` | A500+, 68000, ECS, 1 MiB Chip | user-supplied Kickstart 2.x | READY | NOT RUN |
+| `classic-a1200-3x` | A1200, 68020, AGA, 2 MiB Chip + 8 MiB Fast | user-supplied Kickstart 3.x | READY | NOT RUN |
+
+A row may change to `PASS` only from captured evidence produced by the
+qualification runner. Documentation readiness alone is never a qualification
+result. Failed or incomplete runs should be recorded as such rather than being
+collapsed into `READY`.
+
+This distinction lets public development continue without redistributing
+copyrighted Amiga assets while preserving an auditable completion gate for M8.2.
+
 ## Remaining classic baselines
 
 The same mechanism is used for:
