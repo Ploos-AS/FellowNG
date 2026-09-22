@@ -85,6 +85,18 @@ metadata = {
 }
 (evidence_dir / "qualification-metadata.json").write_text(
     json.dumps(metadata, indent=2, sort_keys=True) + "\n")
+manifest_cmd = [
+    os.environ.get("PYTHON", "python3"), "tools/build_evidence_manifest.py",
+    str(evidence_dir),
+    "--profile", profile["id"],
+    "--profile-revision", str(profile["revision"]),
+    "--mode", q["mode"],
+    "--max-pumps", str(q["max_pumps"]),
+]
+revision = os.environ.get("FELLOWNG_REVISION")
+if revision:
+    manifest_cmd += ["--fellowng-revision", revision]
+subprocess.run(manifest_cmd, check=True)
 if result.get("schema") != q["result_schema"]:
     raise SystemExit("unexpected runtime result schema")
 if result.get("status") != "pass" or proc.returncode != 0:
