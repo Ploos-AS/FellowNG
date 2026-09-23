@@ -42,6 +42,29 @@ jobs:
           set -o pipefail
           ./build-m4/frontend/sdl/fellowng-sdl --self-test 2>&1 | tee sdl-self-test.log
 
+      - name: M8.5 configuration usability regression
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: |
+          cat > fellowng-test.conf <<'EOF'
+          # portable config
+          cpu_type=68000
+          ; another comment
+          -s chipmem_size=4
+          EOF
+          ./build-m4/frontend/sdl/fellowng-sdl --config fellowng-test.conf --print-config -s cpu_type=68020 | tee config.log
+          grep -q "config: cpu_type=68000" config.log
+          grep -q "config: chipmem_size=4" config.log
+          grep -q "command-line: cpu_type=68020" config.log
+          set +e
+          ./build-m4/frontend/sdl/fellowng-sdl --config does-not-exist.conf --print-config
+          test "$?" -ne 0
+          printf 'not-an-assignment\n' > fellowng-bad.conf
+          ./build-m4/frontend/sdl/fellowng-sdl --config fellowng-bad.conf --print-config
+          test "$?" -ne 0
+          set -e
+
       - name: Real runtime smoke without copyrighted ROM
         env:
           SDL_VIDEODRIVER: dummy
