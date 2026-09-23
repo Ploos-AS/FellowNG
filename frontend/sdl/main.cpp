@@ -135,9 +135,11 @@ int main(int argc, char **argv)
   bool result_json = false;
   int max_pumps = -1;
   const char *config_path = nullptr;
+  bool print_config = false;
   for (int i = 1; i < argc; ++i)
   {
     if (std::strcmp(argv[i], "--result-json") == 0) result_json = true;
+    else if (std::strcmp(argv[i], "--print-config") == 0) print_config = true;
     else if (std::strcmp(argv[i], "--config") == 0 && i + 1 < argc) config_path = argv[++i];
     else if (std::strcmp(argv[i], "--max-pumps") == 0 && i + 1 < argc) max_pumps = std::atoi(argv[++i]);
   }
@@ -154,6 +156,7 @@ int main(int argc, char **argv)
               << "  --runtime-boot-desktop  Run visible desktop qualification\n"
               << "  --result-json           Emit machine-readable JSON for boot results\n"
               << "  --config FILE           Load Fellow options from a portable text config\n"
+              << "  --print-config          Print resolved config inputs and exit\n"
               << "  --max-pumps N           Bound boot execution for automation\n"
               << "  --version               Print version identity and exit\n"
               << "  -h, --help              Show this help\n";
@@ -213,6 +216,23 @@ int main(int argc, char **argv)
     }
   }
 
+  if (print_config)
+  {
+    std::cout << "FellowNG resolved configuration inputs\n";
+    for (std::size_t i = 0; i + 1 < config_args.size(); i += 2)
+      std::cout << "config: " << config_args[i + 1] << '\n';
+    for (int i = 1; i < argc; ++i)
+    {
+      if (std::strcmp(argv[i], "--config") == 0 && i + 1 < argc) { ++i; continue; }
+      if (std::strcmp(argv[i], "--print-config") == 0) continue;
+      if (std::strcmp(argv[i], "--result-json") == 0) continue;
+      if (std::strcmp(argv[i], "--max-pumps") == 0 && i + 1 < argc) { ++i; continue; }
+      if (std::strcmp(argv[i], "-s") == 0 && i + 1 < argc)
+        std::cout << "command-line: " << argv[++i] << '\n';
+    }
+    return EXIT_SUCCESS;
+  }
+
   // Normal execution owns the real Fellow runtime through the portable
   // runtime-factory/session seam. ROM and AmigaOS paths remain ordinary
   // user-supplied Fellow command-line/configuration inputs.
@@ -223,6 +243,7 @@ int main(int argc, char **argv)
   for (int i = (runtime_smoke || runtime_boot || runtime_boot_deep || runtime_boot_desktop) ? 2 : 1; i < argc; ++i)
   {
     if (std::strcmp(argv[i], "--result-json") == 0) continue;
+    if (std::strcmp(argv[i], "--print-config") == 0) continue;
     if (std::strcmp(argv[i], "--config") == 0 && i + 1 < argc) { ++i; continue; }
     if (std::strcmp(argv[i], "--max-pumps") == 0 && i + 1 < argc) { ++i; continue; }
     runtime_argv.push_back(argv[i]);
