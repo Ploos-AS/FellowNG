@@ -18,7 +18,13 @@
 #include "SdlVideoOutput.h"
 #include "WinFellowRuntimeFactory.h"
 
-#ifndef FELLOWNG_VERSION\n#define FELLOWNG_VERSION "dev"\n#endif\n\nnamespace\n{\n  constexpr int DefaultWidth = 720;
+#ifndef FELLOWNG_VERSION
+#define FELLOWNG_VERSION "dev"
+#endif
+
+namespace
+{
+  constexpr int DefaultWidth = 720;
   constexpr int DefaultHeight = 568;
   constexpr std::uint32_t TestWidth = 320;
   constexpr std::uint32_t TestHeight = 256;
@@ -162,7 +168,7 @@ int main(int argc, char **argv)
   }
   if (show_version)
   {
-    std::cout << "FellowNG " << FELLOWNG_VERSION << " SDL3 frontend\\n";
+    std::cout << "FellowNG " << FELLOWNG_VERSION << " SDL3 frontend\n";
     return EXIT_SUCCESS;
   }
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD))
