@@ -1,0 +1,110 @@
+name: M8 Release Artifacts
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version identity
+        required: false
+        default: ci
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            host: linux
+            arch: x86_64
+            binary: build/frontend/sdl/fellowng-sdl
+          - os: ubuntu-24.04-arm
+            host: linux
+            arch: arm64
+            binary: build/frontend/sdl/fellowng-sdl
+          - os: macos-15
+            host: macos
+            arch: arm64
+            binary: build/frontend/sdl/fellowng-sdl
+          - os: windows-latest
+            host: windows
+            arch: x86_64
+            binary: build/frontend/sdl/Release/fellowng-sdl.exe
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SDL3
+        id: sdl
+        uses: libsdl-org/setup-sdl@main
+        with:
+          version: 3.4.16
+          install-linux-dependencies: true
+
+      - name: Select version
+        id: version
+        shell: bash
+        run: |
+          VERSION="${{ inputs.version }}"
+          if [ -z "$VERSION" ]; then VERSION="ci-${GITHUB_SHA::12}"; fi
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Configure
+        shell: bash
+        run: >-
+          cmake -S . -B build
+          -DFELLOWNG_BUILD_TESTS=OFF
+          -DFELLOWNG_BUILD_SDL_FRONTEND=ON
+          -DFELLOWNG_RELEASE_VERSION="${{ steps.version.outputs.value }}"
+          -DCMAKE_PREFIX_PATH="${{ steps.sdl.outputs.prefix }}"
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 2
+
+      - name: Verify release identity
+        shell: bash
+        run: |
+          "${{ matrix.binary }}" --help
+          "${{ matrix.binary }}" --version | tee version.txt
+          grep -F "${{ steps.version.outputs.value }}" version.txt
+
+      - name: Package
+        shell: bash
+        run: |
+          python3 tools/package_release.py \
+            --version "${{ steps.version.outputs.value }}" \
+            --binary "${{ matrix.binary }}" \
+            --host "${{ matrix.host }}" \
+            --arch "${{ matrix.arch }}" \
+            --output-dir dist
+
+      - name: Validate archive and checksum
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, pathlib
+          checksums=list(pathlib.Path("dist").glob("*.sha256"))
+          assert len(checksums)==1
+          line=checksums[0].read_text().strip()
+          digest,name=line.split(None,1)
+          archive=pathlib.Path("dist")/name
+          assert archive.is_file()
+          assert hashlib.sha256(archive.read_bytes()).hexdigest()==digest
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fellowng-${{ steps.version.outputs.value }}-${{ matrix.host }}-${{ matrix.arch }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
