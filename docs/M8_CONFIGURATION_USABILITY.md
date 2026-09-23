@@ -51,3 +51,40 @@ for portability and diagnostics.
 - M8.5c: `--print-config` resolved configuration diagnostics.
 - M8.5d: malformed/unknown-option diagnostics and regression tests.
 - M8.5e: interactive configuration documentation and CI qualification.
+
+
+## M8.5e — Interactive use and qualified baseline
+
+The portable configuration path is now qualified in CI.
+
+Example:
+
+```text
+# fellowng.conf
+cpu_type=68020
+chipmem_size=4
+```
+
+Inspect it without booting:
+
+```sh
+fellowng-sdl --config fellowng.conf --print-config
+```
+
+Override a value explicitly:
+
+```sh
+fellowng-sdl --config fellowng.conf --print-config -s cpu_type=68000
+```
+
+The printed provenance makes the layering visible. Explicit command-line Fellow
+options remain later inputs than file-backed options and therefore retain the
+intended override position.
+
+The CI baseline covers comments, plain `key=value`, existing `-s key=value`
+syntax, provenance output, command-line override input, missing files, and
+malformed lines. The Linux SDL3 workflow passes this regression suite.
+
+Qualification automation should still specify all boot-critical values
+explicitly. `--config` is primarily an interactive/integration convenience and
+does not authorize automatic discovery of proprietary assets.
