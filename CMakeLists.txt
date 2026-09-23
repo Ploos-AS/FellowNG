@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(FellowNG VERSION 0.1.0 LANGUAGES C CXX)
+project(FellowNG VERSION 0.1.0 LANGUAGES C CXX)\n\nset(FELLOWNG_RELEASE_VERSION "${PROJECT_VERSION}" CACHE STRING "FellowNG release/version identity")
 
 option(FELLOWNG_BUILD_TESTS "Build FellowNG portable-core tests" ON)
 option(FELLOWNG_BUILD_SDL_FRONTEND "Build the FellowNG SDL3 frontend" OFF)
