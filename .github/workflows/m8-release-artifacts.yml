@@ -74,6 +74,7 @@ jobs:
         run: |
           BINARY="${{ matrix.binary }}"
           if [ "${{ matrix.host }}" = "windows" ]; then
+            cp "$SDL3_ROOT/bin/SDL3.dll" "$(dirname "$BINARY")/SDL3.dll"
             export PATH="$(pwd)/$(dirname "$BINARY"):$PATH"
             BINARY="$(basename "$BINARY")"
           fi
