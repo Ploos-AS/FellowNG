@@ -74,7 +74,8 @@ jobs:
         run: |
           BINARY="${{ matrix.binary }}"
           if [ "${{ matrix.host }}" = "windows" ]; then
-            BINARY="./$BINARY"
+            export PATH="$(pwd)/$(dirname "$BINARY"):$PATH"
+            BINARY="$(basename "$BINARY")"
           fi
           "$BINARY" --help
           "$BINARY" --version | tee version.txt
