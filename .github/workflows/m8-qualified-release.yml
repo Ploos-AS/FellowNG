@@ -4,6 +4,18 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Dry-run release version identity
+        required: false
+        default: dry-run
+        type: string
+      publish:
+        description: Publish a GitHub Release (tag pushes publish automatically)
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -12,10 +24,11 @@ jobs:
   qualify:
     uses: ./.github/workflows/m8-release-artifacts.yml
     with:
-      version: ${{ github.ref_name }}
+      version: ${{ github.event_name == 'push' && github.ref_name || inputs.version }}
 
   publish:
     needs: qualify
+    if: ${{ github.event_name == 'push' || inputs.publish }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +36,7 @@ jobs:
       - name: Download qualified artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: fellowng-${{ github.ref_name }}-*
+          pattern: fellowng-${{ github.event_name == 'push' && github.ref_name || inputs.version }}-*
           path: dist
           merge-multiple: true
 
