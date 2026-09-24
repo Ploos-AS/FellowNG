@@ -11,6 +11,12 @@ on:
         description: Release version identity
         required: false
         default: ci
+  workflow_call:
+    inputs:
+      version:
+        description: Release version identity
+        required: true
+        type: string
 
 permissions:
   contents: read
