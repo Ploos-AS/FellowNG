@@ -102,7 +102,7 @@ jobs:
           ./build-m4/frontend/sdl/fellowng-sdl --help | tee sdl-cli-help.log
           grep -q -- "--result-json" sdl-cli-help.log
           ./build-m4/frontend/sdl/fellowng-sdl --version | tee sdl-cli-version.log
-          grep -q "FellowNG SDL3 frontend" sdl-cli-version.log
+          grep -Eq "FellowNG .+ SDL3 frontend" sdl-cli-version.log
           ROM="$(cat build-m4/aros-m68k/rom-path.txt)"
           EXT="$(cat build-m4/aros-m68k/ext-path.txt)"
           args=(--runtime-boot --result-json -s "kickstart_rom_file=$ROM" -s "cpu_type=68020")
