@@ -1,0 +1,42 @@
+name: Qualified Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    uses: ./.github/workflows/m8-release-artifacts.yml
+    with:
+      version: ${{ github.ref_name }}
+
+  publish:
+    needs: qualify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download qualified artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fellowng-${{ github.ref_name }}-*
+          path: dist
+          merge-multiple: true
+
+      - name: Reject guest assets before publication
+        shell: bash
+        run: |
+          test -n "$(find dist -maxdepth 1 -type f \( -name '*.tar.gz' -o -name '*.zip' \) -print -quit)"
+          if find dist -type f \( -iname '*.rom' -o -iname '*.adf' -o -iname '*.hdf' -o -iname '*.ipf' -o -iname '*.dms' \) -print -quit | grep -q .; then
+            echo "forbidden guest asset found"
+            exit 1
+          fi
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh release create "${{ github.ref_name }}" dist/*             --repo "${{ github.repository }}"             --verify-tag             --generate-notes             --title "FellowNG ${{ github.ref_name }}"
