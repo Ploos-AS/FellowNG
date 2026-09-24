@@ -72,8 +72,12 @@ jobs:
       - name: Verify release identity
         shell: bash
         run: |
-          "${{ matrix.binary }}" --help
-          "${{ matrix.binary }}" --version | tee version.txt
+          BINARY="${{ matrix.binary }}"
+          if [ "${{ matrix.host }}" = "windows" ]; then
+            BINARY="./$BINARY"
+          fi
+          "$BINARY" --help
+          "$BINARY" --version | tee version.txt
           grep -F "${{ steps.version.outputs.value }}" version.txt
 
       - name: Package
