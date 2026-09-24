@@ -57,6 +57,10 @@ jobs:
           if [ -z "$VERSION" ]; then VERSION="ci-${GITHUB_SHA::12}"; fi
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Test release validation tooling
+        shell: bash
+        run: python3 tools/test_release_tools.py
+
       - name: Configure
         shell: bash
         run: >-
@@ -95,16 +99,9 @@ jobs:
       - name: Validate archive and checksum
         shell: bash
         run: |
-          python3 - <<'PY'
-          import hashlib, pathlib
-          checksums=list(pathlib.Path("dist").glob("*.sha256"))
-          assert len(checksums)==1
-          line=checksums[0].read_text().strip()
-          digest,name=line.split(None,1)
-          archive=pathlib.Path("dist")/name
-          assert archive.is_file()
-          assert hashlib.sha256(archive.read_bytes()).hexdigest()==digest
-          PY
+          ARCHIVE="$(find dist -maxdepth 1 -type f \( -name '*.tar.gz' -o -name '*.zip' \) -print -quit)"
+          test -n "$ARCHIVE"
+          python3 tools/validate_release_archive.py "$ARCHIVE"
 
       - uses: actions/upload-artifact@v4
         with:
