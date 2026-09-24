@@ -4,6 +4,14 @@ on:
   push:
     tags:
       - 'v*'
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/m8-qualified-release.yml'
+      - '.github/workflows/m8-release-artifacts.yml'
+      - 'tools/package_release.py'
+      - 'tools/validate_release_archive.py'
+      - 'tools/test_release_tools.py'
   workflow_dispatch:
     inputs:
       version:
@@ -24,7 +32,7 @@ jobs:
   qualify:
     uses: ./.github/workflows/m8-release-artifacts.yml
     with:
-      version: ${{ github.event_name == 'push' && github.ref_name || inputs.version }}
+      version: ${{ github.event_name == 'push' && github.ref_name || github.event_name == 'workflow_dispatch' && inputs.version || format('pr-{0}', github.event.pull_request.number) }}
 
   publish:
     needs: qualify
@@ -36,7 +44,7 @@ jobs:
       - name: Download qualified artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: fellowng-${{ github.event_name == 'push' && github.ref_name || inputs.version }}-*
+          pattern: fellowng-${{ github.event_name == 'push' && github.ref_name || github.event_name == 'workflow_dispatch' && inputs.version || format('pr-{0}', github.event.pull_request.number) }}-*
           path: dist
           merge-multiple: true
 
