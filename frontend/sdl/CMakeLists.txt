@@ -13,7 +13,8 @@ add_executable(fellowng-sdl-runtime-factory-smoke
   SdlFrontendSession.cpp
 )
 
-target_compile_features(fellowng-sdl PRIVATE cxx_std_20)\ntarget_compile_definitions(fellowng-sdl PRIVATE FELLOWNG_VERSION="${FELLOWNG_RELEASE_VERSION}")
+target_compile_features(fellowng-sdl PRIVATE cxx_std_20)
+target_compile_definitions(fellowng-sdl PRIVATE FELLOWNG_VERSION="${FELLOWNG_RELEASE_VERSION}")
 target_compile_features(fellowng-sdl-runtime-factory-smoke PRIVATE cxx_std_20)
 
 target_link_libraries(fellowng-sdl
