@@ -19,11 +19,6 @@ on:
         required: false
         default: dry-run
         type: string
-      publish:
-        description: Publish a GitHub Release (tag pushes publish automatically)
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: write
@@ -34,9 +29,8 @@ jobs:
     with:
       version: ${{ github.event_name == 'push' && github.ref_name || github.event_name == 'workflow_dispatch' && inputs.version || format('pr-{0}', github.event.pull_request.number) }}
 
-  publish:
+  release-gate:
     needs: qualify
-    if: ${{ github.event_name == 'push' || inputs.publish }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -59,6 +53,7 @@ jobs:
           test "$count" -eq 4
 
       - name: Publish GitHub release
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
