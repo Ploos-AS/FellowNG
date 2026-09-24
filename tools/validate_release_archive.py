@@ -26,7 +26,7 @@ for raw in names:
     p=pathlib.PurePosixPath(raw)
     if p.is_absolute() or ".." in p.parts: raise SystemExit(f"unsafe archive path: {raw}")
     if not p.parts or p.parts[0]!=base: raise SystemExit(f"unexpected archive root: {raw}")
-    if raw.endswith("/"): continue
+    if raw.endswith("/") or len(p.parts)==1: continue
     files.append(p)
 required={"LICENSE","README.md"}
 leaf={p.name for p in files}
