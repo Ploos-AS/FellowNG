@@ -32,15 +32,29 @@ The `fellowng.runtime-result.v1` schema remains frozen. External integration mus
 
 The integration must not require copyrighted Kickstart ROMs, AmigaOS/Workbench media, or other proprietary assets to be committed to FellowNG.
 
-### M8.2 — classic local qualification
+### M8.2 — classic local qualification ✅
 
-Use the existing classic/reference profile family to qualify representative configurations with user-supplied assets:
+Classic local qualification is implemented through the common `tools/run_qualification_profile.py` runner and the three versioned reference profiles:
 
-- A500 / Kickstart 1.x
-- A500+ / Kickstart 2.x
-- A1200 / 68020 / Kickstart 3.x
+- `classic-a500-1x`: A500, 68000, OCS, 512 KiB chip RAM, Kickstart 1.x.
+- `classic-a500plus-2x`: A500+, 68000, ECS, 1 MiB chip RAM, Kickstart 2.x.
+- `classic-a1200-3x`: A1200, 68020, AGA, 2 MiB chip RAM plus 8 MiB fast RAM, Kickstart 3.x.
 
-Public CI continues to use redistributable assets only.
+The runner requires an external asset directory containing `rom-path.txt`. Optional `workbench-path.txt`, `boot-adf-path.txt`, and `ext-path.txt` files may point to locally licensed Workbench/filesystem, boot floppy, and extended ROM assets. These path files and assets are local inputs and are not committed.
+
+Example:
+
+```sh
+python3 tools/run_qualification_profile.py \
+  profiles/qualification/classic-a500-1x.json \
+  --fellowng ./build/fellowng-sdl \
+  --assets /path/to/local/a500-assets \
+  --evidence-dir evidence/classic-a500-1x
+```
+
+The same invocation pattern applies to the A500+ and A1200 profiles. A successful run must emit `fellowng.runtime-result.v1`, return exit status 0, match the profile's requested runtime mode, and produce a validated evidence bundle.
+
+This completes the repository-side classic-local qualification support. Actual ROM/Workbench compatibility results are machine- and asset-specific and are recorded only when the licensed local assets are supplied. Public CI continues to use redistributable assets only.
 
 ### M8.3 — ARexx m68k qualification
 
