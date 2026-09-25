@@ -56,9 +56,17 @@ The same invocation pattern applies to the A500+ and A1200 profiles. A successfu
 
 This completes the repository-side classic-local qualification support. Actual ROM/Workbench compatibility results are machine- and asset-specific and are recorded only when the licensed local assets are supplied. Public CI continues to use redistributable assets only.
 
-### M8.3 — ARexx m68k qualification
+### M8.3 — ARexx m68k qualification ✅
 
-Add a guest-side ARexx probe executed on the emulated m68k environment. The probe must provide deterministic pass/fail evidence and must not substitute an x86 AROS-host ARexx implementation for the guest m68k environment.
+FellowNG now contains a project-authored guest probe at `probes/arexx/arexx-baseline-v1.rexx` plus host-side staging, execution-evidence, and parsing tools.
+
+`tools/stage_arexx_probe.py` copies the probe into a user-supplied Workbench filesystem and records its SHA-256 plus the guest `RX` launch command. `tools/run_arexx_qualification.py` prepares the evidence directory and, after guest execution, gates the captured output through `tools/parse_arexx_probe.py`.
+
+The parser emits the machine-readable `fellowng.arexx-result.v1` result and requires the versioned begin/pass markers, at least one test record, no failed test records, and no guest final-failure marker. This keeps the guest test result independent of screenshots and human log interpretation.
+
+The qualification target is explicitly the emulated **m68k guest ARexx environment**. Host-side or x86 AROS ARexx execution is not accepted as a substitute. Licensed Workbench/ARexx components remain user-supplied and outside the repository.
+
+This completes the repository-side deterministic ARexx m68k qualification path. Emulator/OS-specific compatibility evidence is produced when a licensed guest environment is supplied.
 
 ### M8.4 — runtime evidence contract
 
