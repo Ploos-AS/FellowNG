@@ -96,7 +96,7 @@ See `docs/M7_EMULATOR_QUALIFICATION.md`.
 M8 turns the qualified emulator into a practical backend for day-to-day development and automated Amiga software qualification.
 
 - [x] **M8.1 — amiga-runtime adapter:** define and document the FellowNG invocation/profile/result mapping required by external runtime orchestration while keeping `fellowng.runtime-result.v1` stable.
-- [ ] **M8.2 — classic local qualification:** exercise A500 1.x, A500+ 2.x, and A1200 3.x reference profiles with user-supplied Kickstart/Workbench assets; no copyrighted ROM or OS assets are stored in the repository.
+- [x] **M8.2 — classic local qualification:** classic A500 1.x, A500+ 2.x, and A1200 3.x reference profiles are wired through the common local qualification/evidence runner for user-supplied licensed assets; no copyrighted ROM or OS assets are stored in the repository.
 - [ ] **M8.3 — ARexx m68k qualification:** add a deterministic guest-side ARexx probe and machine-readable pass/fail evidence suitable for cross-emulator qualification.
 - [x] **M8.4 — runtime evidence contract:** standardize logs, screenshots/framebuffers, profile metadata, exit status, and JSON results so external runners can archive comparable evidence.
 - [x] **M8.5 — configuration usability:** improve portable profile/config loading and diagnostics for interactive users without weakening deterministic automation.
