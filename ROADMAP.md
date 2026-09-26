@@ -110,7 +110,7 @@ See `docs/M8_PRODUCTION_INTEGRATION.md`.
 
 M9 expands the qualified production baseline from boot/runtime proof into narrower, reproducible compatibility evidence. M8 remains the frozen integration baseline.
 
-- [ ] **M9.1 — compatibility probe framework:** define a versioned, machine-readable probe/result contract for CPU, chipset, CIA, storage, input, audio, and timing-sensitive tests.
+- [x] **M9.1 — compatibility probe framework:** define a versioned, machine-readable probe/result contract for CPU, chipset, CIA, storage, input, audio, and timing-sensitive tests.
 - [ ] **M9.2 — CPU and exception probes:** add deterministic 68000/68020 instruction, exception, interrupt, and alignment workloads using redistributable test payloads.
 - [ ] **M9.3 — chipset probes:** qualify OCS/ECS/AGA-visible behavior for Copper, Blitter, bitplanes, sprites, interrupts, and representative DMA interactions.
 - [ ] **M9.4 — CIA/input/storage/audio probes:** add focused tests for CIA timers/ports, keyboard/joystick/mouse input, floppy/hardfile behavior, and Paula audio paths.
