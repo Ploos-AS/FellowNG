@@ -80,9 +80,15 @@ Make portable configuration/profile selection and diagnostics convenient enough 
 
 Produce versioned portable artifacts and release checks for supported hosts. Release work must retain the legacy Windows baseline until the portable frontend has an explicitly documented replacement policy.
 
-### M8.7 — integration qualification
+### M8.7 — integration qualification ✅
 
-Run FellowNG through the external amiga-runtime integration and record reproducible qualification results, including known limitations and differences from other emulator backends.
+External integration qualification passed in Ploos-AS/amiga-runtime GitHub Actions run #357 (2026-09-26), against amiga-runtime commit `7a91820069b7937ae8197a8d41920a48252267c8`.
+
+The run built `fellowng-sdl` from source, detected the backend as available with automation contract `fellowng.runtime-result.v1`, and completed the redistributable `a1200-020-aros` sustained boot profile. FellowNG emitted `status=pass` after 16,384 pumps / 67,108,864 slices with observable framebuffer progress.
+
+The emulator-neutral `qualify-aros-boot ... --emulator fellowng` path also passed and reported Q3, `guest_boot_proven=true`, and the FellowNG deterministic runtime-result as its proof. The four-backend comparison across FS-UAE, Amiberry, FellowNG, and Copperline completed with overall PASS, with all four backends reporting PASS for the same AROS m68k profile.
+
+The same workflow's `regina-m68k` and runtime jobs both completed successfully, so this baseline is reproducible from public, redistributable inputs rather than copyrighted Kickstart/Workbench assets. This establishes the external integration baseline; classic proprietary-asset compatibility remains a local qualification concern.
 
 ### M8.8 — completion gate
 
