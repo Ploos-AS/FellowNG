@@ -8,7 +8,7 @@ FellowNG starts from the existing WinFellow source tree and aims to make Fellow 
 
 The immediate focus is portability: separate the reusable emulator core from Windows-specific host code, establish a portable build, add a modern SDL-based frontend, and make deterministic command-line automation a first-class capability.
 
-> **Project status:** M7 complete — emulator qualification. FellowNG now has a portable SDL3 frontend on Linux, Windows, and macOS, deterministic CLI/JSON automation, reproducible classic and AROS m68k qualification profiles, public AROS runtime/desktop qualification, and an independent FS-UAE CI cross-check. See [ROADMAP.md](ROADMAP.md) and [docs/M7_COMPATIBILITY_MATRIX.md](docs/M7_COMPATIBILITY_MATRIX.md).
+> **Project status:** M8 complete — production usability and runtime integration. FellowNG provides a portable SDL3 frontend on Linux, Windows, and macOS, deterministic CLI/JSON automation, reproducible classic/local and public AROS m68k qualification profiles, and a qualified external `amiga-runtime` backend. The production baseline passed Q3 emulator-neutral dispatch and a four-backend FS-UAE/Amiberry/FellowNG/Copperline comparison. See [ROADMAP.md](ROADMAP.md), [docs/M8_PRODUCTION_INTEGRATION.md](docs/M8_PRODUCTION_INTEGRATION.md), and [docs/M7_COMPATIBILITY_MATRIX.md](docs/M7_COMPATIBILITY_MATRIX.md).
 
 ## Why FellowNG?
 
@@ -64,7 +64,7 @@ See [ROADMAP.md](ROADMAP.md).
 
 The first modernization and qualification sequence is complete:
 
-**M0 foundation ✅ → M1 portability inventory ✅ → M2 portable core ✅ → M3 platform abstraction ✅ → M4 SDL frontend ✅ → M5 CLI/automation ✅ → M6 cross-platform expansion ✅ → M7 emulator qualification ✅.**
+**M0 foundation ✅ → M1 portability inventory ✅ → M2 portable core ✅ → M3 platform abstraction ✅ → M4 SDL frontend ✅ → M5 CLI/automation ✅ → M6 cross-platform expansion ✅ → M7 emulator qualification ✅ → M8 production integration ✅.**
 
 ## Upstream and provenance
 
