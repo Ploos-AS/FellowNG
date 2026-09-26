@@ -82,7 +82,7 @@ Produce versioned portable artifacts and release checks for supported hosts. Rel
 
 ### M8.7 — integration qualification ✅
 
-External integration qualification passed in Ploos-AS/amiga-runtime GitHub Actions run #357 (2026-09-26), against amiga-runtime commit `7a91820069b7937ae8197a8d41920a48252267c8`.
+External integration qualification passed in Ploos-AS/amiga-runtime GitHub Actions run `36245110517` (2026-09-26), against amiga-runtime commit `d08e1de0b82fdd3a6d2c7faa237c4674df378814`.
 
 The run built `fellowng-sdl` from source, detected the backend as available with automation contract `fellowng.runtime-result.v1`, and completed the redistributable `a1200-020-aros` sustained boot profile. FellowNG emitted `status=pass` after 16,384 pumps / 67,108,864 slices with observable framebuffer progress.
 
@@ -92,7 +92,7 @@ The same workflow's `regina-m68k` and runtime jobs both completed successfully, 
 
 ### M8.8 — completion gate ✅
 
-M8 is complete. The first production-integration baseline is reproducible, documented, externally consumable through `amiga-runtime`, and recorded in the compatibility matrix. The completion evidence is external amiga-runtime GitHub Actions run #357 (2026-09-26), where both `regina-m68k` and `runtime` completed successfully and FellowNG passed direct backend qualification, Q3 emulator-neutral dispatch, and the four-backend comparison.
+M8 is complete. The first production-integration baseline is reproducible, documented, externally consumable through `amiga-runtime`, and recorded in the compatibility matrix. The completion evidence is external amiga-runtime GitHub Actions run `36245110517` (2026-09-26), where both `regina-m68k` and `runtime` completed successfully and FellowNG passed direct backend qualification, Q3 emulator-neutral dispatch, and the four-backend comparison. The Q3 CI assertion explicitly requires FellowNG `guest_boot_proven=true`.
 
 ## Constraints
 
