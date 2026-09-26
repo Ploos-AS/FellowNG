@@ -1,0 +1,23 @@
+name: M9 Compatibility Probes
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  probe-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate M9 probe contract
+        run: |
+          set -euo pipefail
+          python3 tools/validate_compat_probe_result.py tests/compat-probes/framework-pass.json
+          python3 -m json.tool docs/schema/compat-probe-result-v1.schema.json >/dev/null
+          grep -q 'fellowng.compat-probe-result.v1' docs/schema/compat-probe-result-v1.schema.json
+          echo 'FellowNG M9.1 compatibility probe framework: PASS'
