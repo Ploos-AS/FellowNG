@@ -106,6 +106,23 @@ M8 turns the qualified emulator into a practical backend for day-to-day developm
 
 See `docs/M8_PRODUCTION_INTEGRATION.md`.
 
+## M9 — Compatibility depth and real workloads 🚧
+
+M9 expands the qualified production baseline from boot/runtime proof into narrower, reproducible compatibility evidence. M8 remains the frozen integration baseline.
+
+- [ ] **M9.1 — compatibility probe framework:** define a versioned, machine-readable probe/result contract for CPU, chipset, CIA, storage, input, audio, and timing-sensitive tests.
+- [ ] **M9.2 — CPU and exception probes:** add deterministic 68000/68020 instruction, exception, interrupt, and alignment workloads using redistributable test payloads.
+- [ ] **M9.3 — chipset probes:** qualify OCS/ECS/AGA-visible behavior for Copper, Blitter, bitplanes, sprites, interrupts, and representative DMA interactions.
+- [ ] **M9.4 — CIA/input/storage/audio probes:** add focused tests for CIA timers/ports, keyboard/joystick/mouse input, floppy/hardfile behavior, and Paula audio paths.
+- [ ] **M9.5 — application workloads:** run redistributable real Amiga applications/demos or project-authored workloads through deterministic profiles and archive machine-readable evidence.
+- [ ] **M9.6 — cross-emulator comparison:** compare applicable probes through amiga-runtime across FellowNG, FS-UAE, Amiberry, and Copperline without treating another emulator as an oracle.
+- [ ] **M9.7 — classic local compatibility suite:** provide the same workload harness for user-supplied licensed A500/A500+/A1200 environments while keeping proprietary assets outside Git.
+- [ ] **M9.8 — compatibility matrix:** publish per-subsystem and per-workload results, known differences, regressions, and evidence references.
+- [ ] **M9.9 — regression gate:** promote stable redistributable probes into CI so established FellowNG compatibility cannot regress silently.
+- [ ] **M9.10 — complete M9:** freeze the first compatibility-depth baseline while preserving the M8 automation contract.
+
+See `docs/M9_COMPATIBILITY_DEPTH.md`.
+
 ## Principles
 
 1. Preserve Fellow's independent emulator lineage.
