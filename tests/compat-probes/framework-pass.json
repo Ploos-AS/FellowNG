@@ -1,0 +1,1 @@
+{"schema":"fellowng.compat-probe-result.v1","probe":"framework-selftest","subsystem":"cpu","profile":"framework","status":"PASS","execution_bound":{"kind":"slices","value":1},"observations":[{"name":"contract","value":"v1"}],"evidence":["selftest"]}
