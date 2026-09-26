@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ploos.dev/fellowng/schema/compat-probe-result-v1.schema.json",
+  "title": "FellowNG compatibility probe result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","probe","subsystem","profile","status","observations"],
+  "properties": {
+    "schema": {"const": "fellowng.compat-probe-result.v1"},
+    "probe": {"type":"string","minLength":1},
+    "subsystem": {"enum":["cpu","exceptions","interrupts","chipset","dma","cia","input","storage","audio","os-runtime","application"]},
+    "profile": {"type":"string","minLength":1},
+    "status": {"enum":["PASS","FAIL","SKIP"]},
+    "execution_bound": {"type":"object","additionalProperties":false,"properties":{"kind":{"enum":["pumps","slices","frames","seconds"]},"value":{"type":"integer","minimum":1}},"required":["kind","value"]},
+    "observations": {"type":"array","items":{"type":"object","additionalProperties":false,"required":["name","value"],"properties":{"name":{"type":"string","minLength":1},"value":{"type":["string","number","integer","boolean","null"]}}}},
+    "evidence": {"type":"array","items":{"type":"string","minLength":1}},
+    "reason": {"type":"string"}
+  },
+  "allOf": [{"if":{"properties":{"status":{"const":"SKIP"}}},"then":{"required":["reason"]}}]
+}
