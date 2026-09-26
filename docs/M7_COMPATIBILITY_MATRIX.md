@@ -55,3 +55,21 @@ baseline while keeping classic proprietary-media profiles available for local
 qualification. Future compatibility work can add narrower CPU, chipset, timing,
 audio, input, storage, and application probes without changing the frozen M5
 runtime-result v1 contract.
+
+
+## M8 production integration baseline
+
+The first production-integration baseline was qualified externally by `Ploos-AS/amiga-runtime` GitHub Actions run #357 on 2026-09-26 (amiga-runtime commit `7a91820069b7937ae8197a8d41920a48252267c8`).
+
+| Integration path | Profile | Result | Evidence |
+| --- | --- | --- | --- |
+| FellowNG backend discovery | n/a | PASS | `fellowng-sdl` available; automation contract `fellowng.runtime-result.v1` |
+| Direct FellowNG runtime backend | a1200-020-aros | PASS | deterministic deep boot, 16,384 pumps / 67,108,864 slices, framebuffer progress |
+| Emulator-neutral dispatch | a1200-020-aros | PASS / Q3 | `guest_boot_proven=true`; FellowNG runtime-result v1 proof |
+| Four-backend comparison | a1200-020-aros | PASS | FS-UAE, Amiberry, FellowNG, and Copperline all PASS |
+
+This baseline uses redistributable AROS m68k inputs. It does not convert the classic/reference rows above into public proprietary-ROM compatibility claims. Classic Kickstart/Workbench qualification remains local and asset-dependent.
+
+### M8 conclusion
+
+M8 freezes `fellowng.runtime-result.v1` as the first production-integration automation boundary and demonstrates that FellowNG can be consumed as an external backend rather than only by its own repository CI. The external baseline covers backend discovery, deterministic AROS m68k boot evidence, Q3 emulator-neutral dispatch, and cross-backend comparison. Future compatibility expansion can add narrower semantic, timing, application, and licensed-classic probes without weakening this baseline.
