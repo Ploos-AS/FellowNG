@@ -101,8 +101,8 @@ M8 turns the qualified emulator into a practical backend for day-to-day developm
 - [x] **M8.4 — runtime evidence contract:** standardize logs, screenshots/framebuffers, profile metadata, exit status, and JSON results so external runners can archive comparable evidence.
 - [x] **M8.5 — configuration usability:** improve portable profile/config loading and diagnostics for interactive users without weakening deterministic automation.
 - [x] **M8.6 — release readiness:** establish versioned portable build artifacts and release checks for the supported host matrix.
-- [x] **M8.7 — integration qualification:** FellowNG passed the external `amiga-runtime` GitHub Actions integration in run #357 (2026-09-26), including backend discovery, deterministic AROS m68k Q3 boot qualification, emulator-neutral dispatch, and the four-backend FS-UAE/Amiberry/FellowNG/Copperline comparison.
-- [x] **M8.8 — complete M8:** the first production-integration baseline is frozen and published in the compatibility matrix, backed by external amiga-runtime CI run #357.
+- [x] **M8.7 — integration qualification:** FellowNG passed the external `amiga-runtime` GitHub Actions integration in run `36245110517` (2026-09-26), including backend discovery, deterministic AROS m68k Q3 boot qualification, emulator-neutral dispatch, and the four-backend FS-UAE/Amiberry/FellowNG/Copperline comparison. The Q3 CI gate explicitly requires `fellowng.guest_boot_proven == true`.
+- [x] **M8.8 — complete M8:** the first production-integration baseline is frozen and published in the compatibility matrix, backed by external amiga-runtime CI run `36245110517`.
 
 See `docs/M8_PRODUCTION_INTEGRATION.md`.
 
