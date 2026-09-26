@@ -90,9 +90,9 @@ The emulator-neutral `qualify-aros-boot ... --emulator fellowng` path also passe
 
 The same workflow's `regina-m68k` and runtime jobs both completed successfully, so this baseline is reproducible from public, redistributable inputs rather than copyrighted Kickstart/Workbench assets. This establishes the external integration baseline; classic proprietary-asset compatibility remains a local qualification concern.
 
-### M8.8 — completion gate
+### M8.8 — completion gate ✅
 
-M8 is complete when the production-integration baseline is reproducible, documented, externally consumable, and represented in an updated compatibility matrix.
+M8 is complete. The first production-integration baseline is reproducible, documented, externally consumable through `amiga-runtime`, and recorded in the compatibility matrix. The completion evidence is external amiga-runtime GitHub Actions run #357 (2026-09-26), where both `regina-m68k` and `runtime` completed successfully and FellowNG passed direct backend qualification, Q3 emulator-neutral dispatch, and the four-backend comparison.
 
 ## Constraints
 
