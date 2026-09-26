@@ -10,7 +10,7 @@ Public CI uses only redistributable inputs. Copyrighted Kickstart ROMs, Workbenc
 
 Cross-emulator testing is comparative evidence, not an assumption that any one emulator is the correctness oracle.
 
-## M9.1 — compatibility probe framework
+## M9.1 — compatibility probe framework ✅
 
 The first step is a small versioned probe framework that can express a test identity, subsystem, machine/profile requirements, deterministic execution bound, observations, PASS/FAIL/SKIP result, and evidence references.
 
@@ -30,3 +30,8 @@ Probe payloads should be project-authored or otherwise redistributable, small en
 ## Completion criteria
 
 M9 is complete when representative redistributable probes cover the major subsystems, stable probes run as regression gates, applicable evidence can be compared across emulator backends, classic/local execution is documented, and the compatibility matrix records both successful behavior and known differences.
+
+
+### M9.1 qualification
+
+The v1 probe contract, validator, fixture, and dedicated GitHub Actions gate passed in M9 Compatibility Probes run #1 on commit `62896fded0acb6d3cb5ea47e7fcb2b9a46602c0e`. The schema identifier `fellowng.compat-probe-result.v1` is now the frozen M9.1 compatibility-probe result boundary.
