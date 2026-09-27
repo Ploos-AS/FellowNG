@@ -4,6 +4,7 @@
 #include <iterator>
 #include <vector>
 
+#include "Defs.h"
 #include "CpuModule.h"
 #include "MemoryInterface.h"
 
