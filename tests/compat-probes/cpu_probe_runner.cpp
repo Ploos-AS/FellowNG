@@ -6,6 +6,7 @@
 
 #include "Defs.h"
 #include "CpuModule.h"
+#include "CpuIntegration.h"
 #include "MemoryInterface.h"
 #include "VirtualHost/CoreFactory.h"
 
@@ -34,7 +35,7 @@ int main(int argc, char **argv) {
   // normal Kickstart overlay before loading vectors and code.
   memoryChipMap(false);
 
-  cpuStartup();
+  cpuIntegrationStartup();
   cpuSetModel(0, 0);
   cpuSetCheckPendingInterruptsFunc(no_interrupts);
   cpuSetMidInstructionExceptionFunc(mid_instruction);
