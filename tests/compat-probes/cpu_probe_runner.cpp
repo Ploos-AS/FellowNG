@@ -7,6 +7,7 @@
 #include "Defs.h"
 #include "CpuModule.h"
 #include "MemoryInterface.h"
+#include "VirtualHost/CoreFactory.h"
 
 namespace {
 void no_interrupts() {}
@@ -25,6 +26,7 @@ int main(int argc, char **argv) {
   if (!in.good() && !in.eof()) return 2;
   if (image.empty() || image.size() > 512 * 1024) return 2;
 
+  CoreFactory::CreateServices();
   memoryStartup();
   memorySetChipSize(512 * 1024);
   memoryHardReset();
@@ -68,5 +70,6 @@ int main(int argc, char **argv) {
             << "\"}}\n";
 
   memoryShutdown();
+  CoreFactory::DestroyServices();
   return pass ? 0 : 1;
 }
