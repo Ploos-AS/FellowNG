@@ -37,6 +37,8 @@ after_illegal:
         moveq #0,%d0
         divu %d0,%d1
 after_divzero:
+        .global trap_site
+trap_site:
         trap #0
 after_trap:
         /* Enter user mode, then execute privileged STOP. */
