@@ -14,6 +14,11 @@ namespace {
 void no_interrupts() {}
 void mid_instruction() {}
 void reset_exception() {}
+
+char marker(uint32_t address) {
+  const uint8_t value = memoryReadByte(address);
+  return value >= 0x20 && value <= 0x7e ? static_cast<char>(value) : '.';
+}
 }
 
 int main(int argc, char **argv) {
@@ -52,8 +57,19 @@ int main(int argc, char **argv) {
   constexpr uint32_t result = 0x1000;
   bool pass = false;
   uint32_t instructions = 0;
+  uint32_t last_pc = cpuGetPC();
+  uint32_t stagnant_pc_count = 0;
   for (; instructions < 10000; ++instructions) {
     cpuExecuteInstruction();
+
+    const uint32_t pc = cpuGetPC();
+    if (pc == last_pc) {
+      ++stagnant_pc_count;
+    } else {
+      stagnant_pc_count = 0;
+      last_pc = pc;
+    }
+
     if (memoryReadByte(result) == 'I' &&
         memoryReadByte(result + 1) == 'D' &&
         memoryReadByte(result + 2) == 'T' &&
@@ -61,7 +77,23 @@ int main(int argc, char **argv) {
       pass = true;
       break;
     }
+
+    // A bare-metal probe should always make forward progress except for its
+    // terminal loop. Stop early on a stuck CPU so CI reports the useful PC
+    // and partial exception markers instead of burning all 10k instructions.
+    if (stagnant_pc_count >= 32) break;
   }
+
+  const char m0 = marker(result);
+  const char m1 = marker(result + 1);
+  const char m2 = marker(result + 2);
+  const char m3 = marker(result + 3);
+
+  const char *stage = "entry";
+  if (m0 == 'I') stage = "after-illegal";
+  if (m0 == 'I' && m1 == 'D') stage = "after-divzero";
+  if (m0 == 'I' && m1 == 'D' && m2 == 'T') stage = "after-trap";
+  if (m0 == 'I' && m1 == 'D' && m2 == 'T' && m3 == 'P') stage = "complete";
 
   std::cout << "{\"schema\":\"fellowng.compat-probe-result.v1\","
             << "\"probe\":\"m68000-exception-vectors-v1\","
@@ -71,10 +103,12 @@ int main(int argc, char **argv) {
             << ",\"pc\":" << cpuGetPC()
             << ",\"entry_word\":" << memoryReadWord(0x400)
             << ",\"vector_illegal\":" << memoryReadLong(0x10)
+            << ",\"vector_divzero\":" << memoryReadLong(0x14)
+            << ",\"vector_privilege\":" << memoryReadLong(0x20)
             << ",\"vector_trap0\":" << memoryReadLong(0x80)
-            << ",\"markers\":\""
-            << char(memoryReadByte(result)) << char(memoryReadByte(result + 1))
-            << char(memoryReadByte(result + 2)) << char(memoryReadByte(result + 3))
+            << ",\"stage\":\"" << stage << "\""
+            << ",\"stagnant_pc_count\":" << stagnant_pc_count
+            << ",\"markers\":\"" << m0 << m1 << m2 << m3
             << "\"}}\n";
 
   memoryShutdown();
