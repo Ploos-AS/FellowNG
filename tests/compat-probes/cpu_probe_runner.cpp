@@ -70,6 +70,7 @@ int main(int argc, char **argv) {
             << ",\"pc\":" << cpuGetPC()
             << ",\"entry_word\":" << memoryReadWord(0x400)
             << ",\"vector_illegal\":" << memoryReadLong(0x10)
+            << ",\"vector_trap0\":" << memoryReadLong(0x80)
             << ",\"markers\":\""
             << char(memoryReadByte(result)) << char(memoryReadByte(result + 1))
             << char(memoryReadByte(result + 2)) << char(memoryReadByte(result + 3))
