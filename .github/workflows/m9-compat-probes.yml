@@ -21,3 +21,25 @@ jobs:
           python3 -m json.tool docs/schema/compat-probe-result-v1.schema.json >/dev/null
           grep -q 'fellowng.compat-probe-result.v1' docs/schema/compat-probe-result-v1.schema.json
           echo 'FellowNG M9.1 compatibility probe framework: PASS'
+
+  cpu-probe-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install m68k binutils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-m68k-linux-gnu
+      - name: Validate and build M9.2a 68000 exception probe
+        run: |
+          set -euo pipefail
+          python3 tools/stage_cpu_probe.py probes/cpu/m68000-exception-vectors-v1.json
+          python3 tools/build_cpu_probe.py probes/cpu/m68000-exception-vectors-v1.S --output m68000-exception-vectors-v1.bin
+          test -s m68000-exception-vectors-v1.bin
+          python3 tools/stage_cpu_probe.py probes/cpu/m68000-exception-vectors-v1.json --image m68000-exception-vectors-v1.bin --output staged.bin
+          cmp m68000-exception-vectors-v1.bin staged.bin
+          echo 'FellowNG M9.2a CPU probe build: PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m68000-exception-vectors-v1
+          path: m68000-exception-vectors-v1.bin
