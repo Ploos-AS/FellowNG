@@ -30,6 +30,9 @@ int main(int argc, char **argv) {
   memoryStartup();
   memorySetChipSize(512 * 1024);
   memoryHardReset();
+  // Bare-metal probes execute from chip RAM at address zero; disable the
+  // normal Kickstart overlay before loading vectors and code.
+  memoryChipMap(false);
 
   cpuStartup();
   cpuSetModel(0, 0);
