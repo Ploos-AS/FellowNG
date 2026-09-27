@@ -48,12 +48,18 @@ jobs:
           set -euo pipefail
           RUNNER="$(find build -type f -name fellowng-cpu-probe-runner -perm -111 | head -n1)"
           test -n "$RUNNER"
+          set +e
           "$RUNNER" m68000-exception-vectors-v1.bin | tee m68000-exception-vectors-v1-result.json
+          runner_status=${PIPESTATUS[0]}
+          set -e
           python3 tools/validate_compat_probe_result.py m68000-exception-vectors-v1-result.json
+          cat m68000-exception-vectors-v1-result.json
+          test "$runner_status" -eq 0
           grep -q '"status":"PASS"' m68000-exception-vectors-v1-result.json
           grep -q '"markers":"IDTP"' m68000-exception-vectors-v1-result.json
           echo 'FellowNG M9.2a real CPU execution: PASS'
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: m68000-exception-vectors-v1
           path: |
