@@ -72,6 +72,7 @@ add_library(FellowNG.Emulation.Portable STATIC
   ../WinFellow.Core/CustomChipset/RegisterUtility.cpp
   ../WinFellow.Core/CustomChipset/Registers.cpp
   ../WinFellow.Core/DebugApi/DebugVM.cpp
+  ../WinFellow.Core/Driver/PortableSoundDriver.cpp
   DebugApi/M68K.cpp
   DebugApi/MemorySystem.cpp
   ../WinFellow.Core/Module/Hardfile/HardfileConfiguration.cpp
