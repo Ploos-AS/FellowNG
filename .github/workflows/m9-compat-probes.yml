@@ -39,7 +39,23 @@ jobs:
           python3 tools/stage_cpu_probe.py probes/cpu/m68000-exception-vectors-v1.json --image m68000-exception-vectors-v1.bin --output staged.bin
           cmp m68000-exception-vectors-v1.bin staged.bin
           echo 'FellowNG M9.2a CPU probe build: PASS'
+      - name: Configure FellowNG CPU probe runner
+        run: cmake -S . -B build -DFELLOWNG_BUILD_TESTS=ON -DFELLOWNG_BUILD_EMULATION_CORE=ON -DFELLOWNG_BUILD_SDL_FRONTEND=OFF
+      - name: Build FellowNG CPU probe runner
+        run: cmake --build build --target fellowng-cpu-probe-runner -j2
+      - name: Execute M9.2a payload in FellowNG 68000 core
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-cpu-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          "$RUNNER" m68000-exception-vectors-v1.bin | tee m68000-exception-vectors-v1-result.json
+          python3 tools/validate_compat_probe_result.py m68000-exception-vectors-v1-result.json
+          grep -q '"status":"PASS"' m68000-exception-vectors-v1-result.json
+          grep -q '"markers":"IDTP"' m68000-exception-vectors-v1-result.json
+          echo 'FellowNG M9.2a real CPU execution: PASS'
       - uses: actions/upload-artifact@v4
         with:
           name: m68000-exception-vectors-v1
-          path: m68000-exception-vectors-v1.bin
+          path: |
+            m68000-exception-vectors-v1.bin
+            m68000-exception-vectors-v1-result.json
