@@ -13,6 +13,6 @@ if not all((as_cmd,objcopy,ld)):
 with tempfile.TemporaryDirectory() as td:
     o=pathlib.Path(td)/"probe.o"; elf=pathlib.Path(td)/"probe.elf"
     subprocess.run([as_cmd,"-m68000","-o",str(o),args.source],check=True)
-    subprocess.run([ld,"-Ttext=0x400","-Tdata=0x1000","-o",str(elf),str(o)],check=True)
+    linker_script=pathlib.Path(td)/"probe.ld"\n    linker_script.write_text("""SECTIONS\n{\n  . = 0;\n  .vectors : { *(.vectors) }\n  . = 0x400;\n  .text : { *(.text*) }\n  . = 0x1000;\n  .data : { *(.data*) }\n}\n""")\n    subprocess.run([ld,"-T",str(linker_script),"-o",str(elf),str(o)],check=True)
     subprocess.run([objcopy,"-O","binary",str(elf),args.output],check=True)
 print("built:",args.output)
