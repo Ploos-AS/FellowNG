@@ -22,7 +22,6 @@
         .long trap0_handler
 
         .section .text,"ax"
-        .org 0x400
 start:
         lea result_area,%a0
         moveq #0,%d0
@@ -64,7 +63,6 @@ privilege_handler:
         rte
 
         .section .data,"aw"
-        .org 0x1000
         .global result_area
 result_area:
         .space 16
