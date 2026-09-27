@@ -1,0 +1,16 @@
+{
+  "schema": "fellowng.cpu-probe-image.v1",
+  "id": "m68000-exception-vectors-v1",
+  "cpu": "68000",
+  "subsystem": "exceptions",
+  "load_address": 0,
+  "reset_pc": 1024,
+  "result_schema": "fellowng.compat-probe-result.v1",
+  "cases": [
+    "illegal-instruction-vector",
+    "divide-by-zero-vector",
+    "trap-vector",
+    "privilege-violation-vector",
+    "address-error-alignment"
+  ]
+}
