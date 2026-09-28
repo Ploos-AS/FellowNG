@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
   cpuSetSspDirect(0x0007fff0);
   cpuSetUspDirect(0x0007f000);
   cpuSetSR(0x2700);
-  cpuSetPC(0x00000400);
+  cpuInitializeFromNewPC(0x00000400);
 
   constexpr uint32_t result = 0x1000;
   bool pass = false;
@@ -65,12 +65,12 @@ int main(int argc, char **argv) {
   uint32_t trap_return_pc = 0xffffffff;
   for (; instructions < 10000; ++instructions) {
     const uint32_t pc_before = cpuGetPC();
-    const uint16_t opcode_before = memoryReadWord(pc_before);
     cpuExecuteInstruction();
+    const uint32_t opcode_pc = cpuGetOriginalPC();
 
     const uint32_t pc = cpuGetPC();
-    if (opcode_before == 0x4e40 && trap_opcode_pc == 0xffffffff) {
-      trap_opcode_pc = pc_before;
+    if (opcode_pc == 0x00000420 && trap_opcode_pc == 0xffffffff) {
+      trap_opcode_pc = opcode_pc;
       trap_dispatch_pc = pc;
     } else if (trap_dispatch_pc != 0xffffffff && trap_handler_pc == 0xffffffff) {
       trap_handler_pc = pc;
