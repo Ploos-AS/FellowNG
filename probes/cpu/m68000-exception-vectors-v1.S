@@ -58,6 +58,8 @@ divzero_handler:
         rte
 trap0_handler:
         move.b #'T',result_area+2
+        /* TRAP stacks the return PC (the instruction after TRAP), so unlike
+         * illegal/divzero/privilege the handler must not adjust stacked PC. */
         rte
 privilege_handler:
         move.b #'P',result_area+3
