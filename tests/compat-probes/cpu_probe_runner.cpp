@@ -59,10 +59,21 @@ int main(int argc, char **argv) {
   uint32_t instructions = 0;
   uint32_t last_pc = cpuGetPC();
   uint32_t stagnant_pc_count = 0;
+  uint32_t trap_dispatch_pc = 0xffffffff;
+  uint32_t trap_handler_pc = 0xffffffff;
+  uint32_t trap_return_pc = 0xffffffff;
   for (; instructions < 10000; ++instructions) {
+    const uint32_t pc_before = cpuGetPC();
     cpuExecuteInstruction();
 
     const uint32_t pc = cpuGetPC();
+    if (pc_before == 0x00000420) {
+      trap_dispatch_pc = pc;
+    } else if (trap_dispatch_pc != 0xffffffff && trap_handler_pc == 0xffffffff) {
+      trap_handler_pc = pc;
+    } else if (trap_handler_pc != 0xffffffff && trap_return_pc == 0xffffffff) {
+      trap_return_pc = pc;
+    }
     if (pc == last_pc) {
       ++stagnant_pc_count;
     } else {
@@ -108,6 +119,9 @@ int main(int argc, char **argv) {
             << ",\"vector_trap0\":" << memoryReadLong(0x80)
             << ",\"stage\":\"" << stage << "\""
             << ",\"stagnant_pc_count\":" << stagnant_pc_count
+            << ",\"trap_dispatch_pc\":" << trap_dispatch_pc
+            << ",\"trap_handler_pc\":" << trap_handler_pc
+            << ",\"trap_return_pc\":" << trap_return_pc
             << ",\"markers\":\"" << m0 << m1 << m2 << m3
             << "\"}}\n";
 
