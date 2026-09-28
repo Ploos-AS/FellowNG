@@ -65,10 +65,11 @@ int main(int argc, char **argv) {
   uint32_t trap_return_pc = 0xffffffff;
   for (; instructions < 10000; ++instructions) {
     const uint32_t pc_before = cpuGetPC();
+    const uint16_t opcode_before = memoryReadWord(pc_before);
     cpuExecuteInstruction();
 
     const uint32_t pc = cpuGetPC();
-    if (memoryReadWord(pc_before) == 0x4e40 && trap_opcode_pc == 0xffffffff) {
+    if (opcode_before == 0x4e40 && trap_opcode_pc == 0xffffffff) {
       trap_opcode_pc = pc_before;
       trap_dispatch_pc = pc;
     } else if (trap_dispatch_pc != 0xffffffff && trap_handler_pc == 0xffffffff) {
@@ -119,6 +120,7 @@ int main(int argc, char **argv) {
             << ",\"vector_divzero\":" << memoryReadLong(0x14)
             << ",\"vector_privilege\":" << memoryReadLong(0x20)
             << ",\"vector_trap0\":" << memoryReadLong(0x80)
+            << ",\"trap_site_word\":" << memoryReadWord(0x420)
             << ",\"stage\":\"" << stage << "\""
             << ",\"stagnant_pc_count\":" << stagnant_pc_count
             << ",\"trap_opcode_pc\":" << trap_opcode_pc
