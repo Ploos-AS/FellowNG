@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
   for (; instructions < 10000; ++instructions) {
     const uint32_t pc_before = cpuGetPC();
     cpuExecuteInstruction();
-    const uint32_t opcode_pc = cpuGetOriginalPC();
+    const uint32_t opcode_pc = pc_before;
 
     const uint32_t pc = cpuGetPC();
     if (opcode_pc == 0x00000420 && trap_opcode_pc == 0xffffffff) {
