@@ -3706,6 +3706,13 @@ void cpuMakeOpcodeTableForModel()
   }
 }
 
+static uint16_t cpu_last_dispatched_opcode = 0;
+
+uint16_t cpuGetLastDispatchedOpcode()
+{
+  return cpu_last_dispatched_opcode;
+}
+
 uint32_t irq_arrival_time = -1;
 extern uint32_t busGetCycle();
 
@@ -3728,6 +3735,7 @@ uint32_t cpuExecuteInstruction()
 
     cpuSetOriginalPC(cpuGetPC()); // Store pc and opcode for exception logging
     uint16_t opcode = cpuGetNextWord();
+    cpu_last_dispatched_opcode = opcode;
 
 #ifdef CPU_INSTRUCTION_LOGGING
     cpuSetCurrentOpcode(opcode);
