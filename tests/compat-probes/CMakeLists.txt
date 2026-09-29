@@ -15,3 +15,9 @@ add_executable(fellowng-interrupt-probe-runner
 )
 target_link_libraries(fellowng-interrupt-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-interrupt-probe-runner PRIVATE cxx_std_20)
+
+add_executable(fellowng-68020-probe-runner
+  m68020_probe_runner.cpp
+)
+target_link_libraries(fellowng-68020-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-68020-probe-runner PRIVATE cxx_std_20)
