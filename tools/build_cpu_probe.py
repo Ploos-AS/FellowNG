@@ -8,7 +8,7 @@ import tempfile
 
 ap = argparse.ArgumentParser()
 ap.add_argument("source")
-ap.add_argument("--output", required=True)
+ap.add_argument("--output", required=True)\nap.add_argument("--cpu", choices=("68000", "68020"), default="68000")
 args = ap.parse_args()
 
 as_cmd = shutil.which("m68k-linux-gnu-as")
@@ -35,7 +35,7 @@ with tempfile.TemporaryDirectory() as td:
 """
     )
 
-    subprocess.run([as_cmd, "-m68000", "-o", str(o), args.source], check=True)
+    subprocess.run([as_cmd, f"-m{args.cpu}", "-o", str(o), args.source], check=True)
     subprocess.run([ld, "-T", str(linker_script), "-o", str(elf), str(o)], check=True)
     subprocess.run([objcopy, "-O", "binary", str(elf), args.output], check=True)
 
