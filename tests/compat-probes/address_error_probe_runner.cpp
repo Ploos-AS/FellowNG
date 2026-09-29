@@ -59,9 +59,17 @@ int main(int argc, char **argv) {
   uint32_t first_pc = cpuGetPC();
   uint32_t last_pc = first_pc;
   uint16_t last_opcode = 0;
+  uint32_t trace_pc[12] = {};
+  uint16_t trace_opcode[12] = {};
+  uint32_t trace_count = 0;
   for (; instructions < 64; ++instructions) {
     last_pc = cpuGetPC();
     last_opcode = memoryReadWord(last_pc);
+    if (trace_count < 12) {
+      trace_pc[trace_count] = last_pc;
+      trace_opcode[trace_count] = last_opcode;
+      ++trace_count;
+    }
     mid_instruction_armed = true;
     if (setjmp(mid_instruction_env) == 0) {
       cpuExecuteInstruction();
@@ -96,6 +104,12 @@ int main(int argc, char **argv) {
             << "},{\"name\":\"first_pc\",\"value\":" << first_pc
             << "},{\"name\":\"last_pc\",\"value\":" << last_pc
             << "},{\"name\":\"last_opcode\",\"value\":" << last_opcode
+            << "},{\"name\":\"trace\",\"value\":\"";
+  for (uint32_t i = 0; i < trace_count; ++i) {
+    if (i) std::cout << ",";
+    std::cout << trace_pc[i] << ":" << trace_opcode[i];
+  }
+  std::cout << "\""
             << "},{\"name\":\"caught_mid_instruction\",\"value\":" << (caught ? "true" : "false")
             << "},{\"name\":\"vector_address_error\",\"value\":" << memoryReadLong(0x0c)
             << "},{\"name\":\"fault_address\",\"value\":" << memory_fault_address
