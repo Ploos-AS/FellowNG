@@ -45,7 +45,8 @@ int main(int argc, char **argv) {
   cpuSetSspDirect(0x0007fff0);
   cpuSetUspDirect(0x0007f000);
   cpuSetSR(0x2700);
-  cpuInitializeFromNewPC(0x00000400);
+  const uint32_t reset_pc = memoryReadLong(4);
+  cpuInitializeFromNewPC(reset_pc);
 
   constexpr uint32_t result = 0x1000;
   // Execute LEA/CLR/CLR/MOVE-to-SR so the guest is waiting in user mode.
