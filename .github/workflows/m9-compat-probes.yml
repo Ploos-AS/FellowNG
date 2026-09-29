@@ -56,7 +56,7 @@ jobs:
           cat m68000-exception-vectors-v1-result.json
           test "$runner_status" -eq 0
           grep -q '"status":"PASS"' m68000-exception-vectors-v1-result.json
-          grep -q '"markers":"IDTP"' m68000-exception-vectors-v1-result.json
+          grep -q '"name":"markers","value":"IDTP"' m68000-exception-vectors-v1-result.json
           echo 'FellowNG M9.2a real CPU execution: PASS'
       - name: Validate and build M9.2b 68000 address-error probe
         run: |
@@ -74,7 +74,7 @@ jobs:
           "$RUNNER" m68000-address-error-v1.bin | tee m68000-address-error-v1-result.json
           python3 tools/validate_compat_probe_result.py m68000-address-error-v1-result.json
           grep -q '"status":"PASS"' m68000-address-error-v1-result.json
-          grep -q '"markers":"A"' m68000-address-error-v1-result.json
+          grep -q '"name":"markers","value":"A"' m68000-address-error-v1-result.json
           echo 'FellowNG M9.2b address-error execution: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
