@@ -1,0 +1,10 @@
+{
+  "schema": "fellowng.cpu-probe-image.v1",
+  "id": "m68000-interrupt-level3-v1",
+  "cpu": "68000",
+  "subsystem": "interrupts",
+  "load_address": 0,
+  "reset_pc": 1024,
+  "result_schema": "fellowng.compat-probe-result.v1",
+  "cases": ["level3-autovector", "supervisor-stack-switch", "rte-return"]
+}
