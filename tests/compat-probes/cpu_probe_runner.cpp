@@ -119,11 +119,12 @@ int main(int argc, char **argv) {
 
   std::cout << "{\"schema\":\"fellowng.compat-probe-result.v1\","
             << "\"probe\":\"m68000-exception-vectors-v1\","
+            << "\"profile\":\"m68000-bare-metal\","
             << "\"subsystem\":\"exceptions\","
             << "\"status\":\"" << (pass ? "PASS" : "FAIL") << "\","
-            << "\"observations\":{\"instruction_count\":" << instructions + 1
-            << ",\"pc\":" << cpuGetPC()
-            << ",\"entry_word\":" << memoryReadWord(0x400)
+            << "\"observations\":[{\"name\":\"instruction_count\",\"value\":" << instructions + 1
+            << "},{\"name\":\"pc\",\"value\":" << cpuGetPC()
+            << "},{\"name\":\"entry_word\",\"value\":" << memoryReadWord(0x400)
             << ",\"vector_illegal\":" << memoryReadLong(0x10)
             << ",\"vector_divzero\":" << memoryReadLong(0x14)
             << ",\"vector_privilege\":" << memoryReadLong(0x20)
@@ -132,14 +133,14 @@ int main(int argc, char **argv) {
             << ",\"last_dispatched_opcode\":" << cpuGetLastDispatchedOpcode()
             << ",\"divzero_return_pc\":" << divzero_return_pc
             << ",\"first_pc_after_divzero_marker\":" << first_pc_after_divzero_marker
-            << ",\"stage\":\"" << stage << "\""
+            << "},{\"name\":\"stage\",\"value\":\"" << stage << "\""
             << ",\"stagnant_pc_count\":" << stagnant_pc_count
             << ",\"trap_opcode_pc\":" << trap_opcode_pc
             << ",\"trap_dispatch_pc\":" << trap_dispatch_pc
             << ",\"trap_handler_pc\":" << trap_handler_pc
             << ",\"trap_return_pc\":" << trap_return_pc
-            << ",\"markers\":\"" << m0 << m1 << m2 << m3
-            << "\"}}\n";
+            << "},{\"name\":\"markers\",\"value\":\"" << m0 << m1 << m2 << m3
+            << "\"}]}\n";
 
   memoryShutdown();
   CoreFactory::DestroyServices();
