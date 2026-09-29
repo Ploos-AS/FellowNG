@@ -67,9 +67,10 @@ int main(int argc, char **argv) {
     const uint32_t pc_before = cpuGetPC();
     cpuExecuteInstruction();
     const uint32_t opcode_pc = cpuGetOriginalPC();
+    const uint16_t dispatched_opcode = cpuGetLastDispatchedOpcode();
 
     const uint32_t pc = cpuGetPC();
-    if (opcode_pc == 0x00000420 && trap_opcode_pc == 0xffffffff) {
+    if (dispatched_opcode == 0x4e40 && trap_opcode_pc == 0xffffffff) {
       trap_opcode_pc = opcode_pc;
       trap_dispatch_pc = pc;
     } else if (trap_dispatch_pc != 0xffffffff && trap_handler_pc == 0xffffffff) {
@@ -121,6 +122,7 @@ int main(int argc, char **argv) {
             << ",\"vector_privilege\":" << memoryReadLong(0x20)
             << ",\"vector_trap0\":" << memoryReadLong(0x80)
             << ",\"trap_site_word\":" << memoryReadWord(0x420)
+            << ",\"last_dispatched_opcode\":" << cpuGetLastDispatchedOpcode()
             << ",\"stage\":\"" << stage << "\""
             << ",\"stagnant_pc_count\":" << stagnant_pc_count
             << ",\"trap_opcode_pc\":" << trap_opcode_pc
