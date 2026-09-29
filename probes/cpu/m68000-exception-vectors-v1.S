@@ -54,7 +54,7 @@ illegal_handler:
         rte
 divzero_handler:
         move.b #'D',result_area+1
-        addq.l #2,2(%sp)
+        /* DIVU-by-zero stacks the PC of the following instruction. */
         rte
 trap0_handler:
         move.b #'T',result_area+2
