@@ -8,7 +8,8 @@ import tempfile
 
 ap = argparse.ArgumentParser()
 ap.add_argument("source")
-ap.add_argument("--output", required=True)\nap.add_argument("--cpu", choices=("68000", "68020"), default="68000")
+ap.add_argument("--output", required=True)
+ap.add_argument("--cpu", choices=("68000", "68020"), default="68000")
 args = ap.parse_args()
 
 as_cmd = shutil.which("m68k-linux-gnu-as")
