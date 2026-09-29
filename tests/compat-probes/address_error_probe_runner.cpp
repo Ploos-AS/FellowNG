@@ -82,19 +82,20 @@ int main(int argc, char **argv) {
 
   std::cout << "{\"schema\":\"fellowng.compat-probe-result.v1\","
             << "\"probe\":\"m68000-address-error-v1\","
-            << "\"subsystem\":\"address-error\","
+            << "\"profile\":\"m68000-bare-metal\","
+            << "\"subsystem\":\"exceptions\","
             << "\"status\":\"" << (pass ? "PASS" : "FAIL") << "\","
-            << "\"observations\":{\"instruction_count\":" << instructions + 1
-            << ",\"caught_mid_instruction\":" << (caught ? "true" : "false")
-            << ",\"vector_address_error\":" << memoryReadLong(0x0c)
-            << ",\"fault_address\":" << memory_fault_address
-            << ",\"fault_read\":" << (memory_fault_read ? "true" : "false")
-            << ",\"stack_pointer\":" << sp
-            << ",\"stack_status_word\":" << status_word
-            << ",\"stack_fault_address\":" << stacked_fault_address
-            << ",\"stack_pc\":" << stacked_pc
-            << ",\"stack_sr\":" << stacked_sr
-            << ",\"markers\":\"" << m << "\"}}\n";
+            << "\"observations\":[{\"name\":\"instruction_count\",\"value\":" << instructions + 1
+            << "},{\"name\":\"caught_mid_instruction\",\"value\":" << (caught ? "true" : "false")
+            << "},{\"name\":\"vector_address_error\",\"value\":" << memoryReadLong(0x0c)
+            << "},{\"name\":\"fault_address\",\"value\":" << memory_fault_address
+            << "},{\"name\":\"fault_read\",\"value\":" << (memory_fault_read ? "true" : "false")
+            << "},{\"name\":\"stack_pointer\",\"value\":" << sp
+            << "},{\"name\":\"stack_status_word\",\"value\":" << status_word
+            << "},{\"name\":\"stack_fault_address\",\"value\":" << stacked_fault_address
+            << "},{\"name\":\"stack_pc\",\"value\":" << stacked_pc
+            << "},{\"name\":\"stack_sr\",\"value\":" << stacked_sr
+            << "},{\"name\":\"markers\",\"value\":\"" << m << "\"}]}\n";
 
   memoryShutdown();
   CoreFactory::DestroyServices();
