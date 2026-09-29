@@ -12,7 +12,6 @@
         .long address_error_handler
 
         .section .text,"ax"
-        .org 0x400
 start:
         lea result_area,%a0
         clr.b (%a0)
@@ -31,7 +30,6 @@ handler_done:
         bra handler_done
 
         .section .data,"aw"
-        .org 0x1000
         .global result_area
 result_area:
         .space 16
