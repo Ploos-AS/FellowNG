@@ -55,7 +55,12 @@ int main(int argc, char **argv) {
   constexpr uint32_t result = 0x1000;
   bool caught = false;
   uint32_t instructions = 0;
+  uint32_t first_pc = cpuGetPC();
+  uint32_t last_pc = first_pc;
+  uint16_t last_opcode = 0;
   for (; instructions < 64; ++instructions) {
+    last_pc = cpuGetPC();
+    last_opcode = memoryReadWord(last_pc);
     mid_instruction_armed = true;
     if (setjmp(mid_instruction_env) == 0) {
       cpuExecuteInstruction();
@@ -86,6 +91,9 @@ int main(int argc, char **argv) {
             << "\"subsystem\":\"exceptions\","
             << "\"status\":\"" << (pass ? "PASS" : "FAIL") << "\","
             << "\"observations\":[{\"name\":\"instruction_count\",\"value\":" << instructions + 1
+            << "},{\"name\":\"first_pc\",\"value\":" << first_pc
+            << "},{\"name\":\"last_pc\",\"value\":" << last_pc
+            << "},{\"name\":\"last_opcode\",\"value\":" << last_opcode
             << "},{\"name\":\"caught_mid_instruction\",\"value\":" << (caught ? "true" : "false")
             << "},{\"name\":\"vector_address_error\",\"value\":" << memoryReadLong(0x0c)
             << "},{\"name\":\"fault_address\",\"value\":" << memory_fault_address
