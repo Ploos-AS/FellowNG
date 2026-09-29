@@ -76,6 +76,24 @@ jobs:
           grep -q '"status":"PASS"' m68000-address-error-v1-result.json
           grep -q '"name":"markers","value":"A"' m68000-address-error-v1-result.json
           echo 'FellowNG M9.2b address-error execution: PASS'
+      - name: Validate and build M9.2c 68000 interrupt probe
+        run: |
+          set -euo pipefail
+          python3 tools/stage_cpu_probe.py probes/cpu/m68000-interrupt-level3-v1.json
+          python3 tools/build_cpu_probe.py probes/cpu/m68000-interrupt-level3-v1.S --output m68000-interrupt-level3-v1.bin
+          test -s m68000-interrupt-level3-v1.bin
+      - name: Build FellowNG interrupt probe runner
+        run: cmake --build build --target fellowng-interrupt-probe-runner -j2
+      - name: Execute M9.2c level-3 interrupt payload in FellowNG 68000 core
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-interrupt-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          "$RUNNER" m68000-interrupt-level3-v1.bin | tee m68000-interrupt-level3-v1-result.json
+          python3 tools/validate_compat_probe_result.py m68000-interrupt-level3-v1-result.json
+          grep -q '"status":"PASS"' m68000-interrupt-level3-v1-result.json
+          grep -q '"name":"markers","value":"I"' m68000-interrupt-level3-v1-result.json
+          echo 'FellowNG M9.2c level-3 interrupt execution: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -85,3 +103,5 @@ jobs:
             m68000-exception-vectors-v1-result.json
             m68000-address-error-v1.bin
             m68000-address-error-v1-result.json
+            m68000-interrupt-level3-v1.bin
+            m68000-interrupt-level3-v1-result.json
