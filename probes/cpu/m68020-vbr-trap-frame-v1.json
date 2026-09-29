@@ -1,0 +1,10 @@
+{
+  "schema": "fellowng.cpu-probe-image.v1",
+  "id": "m68020-vbr-trap-frame-v1",
+  "cpu": "68020",
+  "subsystem": "exceptions",
+  "load_address": 0,
+  "reset_pc": 1024,
+  "result_schema": "fellowng.compat-probe-result.v1",
+  "cases": ["vbr-relocation", "trap0-format0-frame", "rte-return"]
+}
