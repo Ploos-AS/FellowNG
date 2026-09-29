@@ -28,6 +28,8 @@ extern void cpuSetInterruptLoggingFunc(cpuInterruptLoggingFunc func);
 // CPU register and control properties
 extern void cpuSetPC(uint32_t pc);
 extern uint32_t cpuGetPC();
+// Address of the instruction currently/most recently dispatched; useful for diagnostics.
+extern uint32_t cpuGetOriginalPC();
 
 extern void cpuSetReg(uint32_t da, uint32_t i, uint32_t value);
 extern uint32_t cpuGetReg(uint32_t da, uint32_t i);
