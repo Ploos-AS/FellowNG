@@ -63,6 +63,8 @@ int main(int argc, char **argv) {
   uint32_t trap_dispatch_pc = 0xffffffff;
   uint32_t trap_handler_pc = 0xffffffff;
   uint32_t trap_return_pc = 0xffffffff;
+  uint32_t divzero_return_pc = 0xffffffff;
+  uint32_t first_pc_after_divzero_marker = 0xffffffff;
   for (; instructions < 10000; ++instructions) {
     const uint32_t pc_before = cpuGetPC();
     cpuExecuteInstruction();
@@ -70,6 +72,11 @@ int main(int argc, char **argv) {
     const uint16_t dispatched_opcode = cpuGetLastDispatchedOpcode();
 
     const uint32_t pc = cpuGetPC();
+    if (dispatched_opcode == 0x4e73 && memoryReadByte(result + 1) == 'D' && divzero_return_pc == 0xffffffff) {
+      divzero_return_pc = pc;
+    } else if (memoryReadByte(result + 1) == 'D' && first_pc_after_divzero_marker == 0xffffffff) {
+      first_pc_after_divzero_marker = opcode_pc;
+    }
     if (dispatched_opcode == 0x4e40 && trap_opcode_pc == 0xffffffff) {
       trap_opcode_pc = opcode_pc;
       trap_dispatch_pc = pc;
@@ -123,6 +130,8 @@ int main(int argc, char **argv) {
             << ",\"vector_trap0\":" << memoryReadLong(0x80)
             << ",\"trap_site_word\":" << memoryReadWord(0x420)
             << ",\"last_dispatched_opcode\":" << cpuGetLastDispatchedOpcode()
+            << ",\"divzero_return_pc\":" << divzero_return_pc
+            << ",\"first_pc_after_divzero_marker\":" << first_pc_after_divzero_marker
             << ",\"stage\":\"" << stage << "\""
             << ",\"stagnant_pc_count\":" << stagnant_pc_count
             << ",\"trap_opcode_pc\":" << trap_opcode_pc
