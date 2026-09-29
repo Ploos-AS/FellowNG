@@ -1,0 +1,10 @@
+{
+  "schema": "fellowng.cpu-probe-image.v1",
+  "id": "m68000-address-error-v1",
+  "cpu": "68000",
+  "subsystem": "address-error",
+  "load_address": 0,
+  "reset_pc": 1024,
+  "result_schema": "fellowng.compat-probe-result.v1",
+  "cases": ["odd-word-read-vector"]
+}
