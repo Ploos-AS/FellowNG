@@ -70,9 +70,10 @@ static void cpuFrameGroup2(uint16_t vector_offset, uint32_t pcPtr)
   cpuSetAReg(7, cpuGetAReg(7) - 2);
   memoryWriteWord((uint16_t)cpuGetSR(), cpuGetAReg(7));
 
-  // fault address, skip ireg
+  // Reserve fault address + instruction-register word. The 68000
+  // Group-2 layout places the fault address after the reserved ireg word.
   cpuSetAReg(7, cpuGetAReg(7) - 6);
-  memoryWriteLong(memory_fault_address, cpuGetAReg(7));
+  memoryWriteLong(memory_fault_address, cpuGetAReg(7) + 2);
 
   cpuSetAReg(7, cpuGetAReg(7) - 2);
   memoryWriteLong(memory_fault_read << 4, cpuGetAReg(7));
