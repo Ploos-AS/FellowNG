@@ -20,7 +20,10 @@ int main() {
   chipmemWriteWord(0x2222, src + 2);
   chipmemWriteWord(0x3333, src + 4);
   chipmemWriteWord(0x4444, src + 6);
-  for (uint32_t offset = 0; offset < 8; offset += 2) chipmemWriteWord(0, dst + offset);
+  chipmemWriteWord(0, dst + 0);
+  chipmemWriteWord(0, dst + 2);
+  chipmemWriteWord(0, dst + 4);
+  chipmemWriteWord(0, dst + 6);
 
   // A -> D, one word wide, four words high. Minterm 0xF0 selects A.
   wbltcon0(0x09f0, 0xdff040);
