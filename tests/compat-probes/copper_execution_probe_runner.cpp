@@ -20,6 +20,9 @@ void capture_color00(uint16_t data, uint32_t) {
 
 void execute_copper_event(const char *label, uint32_t cycle) {
   std::cerr << "m9.3b: " << label << " begin cycle=" << cycle << "\n";
+  // The real bus scheduler pops an event before invoking its handler.
+  // Mirror that ownership rule so a Copper event can safely re-schedule itself.
+  busRemoveEvent(&copperEvent);
   bus.cycle = cycle;
   copperEvent.handler();
   std::cerr << "m9.3b: " << label << " end next=" << copperEvent.cycle
