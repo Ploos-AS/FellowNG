@@ -134,6 +134,17 @@ jobs:
           python3 tools/validate_compat_probe_result.py copper-move-wait-end-v1-result.json
           grep -q '"status":"PASS"' copper-move-wait-end-v1-result.json
           echo 'FellowNG M9.3b Copper execution: PASS'
+      - name: Build M9.3c Blitter copy probe runner
+        run: cmake --build build --target fellowng-blitter-copy-probe-runner -j2
+      - name: Execute M9.3c Blitter A-to-D copy probe
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-blitter-copy-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          timeout 10s "$RUNNER" | tee blitter-a-to-d-copy-v1-result.json
+          python3 tools/validate_compat_probe_result.py blitter-a-to-d-copy-v1-result.json
+          grep -q '"status":"PASS"' blitter-a-to-d-copy-v1-result.json
+          echo 'FellowNG M9.3c Blitter A-to-D copy: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -149,3 +160,4 @@ jobs:
             m68020-vbr-trap-frame-v1-result.json
             chipset-pointer-registers-v1-result.json
             copper-move-wait-end-v1-result.json
+            blitter-a-to-d-copy-v1-result.json
