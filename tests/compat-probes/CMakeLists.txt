@@ -28,3 +28,10 @@ add_executable(fellowng-chipset-register-probe-runner
 )
 target_link_libraries(fellowng-chipset-register-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-chipset-register-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-copper-execution-probe-runner
+  copper_execution_probe_runner.cpp
+)
+target_link_libraries(fellowng-copper-execution-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-copper-execution-probe-runner PRIVATE cxx_std_20)
