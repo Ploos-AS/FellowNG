@@ -84,6 +84,7 @@ extern uint32_t cpuGetNextLong();
 extern void cpuSkipNextWord();
 extern void cpuSkipNextLong();
 extern void cpuClearPrefetch();
+extern uint16_t cpuGetPrefetchWord();
 extern void cpuValidateReadPointer();
 
 extern void cpuInitializeFromNewPC(uint32_t new_pc);
