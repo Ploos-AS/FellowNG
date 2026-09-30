@@ -37,6 +37,9 @@ int main(int argc, char **argv) {
   cpuIntegrationStartup();
   cpuSetModel(0, 0);
   cpuSetCheckPendingInterruptsFunc(no_interrupts);
+  // Bare-metal probes begin with no pending host interrupt. cpuStartup's
+  // legacy level-0 reset path leaves the raise-interrupt latch asserted.
+  cpuSetRaiseInterrupt(FALSE);
   cpuSetMidInstructionExceptionFunc(mid_instruction);
   cpuSetResetExceptionFunc(reset_exception);
   for (uint32_t i = 0; i < image.size(); ++i) memoryWriteByte(image[i], i);
