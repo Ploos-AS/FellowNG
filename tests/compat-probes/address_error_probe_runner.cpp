@@ -68,6 +68,7 @@ int main(int argc, char **argv) {
   uint32_t a0_after_first = 0xffffffff;
   uint32_t pc_after_first = 0xffffffff;
   uint16_t dispatched_after_first = 0xffff;
+  uint16_t prefetch_before_first_execute = 0xffff;
   for (; instructions < 64; ++instructions) {
     last_pc = cpuGetPC();
     last_opcode = memoryReadWord(last_pc);
@@ -77,6 +78,7 @@ int main(int argc, char **argv) {
       ++trace_count;
     }
     if (setjmp(mid_instruction_env) == 0) {
+      if (instructions == 0) prefetch_before_first_execute = cpuGetPrefetchWord();
       mid_instruction_armed = true;
       cpuExecuteInstruction();
       if (instructions == 0) {
@@ -124,6 +126,7 @@ int main(int argc, char **argv) {
     std::cout << trace_pc[i] << ":" << trace_opcode[i];
   }
   std::cout << "\""
+            << "},{\"name\":\"prefetch_before_first_execute\",\"value\":" << prefetch_before_first_execute
             << "},{\"name\":\"a0_after_first\",\"value\":" << a0_after_first
             << "},{\"name\":\"pc_after_first\",\"value\":" << pc_after_first
             << "},{\"name\":\"dispatched_after_first\",\"value\":" << dispatched_after_first
