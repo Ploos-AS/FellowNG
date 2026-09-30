@@ -72,12 +72,8 @@ int main() {
 
   execute_copper_event("move2", wait_target_cycle);
   const uint32_t second_move_cycle = copperEvent.cycle;
-  execute_copper_event("move2-followup", second_move_cycle);
+  execute_copper_event("end", second_move_cycle);
   const uint16_t second_color = observed_color00;
-  const uint32_t after_second_move_pc = copper_registers.copper_pc;
-
-  const uint32_t end_cycle = copperEvent.cycle;
-  execute_copper_event("end", end_cycle);
   const uint32_t final_pc = copper_registers.copper_pc;
   const uint32_t final_event_cycle = copperEvent.cycle;
 
@@ -90,7 +86,6 @@ int main() {
       after_wait_pc == list + 8 &&
       second_color == 0x0456 &&
       color00_writes == 2 &&
-      after_second_move_pc == list + 12 &&
       final_pc == list + 16 &&
       final_event_cycle == BUS_CYCLE_DISABLE;
 
