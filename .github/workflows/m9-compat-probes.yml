@@ -112,6 +112,17 @@ jobs:
           grep -q '"status":"PASS"' m68020-vbr-trap-frame-v1-result.json
           grep -q '"name":"markers","value":"VR"' m68020-vbr-trap-frame-v1-result.json
           echo 'FellowNG M9.2d 68020 VBR/format-0 execution: PASS'
+      - name: Build M9.3a chipset register probe runner
+        run: cmake --build build --target fellowng-chipset-register-probe-runner -j2
+      - name: Execute M9.3a chipset register semantics
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-chipset-register-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          "$RUNNER" | tee chipset-pointer-registers-v1-result.json
+          python3 tools/validate_compat_probe_result.py chipset-pointer-registers-v1-result.json
+          grep -q '"status":"PASS"' chipset-pointer-registers-v1-result.json
+          echo 'FellowNG M9.3a chipset register semantics: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -125,3 +136,4 @@ jobs:
             m68000-interrupt-level3-v1-result.json
             m68020-vbr-trap-frame-v1.bin
             m68020-vbr-trap-frame-v1-result.json
+            chipset-pointer-registers-v1-result.json
