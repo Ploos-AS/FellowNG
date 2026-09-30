@@ -484,6 +484,11 @@ void cpuClearPrefetch()
   cpu_prefetch_word = 0;
 }
 
+uint16_t cpuGetPrefetchWord()
+{
+  return cpu_prefetch_word;
+}
+
 void cpuSkipNextWord()
 {
   cpuSetPC(cpuGetPC() + 2);
