@@ -123,6 +123,17 @@ jobs:
           python3 tools/validate_compat_probe_result.py chipset-pointer-registers-v1-result.json
           grep -q '"status":"PASS"' chipset-pointer-registers-v1-result.json
           echo 'FellowNG M9.3a chipset register semantics: PASS'
+      - name: Build M9.3b Copper execution probe runner
+        run: cmake --build build --target fellowng-copper-execution-probe-runner -j2
+      - name: Execute M9.3b Copper MOVE WAIT end probe
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-copper-execution-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          "$RUNNER" | tee copper-move-wait-end-v1-result.json
+          python3 tools/validate_compat_probe_result.py copper-move-wait-end-v1-result.json
+          grep -q '"status":"PASS"' copper-move-wait-end-v1-result.json
+          echo 'FellowNG M9.3b Copper execution: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -137,3 +148,4 @@ jobs:
             m68020-vbr-trap-frame-v1.bin
             m68020-vbr-trap-frame-v1-result.json
             chipset-pointer-registers-v1-result.json
+            copper-move-wait-end-v1-result.json
