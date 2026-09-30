@@ -18,9 +18,12 @@ void capture_color00(uint16_t data, uint32_t) {
   ++color00_writes;
 }
 
-void execute_copper_event(uint32_t cycle) {
+void execute_copper_event(const char *label, uint32_t cycle) {
+  std::cerr << "m9.3b: " << label << " begin cycle=" << cycle << "\n";
   bus.cycle = cycle;
   copperEvent.handler();
+  std::cerr << "m9.3b: " << label << " end next=" << copperEvent.cycle
+            << " pc=" << copper_registers.copper_pc << "\n";
 }
 }
 
@@ -55,23 +58,23 @@ int main() {
   copper->Load(list);
 
   const uint32_t first_cycle = copperEvent.cycle;
-  execute_copper_event(first_cycle);
+  execute_copper_event("move1", first_cycle);
   const uint16_t first_color = observed_color00;
   const uint32_t after_move_pc = copper_registers.copper_pc;
   const uint32_t wait_decode_cycle = copperEvent.cycle;
 
-  execute_copper_event(wait_decode_cycle);
+  execute_copper_event("wait", wait_decode_cycle);
   const uint32_t wait_target_cycle = copperEvent.cycle;
   const uint32_t after_wait_pc = copper_registers.copper_pc;
 
-  execute_copper_event(wait_target_cycle);
+  execute_copper_event("move2", wait_target_cycle);
   const uint32_t second_move_cycle = copperEvent.cycle;
-  execute_copper_event(second_move_cycle);
+  execute_copper_event("move2-followup", second_move_cycle);
   const uint16_t second_color = observed_color00;
   const uint32_t after_second_move_pc = copper_registers.copper_pc;
 
   const uint32_t end_cycle = copperEvent.cycle;
-  execute_copper_event(end_cycle);
+  execute_copper_event("end", end_cycle);
   const uint32_t final_pc = copper_registers.copper_pc;
   const uint32_t final_event_cycle = copperEvent.cycle;
 
