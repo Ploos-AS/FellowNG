@@ -21,3 +21,17 @@ The first probe deliberately tests register and address semantics rather than ra
 - the result is emitted as `fellowng.compat-probe-result.v1` with subsystem `chipset`.
 
 This small boundary gives later Copper/Blitter/DMA probes a qualified register foundation instead of mixing register bugs with timing bugs.
+
+
+## M9.3a qualified baseline
+
+M9.3a passed in GitHub Actions **M9 Compatibility Probes** run `36717262269` on commit `c0dd0558fd202e630682dd79f4b1e1d01f3abc23`.
+
+Observed deterministic values:
+
+- OCS masked pointer: `0x0002bcde`
+- COP1LC after OCS high/low register writes: `0x0002bcde`
+- ECS masked pointer: `0x001abcde`
+- COP2LC after ECS high/low register writes: `0x001abcde`
+
+The probe result validated as `fellowng.compat-probe-result.v1` with status `PASS`. M9.3a therefore freezes the register/pointer foundation for M9.3b Copper execution.
