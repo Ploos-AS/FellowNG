@@ -90,3 +90,6 @@ extern void cpuSetResetExceptionFunc(cpuResetExceptionFunc func);
 extern void cpuSetModel(uint32_t major, uint32_t minor);
 extern uint32_t cpuGetModelMajor();
 extern uint32_t cpuGetModelMinor();
+
+// Read-only CPU state accessor used by deterministic compatibility probes.
+extern uint16_t cpuGetPrefetchWord();
