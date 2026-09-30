@@ -130,7 +130,7 @@ jobs:
           set -euo pipefail
           RUNNER="$(find build -type f -name fellowng-copper-execution-probe-runner -perm -111 | head -n1)"
           test -n "$RUNNER"
-          "$RUNNER" | tee copper-move-wait-end-v1-result.json
+          timeout 10s "$RUNNER" | tee copper-move-wait-end-v1-result.json
           python3 tools/validate_compat_probe_result.py copper-move-wait-end-v1-result.json
           grep -q '"status":"PASS"' copper-move-wait-end-v1-result.json
           echo 'FellowNG M9.3b Copper execution: PASS'
