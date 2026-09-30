@@ -35,3 +35,10 @@ add_executable(fellowng-copper-execution-probe-runner
 )
 target_link_libraries(fellowng-copper-execution-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-copper-execution-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-blitter-copy-probe-runner
+  blitter_copy_probe_runner.cpp
+)
+target_link_libraries(fellowng-blitter-copy-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-blitter-copy-probe-runner PRIVATE cxx_std_20)
