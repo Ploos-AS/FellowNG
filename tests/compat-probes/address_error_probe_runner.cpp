@@ -54,6 +54,7 @@ int main(int argc, char **argv) {
   const uint16_t entry_word_before_init = memoryReadWord(reset_pc);
   cpuInitializeFromNewPC(reset_pc);
   const uint32_t pc_after_init = cpuGetPC();
+  const uint16_t prefetch_after_init = cpuGetPrefetchWord();
 
   constexpr uint32_t result = 0x1000;
   bool caught = false;
@@ -113,6 +114,7 @@ int main(int argc, char **argv) {
             << "},{\"name\":\"reset_pc\",\"value\":" << reset_pc
             << "},{\"name\":\"entry_word_before_init\",\"value\":" << entry_word_before_init
             << "},{\"name\":\"pc_after_init\",\"value\":" << pc_after_init
+            << "},{\"name\":\"prefetch_after_init\",\"value\":" << prefetch_after_init
             << "},{\"name\":\"first_pc\",\"value\":" << first_pc
             << "},{\"name\":\"last_pc\",\"value\":" << last_pc
             << "},{\"name\":\"last_opcode\",\"value\":" << last_opcode
