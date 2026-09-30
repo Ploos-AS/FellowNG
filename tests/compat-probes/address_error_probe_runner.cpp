@@ -76,8 +76,8 @@ int main(int argc, char **argv) {
       trace_opcode[trace_count] = last_opcode;
       ++trace_count;
     }
-    mid_instruction_armed = true;
     if (setjmp(mid_instruction_env) == 0) {
+      mid_instruction_armed = true;
       cpuExecuteInstruction();
       if (instructions == 0) {
         a0_after_first = cpuGetAReg(0);
