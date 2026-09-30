@@ -35,3 +35,22 @@ Observed deterministic values:
 - COP2LC after ECS high/low register writes: `0x001abcde`
 
 The probe result validated as `fellowng.compat-probe-result.v1` with status `PASS`. M9.3a therefore freezes the register/pointer foundation for M9.3b Copper execution.
+
+
+## M9.3b qualified baseline
+
+M9.3b passed in GitHub Actions **M9 Compatibility Probes** run `36765531617` on commit `6458d213c87f4514c2dcf17764f9b354b30a9c8b`.
+
+The ROM-free LineExact Copper probe executes a project-authored list through the real Copper event path:
+
+- first `MOVE` executes at cycle 4 and writes `COLOR00 = 0x0123`
+- the following `WAIT` is decoded at cycle 8 and resumes at cycle 52
+- the second `MOVE` writes `COLOR00 = 0x0456`
+- exactly two custom-register writes are observed
+- `0xffff,0xfffe` terminates the list with the Copper event at `BUS_CYCLE_DISABLE`
+
+The result validates as `fellowng.compat-probe-result.v1` with subsystem `chipset` and status `PASS`.
+
+The probe dispatches Copper events using the same ownership rule as the bus scheduler: an event is removed from the queue before its handler is invoked, allowing the handler to schedule its successor safely. No emulator-core change was required for M9.3b.
+
+M9.3b therefore freezes deterministic Copper MOVE/WAIT/end-of-list execution as the foundation for M9.3c Blitter qualification.
