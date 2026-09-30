@@ -4,8 +4,9 @@
 #include "Blitter.h"
 #include "BusScheduler.h"
 #include "MemoryInterface.h"
+#include "GraphicsPipeline.h"
 #include "chipset.h"
-#include "VirtualHost/Core.h"
+
 
 int main() {
   constexpr uint32_t src = 0x2000;
@@ -16,8 +17,8 @@ int main() {
   busHardReset();
   memoryStartup();
   blitterStartup();
-  // Enable master + Blitter DMA (DMACON bit 6) for the real BLTSIZE start path.
-  _core.Registers.DmaConR = 0x0040;
+  // Enable the legacy Blitter DMA gate consulted by wbltsize().
+  dmacon = 0x0040;
 
   chipmemWriteWord(0x1111, src + 0);
   chipmemWriteWord(0x2222, src + 2);
