@@ -4,9 +4,11 @@
 #include "chipset.h"
 #include "CopperRegisters.h"
 #include "LegacyCopper.h"
+#include "BusScheduler.h"
 
 int main() {
   chipsetStartup();
+  busStartup();
   copperStartup();
 
   const uint32_t ocs_masked = chipsetMaskPtr(0x001abcdf);
@@ -40,5 +42,6 @@ int main() {
             << "{\"name\":\"ecs_cop2lc\",\"value\":" << ecs_cop2lc << "}"
             << "]}\n";
   copperShutdown();
+  busShutdown();
   return pass ? 0 : 1;
 }
