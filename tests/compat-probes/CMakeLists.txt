@@ -21,3 +21,10 @@ add_executable(fellowng-68020-probe-runner
 )
 target_link_libraries(fellowng-68020-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-68020-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-chipset-register-probe-runner
+  chipset_register_probe_runner.cpp
+)
+target_link_libraries(fellowng-chipset-register-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-chipset-register-probe-runner PRIVATE cxx_std_20)
