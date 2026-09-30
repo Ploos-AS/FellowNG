@@ -102,10 +102,12 @@ int main(int argc, char **argv) {
   if (caught) cpuExecuteInstruction();
 
   const uint32_t sp = cpuGetAReg(7);
-  const uint32_t stacked_fault_address = memoryReadLong(sp + 2);
-  const uint32_t stacked_pc = memoryReadLong(sp + 8);
-  const uint16_t stacked_sr = memoryReadWord(sp + 12);
+  // Fellow's 68000 Group-2 frame is laid out from SP as:
+  // status word, fault address, reserved/ireg word, SR, PC.
   const uint16_t status_word = memoryReadWord(sp);
+  const uint32_t stacked_fault_address = memoryReadLong(sp + 2);
+  const uint16_t stacked_sr = memoryReadWord(sp + 8);
+  const uint32_t stacked_pc = memoryReadLong(sp + 10);
   const char m = marker(result);
   const bool pass = caught && m == 'A' && memory_fault_address == 0x1011 &&
                     stacked_fault_address == 0x1011;
