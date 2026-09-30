@@ -42,6 +42,9 @@ int main(int argc, char **argv) {
   cpuIntegrationStartup();
   cpuSetModel(0, 0);
   cpuSetCheckPendingInterruptsFunc(no_interrupts);
+  // cpuStartup clears the IRQ level through cpuSetIrqLevel(0), which leaves
+  // the legacy raise-interrupt latch set. Bare-metal probes start quiescent.
+  cpuSetRaiseInterrupt(FALSE);
   cpuSetMidInstructionExceptionFunc(mid_instruction);
   cpuSetResetExceptionFunc(reset_exception);
   for (uint32_t i = 0; i < image.size(); ++i) memoryWriteByte(image[i], i);
