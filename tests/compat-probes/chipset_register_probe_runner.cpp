@@ -3,10 +3,11 @@
 
 #include "chipset.h"
 #include "CopperRegisters.h"
+#include "LegacyCopper.h"
 
 int main() {
   chipsetStartup();
-  copper_registers.ClearState();
+  copperStartup();
 
   const uint32_t ocs_masked = chipsetMaskPtr(0x001abcdf);
   wcop1lch(0x001a, 0xdff080);
@@ -38,5 +39,6 @@ int main() {
             << "{\"name\":\"ecs_masked\",\"value\":" << ecs_masked << "},"
             << "{\"name\":\"ecs_cop2lc\",\"value\":" << ecs_cop2lc << "}"
             << "]}\n";
+  copperShutdown();
   return pass ? 0 : 1;
 }
