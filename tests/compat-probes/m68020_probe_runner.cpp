@@ -37,6 +37,8 @@ int main(int argc, char **argv) {
   cpuIntegrationStartup();
   cpuSetModel(2, 0);
   cpuSetCheckPendingInterruptsFunc(no_interrupts);
+  // Bare-metal probes begin without the legacy level-0 IRQ latch left by startup.
+  cpuSetRaiseInterrupt(FALSE);
   cpuSetMidInstructionExceptionFunc(mid_instruction);
   cpuSetResetExceptionFunc(reset_exception);
   for (uint32_t i = 0; i < image.size(); ++i) memoryWriteByte(image[i], i);
@@ -48,7 +50,7 @@ int main(int argc, char **argv) {
   const uint32_t reset_pc = memoryReadLong(4);
   cpuInitializeFromNewPC(reset_pc);
 
-  constexpr uint32_t result = 0x1200;
+  constexpr uint32_t result = 0x1100;
   bool saw_handler = false;
   uint32_t handler_sp = 0;
   uint16_t format_vector = 0xffff;
