@@ -91,5 +91,6 @@ extern void cpuSetModel(uint32_t major, uint32_t minor);
 extern uint32_t cpuGetModelMajor();
 extern uint32_t cpuGetModelMinor();
 
-// Read-only CPU state accessor used by deterministic compatibility probes.
+// CPU state hooks used by deterministic compatibility probes.
 extern uint16_t cpuGetPrefetchWord();
+extern void cpuSetRaiseInterrupt(BOOLE raise_irq);
