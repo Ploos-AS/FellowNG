@@ -51,7 +51,9 @@ int main(int argc, char **argv) {
   cpuSetUspDirect(0x0007f000);
   cpuSetSR(0x2700);
   const uint32_t reset_pc = memoryReadLong(4);
+  const uint16_t entry_word_before_init = memoryReadWord(reset_pc);
   cpuInitializeFromNewPC(reset_pc);
+  const uint32_t pc_after_init = cpuGetPC();
 
   constexpr uint32_t result = 0x1000;
   bool caught = false;
@@ -109,6 +111,8 @@ int main(int argc, char **argv) {
             << "\"status\":\"" << (pass ? "PASS" : "FAIL") << "\","
             << "\"observations\":[{\"name\":\"instruction_count\",\"value\":" << instructions + 1
             << "},{\"name\":\"reset_pc\",\"value\":" << reset_pc
+            << "},{\"name\":\"entry_word_before_init\",\"value\":" << entry_word_before_init
+            << "},{\"name\":\"pc_after_init\",\"value\":" << pc_after_init
             << "},{\"name\":\"first_pc\",\"value\":" << first_pc
             << "},{\"name\":\"last_pc\",\"value\":" << last_pc
             << "},{\"name\":\"last_opcode\",\"value\":" << last_opcode
