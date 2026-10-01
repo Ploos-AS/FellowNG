@@ -53,7 +53,7 @@ int main() {
   const uint32_t event_cycle = blitterEvent.cycle;
   std::cerr << "m9.3c: before finish event=" << event_cycle << "\n";
   if (event_cycle != BUS_CYCLE_DISABLE) {
-    busRemoveEvent(&blitterEvent);
+    blitterRemoveEvent();
     bus.cycle = event_cycle;
     blitFinishBlit();
   }
