@@ -53,9 +53,13 @@ int main() {
   const uint32_t event_cycle = blitterEvent.cycle;
   std::cerr << "m9.3c: before finish event=" << event_cycle << "\n";
   if (event_cycle != BUS_CYCLE_DISABLE) {
-    blitterRemoveEvent();
     bus.cycle = event_cycle;
-    blitFinishBlit();
+    bus_event *event = busPopEvent();
+    if (event == nullptr || event != &blitterEvent) {
+      std::cerr << "m9.3c: unexpected event queue state\n";
+      return 2;
+    }
+    event->handler();
   }
 
   std::cerr << "m9.3c: before readback\n";
