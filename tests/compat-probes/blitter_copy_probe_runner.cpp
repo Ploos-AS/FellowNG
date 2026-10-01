@@ -56,12 +56,11 @@ int main() {
   std::cerr << "m9.3c: before finish event=" << event_cycle << "\n";
   if (event_cycle != BUS_CYCLE_DISABLE) {
     bus.cycle = event_cycle;
-    bus_event *event = busPopEvent();
-    if (event == nullptr || event != &blitterEvent) {
-      std::cerr << "m9.3c: unexpected event queue state\n";
-      return 2;
-    }
-    event->handler();
+    // busPopEvent() assumes another event follows it; this isolated probe has
+    // only the Blitter event. Mirror the scheduler's ownership transition
+    // without invoking that unsafe single-node helper.
+    busRemoveEvent(&blitterEvent);
+    blitterEvent.handler();
   }
 
   std::cerr << "m9.3c: before readback\n";
