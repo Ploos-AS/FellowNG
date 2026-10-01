@@ -15,6 +15,7 @@ int main() {
   constexpr uint32_t dst = 0x2100;
 
   CoreFactory::CreateServices();
+  CoreFactory::CreateModules();
   chipsetStartup();
   busStartup();
   busHardReset();
@@ -97,6 +98,7 @@ int main() {
   blitterShutdown();
   memoryShutdown();
   busShutdown();
+  CoreFactory::DestroyModules();
   CoreFactory::DestroyServices();
   return pass ? 0 : 1;
 }
