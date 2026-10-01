@@ -62,5 +62,9 @@ public:
 
   void EndOfFrame();
 
+  // Deterministic compatibility-probe hook: execute one fetch unit using the
+  // production DMA fetch path without advancing the full graphics scheduler.
+  void ProbeFetchLores();
+
   BitplaneDMA();
 };
