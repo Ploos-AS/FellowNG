@@ -38,7 +38,8 @@ struct bus_event
 
 extern void busInsertEventWithNullCheck(bus_event *ev);
 extern void busInsertEvent(bus_event *event);
-extern void busRemoveEvent(bus_event *event);
+extern bus_event *busPopEvent();
+void busRemoveEvent(bus_event *event);
 
 struct bus_screen_limits
 {
