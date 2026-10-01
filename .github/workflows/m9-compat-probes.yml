@@ -145,6 +145,17 @@ jobs:
           python3 tools/validate_compat_probe_result.py blitter-a-to-d-copy-v1-result.json
           grep -q '"status":"PASS"' blitter-a-to-d-copy-v1-result.json
           echo 'FellowNG M9.3c Blitter A-to-D copy: PASS'
+      - name: Build M9.3d bitplane DMA probe runner
+        run: cmake --build build --target fellowng-bitplane-dma-probe-runner -j2
+      - name: Execute M9.3d OCS lores bitplane DMA fetch
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-bitplane-dma-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          timeout 10s "$RUNNER" | tee bitplane-lores-dma-fetch-v1-result.json
+          python3 tools/validate_compat_probe_result.py bitplane-lores-dma-fetch-v1-result.json
+          grep -q '"status":"PASS"' bitplane-lores-dma-fetch-v1-result.json
+          echo 'FellowNG M9.3d OCS lores bitplane DMA fetch: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -161,3 +172,4 @@ jobs:
             chipset-pointer-registers-v1-result.json
             copper-move-wait-end-v1-result.json
             blitter-a-to-d-copy-v1-result.json
+            bitplane-lores-dma-fetch-v1-result.json
