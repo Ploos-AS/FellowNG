@@ -42,7 +42,9 @@ int main() {
   // Width=1, height=4. BLTSIZE starts the blit when BLTEN is enabled.
   wbltsize((4u << 6) | 1u, 0xdff058);
 
-  const bool started = blitterIsStarted();
+  const bool started_after_size = blitterIsStarted();
+  const uint32_t scheduled_cycle = blitterEvent.cycle;
+  const uint32_t pending_after_size = blitterGetDMAPending();
   const uint32_t event_cycle = blitterEvent.cycle;
   if (event_cycle != BUS_CYCLE_DISABLE) {
     busRemoveEvent(&blitterEvent);
@@ -55,6 +57,7 @@ int main() {
   const uint16_t d2 = chipmemReadWord(dst + 4);
   const uint16_t d3 = chipmemReadWord(dst + 6);
 
+  const bool started = started_after_size;
   const bool pass =
       started &&
       d0 == 0x1111 && d1 == 0x2222 &&
@@ -69,7 +72,10 @@ int main() {
             << "\"subsystem\":\"chipset\","
             << "\"status\":\"" << (pass ? "PASS" : "FAIL") << "\","
             << "\"observations\":["
-            << "{\"name\":\"event_cycle\",\"value\":" << event_cycle << "},"
+            << "{\"name\":\"event_cycle\",\"value\":" << event_cycle << "},\n"
+            << "{\"name\":\"scheduled_cycle\",\"value\":" << scheduled_cycle << "},\n"
+            << "{\"name\":\"started_after_size\",\"value\":" << (started_after_size ? 1 : 0) << "},\n"
+            << "{\"name\":\"dma_pending_after_size\",\"value\":" << pending_after_size << "},
             << "{\"name\":\"d0\",\"value\":" << d0 << "},"
             << "{\"name\":\"d1\",\"value\":" << d1 << "},"
             << "{\"name\":\"d2\",\"value\":" << d2 << "},"
