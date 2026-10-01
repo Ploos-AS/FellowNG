@@ -36,6 +36,7 @@ void blitFinishBlit();
 void blitForceFinish();
 void blitterCopy();
 // Register write handlers used by deterministic compatibility probes.
+extern void blitterRemoveEvent();
 extern void wbltcon0(uint16_t data, uint32_t address);
 extern void wbltcon1(uint16_t data, uint32_t address);
 extern void wbltafwm(uint16_t data, uint32_t address);
