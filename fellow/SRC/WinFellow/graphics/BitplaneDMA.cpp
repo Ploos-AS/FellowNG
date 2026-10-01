@@ -145,6 +145,11 @@ void BitplaneDMA::FetchLores()
       GetHold(6, bplsEnabled, &bpl6pt));
 }
 
+void BitplaneDMA::ProbeFetchLores()
+{
+  FetchLores();
+}
+
 void BitplaneDMA::FetchHires()
 {
   uint32_t bplsEnabled = _core.RegisterUtility.GetEnabledBitplaneCount();
