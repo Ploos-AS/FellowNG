@@ -9,6 +9,7 @@
 
 
 int main() {
+  std::cerr << "m9.3c: start\n";
   constexpr uint32_t src = 0x2000;
   constexpr uint32_t dst = 0x2100;
 
@@ -17,6 +18,7 @@ int main() {
   busHardReset();
   memoryStartup();
   blitterStartup();
+  std::cerr << "m9.3c: startup complete\n";
   // Enable the legacy Blitter DMA gate consulted by wbltsize().
   dmacon = 0x0040;
 
@@ -30,6 +32,7 @@ int main() {
   chipmemWriteWord(0, dst + 6);
 
   // A -> D, one word wide, four words high. Minterm 0xF0 selects A.
+  std::cerr << "m9.3c: before registers\n";
   wbltcon0(0x09f0, 0xdff040);
   wbltcon1(0x0000, 0xdff042);
   wbltafwm(0xffff, 0xdff044);
@@ -40,18 +43,22 @@ int main() {
   wbltdptl(dst & 0xfffe, 0xdff056);
 
   // Width=1, height=4. BLTSIZE starts the blit when BLTEN is enabled.
+  std::cerr << "m9.3c: before BLTSIZE\n";
   wbltsize((4u << 6) | 1u, 0xdff058);
+  std::cerr << "m9.3c: after BLTSIZE\n";
 
   const bool started_after_size = blitterIsStarted();
   const uint32_t scheduled_cycle = blitterEvent.cycle;
   const uint32_t pending_after_size = blitterGetDMAPending();
   const uint32_t event_cycle = blitterEvent.cycle;
+  std::cerr << "m9.3c: before finish event=" << event_cycle << "\n";
   if (event_cycle != BUS_CYCLE_DISABLE) {
     busRemoveEvent(&blitterEvent);
     bus.cycle = event_cycle;
     blitFinishBlit();
   }
 
+  std::cerr << "m9.3c: before readback\n";
   const uint16_t d0 = chipmemReadWord(dst + 0);
   const uint16_t d1 = chipmemReadWord(dst + 2);
   const uint16_t d2 = chipmemReadWord(dst + 4);
