@@ -71,6 +71,12 @@ int main() {
   const uint16_t d3 = chipmemReadWord(dst + 6);
 
   const bool started = started_after_size;
+  std::cerr << "m9.3c: observed started=" << started
+            << " d0=" << std::hex << d0 << " d1=" << d1
+            << " d2=" << d2 << " d3=" << d3
+            << " pending=" << std::dec << blitterGetDMAPending()
+            << " zero=" << blitterGetZeroFlag() << "\n";
+
   const bool pass =
       started &&
       d0 == 0x1111 && d1 == 0x2222 &&
