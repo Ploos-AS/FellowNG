@@ -42,3 +42,10 @@ add_executable(fellowng-blitter-copy-probe-runner
 )
 target_link_libraries(fellowng-blitter-copy-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-blitter-copy-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-bitplane-dma-probe-runner
+  bitplane_dma_probe_runner.cpp
+)
+target_link_libraries(fellowng-bitplane-dma-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-bitplane-dma-probe-runner PRIVATE cxx_std_20)
