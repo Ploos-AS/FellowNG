@@ -6,6 +6,7 @@
 #include "MemoryInterface.h"
 #include "GraphicsPipeline.h"
 #include "chipset.h"
+#include "VirtualHost/CoreFactory.h"
 
 
 int main() {
@@ -13,6 +14,7 @@ int main() {
   constexpr uint32_t src = 0x2000;
   constexpr uint32_t dst = 0x2100;
 
+  CoreFactory::CreateServices();
   chipsetStartup();
   busStartup();
   busHardReset();
@@ -86,7 +88,7 @@ int main() {
             << "{\"name\":\"event_cycle\",\"value\":" << event_cycle << "},\n"
             << "{\"name\":\"scheduled_cycle\",\"value\":" << scheduled_cycle << "},\n"
             << "{\"name\":\"started_after_size\",\"value\":" << (started_after_size ? 1 : 0) << "},\n"
-            << "{\"name\":\"dma_pending_after_size\",\"value\":" << pending_after_size << "}"
+            << "{\"name\":\"dma_pending_after_size\",\"value\":" << pending_after_size << "},"
             << "{\"name\":\"d0\",\"value\":" << d0 << "},"
             << "{\"name\":\"d1\",\"value\":" << d1 << "},"
             << "{\"name\":\"d2\",\"value\":" << d2 << "},"
@@ -96,5 +98,6 @@ int main() {
   blitterShutdown();
   memoryShutdown();
   busShutdown();
+  CoreFactory::DestroyServices();
   return pass ? 0 : 1;
 }
