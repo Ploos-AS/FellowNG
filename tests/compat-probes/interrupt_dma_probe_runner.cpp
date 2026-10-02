@@ -14,13 +14,17 @@ static uint16_t pending_mask()
 
 int main()
 {
+  std::cerr << "m9.3f: start\n";
   intena = 0;
   intreq = 0;
+  std::cerr << "m9.3f: state reset\n";
 
   // Enable BLIT (bit 6) and request it through the real INTREQ write path.
   intena = 0x4000 | (1u << 6);
+  std::cerr << "m9.3f: before INTREQ\n";
   wintreq_direct(0x8000 | (1u << 6), 0xdff09c, false);
 
+  std::cerr << "m9.3f: after INTREQ\n";
   const uint16_t pending_after_set = pending_mask();
   const unsigned latency = interruptGetScheduleLatency();
 
