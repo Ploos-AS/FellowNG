@@ -71,13 +71,17 @@ jobs:
         shell: bash
         run: >-
           cmake -S . -B build
-          -DFELLOWNG_BUILD_TESTS=OFF
+          -DFELLOWNG_BUILD_TESTS=ON
           -DFELLOWNG_BUILD_SDL_FRONTEND=ON
           -DFELLOWNG_RELEASE_VERSION="${{ steps.version.outputs.value }}"
           -DCMAKE_PREFIX_PATH="${{ steps.sdl.outputs.prefix }}"
 
       - name: Build
         run: cmake --build build --config Release --parallel 2
+
+      - name: Run portable regression tests
+        shell: bash
+        run: ctest --test-dir build --output-on-failure
 
       - name: Verify release identity
         shell: bash
