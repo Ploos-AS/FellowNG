@@ -4,6 +4,7 @@
 #include "interrupt.h"
 
 extern uint16_t intreq;
+extern uint16_t intena;
 
 static uint16_t pending_mask()
 {
