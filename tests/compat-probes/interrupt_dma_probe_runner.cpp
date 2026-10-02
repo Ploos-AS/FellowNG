@@ -17,6 +17,7 @@ static uint16_t pending_mask()
 int main()
 {
   CoreFactory::CreateServices();
+  CoreFactory::CreateModules();
   interruptEmulationStart();
   std::cerr << "m9.3f: start\n";
   intena = 0;
