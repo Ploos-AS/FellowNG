@@ -33,7 +33,7 @@ int main()
   uint32_t set_pixels = 0;
   for (uint32_t i = 17; i < decoded_batch_size; ++i)
   {
-    if (odd[i] & 1u) ++set_pixels;
+    if (odd[i] != 0) ++set_pixels;
   }
 
   const bool pass = pointer_after == source + 2 && batch_size >= 33 && decoded_batch_size >= 33 && set_pixels == 8;
