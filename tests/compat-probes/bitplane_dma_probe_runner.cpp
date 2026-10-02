@@ -9,6 +9,7 @@
 int main()
 {
   chipsetStartup();
+  graphStartup();
 
   const uint32_t source = 0x2000;
   memory_chip[source] = 0xa5;
