@@ -156,6 +156,17 @@ jobs:
           python3 tools/validate_compat_probe_result.py bitplane-lores-dma-fetch-v1-result.json
           grep -q '"status":"PASS"' bitplane-lores-dma-fetch-v1-result.json
           echo 'FellowNG M9.3d OCS lores bitplane DMA fetch: PASS'
+      - name: Build M9.3e sprite DMA probe runner
+        run: cmake --build build --target fellowng-sprite-dma-probe-runner -j2
+      - name: Execute M9.3e sprite register DMA probe
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-sprite-dma-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          timeout 10s "$RUNNER" | tee sprite-register-dma-v1-result.json
+          python3 tools/validate_compat_probe_result.py sprite-register-dma-v1-result.json
+          grep -q '"status":"PASS"' sprite-register-dma-v1-result.json
+          echo 'FellowNG M9.3e sprite register/DMA: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -173,3 +184,4 @@ jobs:
             copper-move-wait-end-v1-result.json
             blitter-a-to-d-copy-v1-result.json
             bitplane-lores-dma-fetch-v1-result.json
+            sprite-register-dma-v1-result.json
