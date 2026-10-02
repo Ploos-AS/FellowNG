@@ -35,7 +35,7 @@ int main()
   std::cerr << std::dec << "\n";
 
   uint32_t set_pixels = 0;
-  for (uint32_t i = 17; i < decoded_batch_size; ++i)
+  // The fetched word occupies the active serializer window before the\n  // pre-existing output tail; for this zero-scroll LORES probe the 8 set\n  // pixels are in the first 17 decoded positions.\n  for (uint32_t i = 0; i < 17; ++i)
   {
     if (odd[i] != 0) ++set_pixels;
   }
