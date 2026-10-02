@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <iostream>
 
+#include "Defs.h"
 #include "interrupt.h"
 
 extern uint16_t intreq;
