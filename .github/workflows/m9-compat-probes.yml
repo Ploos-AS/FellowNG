@@ -189,6 +189,16 @@ jobs:
           python3 tools/validate_compat_probe_result.py interrupt-dma-arbitration-v1-result.json
           grep -q '"status":"PASS"' interrupt-dma-arbitration-v1-result.json
           echo 'FellowNG M9.3f interrupt/DMA arbitration: PASS'
+      - name: M9.3 qualification bundle
+        run: |
+          set -euo pipefail
+          for result in             chipset-pointer-registers-v1-result.json             copper-move-wait-end-v1-result.json             blitter-a-to-d-copy-v1-result.json             bitplane-lores-dma-fetch-v1-result.json             sprite-register-dma-v1-result.json             sprite-p2c-decode-v1-result.json             interrupt-dma-arbitration-v1-result.json
+          do
+            test -s "$result"
+            python3 tools/validate_compat_probe_result.py "$result"
+            grep -q '"status":"PASS"' "$result"
+          done
+          echo 'FellowNG M9.3 chipset qualification bundle: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
