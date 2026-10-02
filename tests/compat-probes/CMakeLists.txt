@@ -70,3 +70,10 @@ add_executable(fellowng-interrupt-dma-probe-runner
 )
 target_link_libraries(fellowng-interrupt-dma-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-interrupt-dma-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-copper-bitplane-contention-probe-runner
+  copper_bitplane_contention_probe_runner.cpp
+)
+target_link_libraries(fellowng-copper-bitplane-contention-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-copper-bitplane-contention-probe-runner PRIVATE cxx_std_20)
