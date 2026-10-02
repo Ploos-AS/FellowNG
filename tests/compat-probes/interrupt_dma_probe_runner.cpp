@@ -2,7 +2,9 @@
 #include <iostream>
 
 #include "Defs.h"
+#include "Defs.h"
 #include "interrupt.h"
+#include "VirtualHost/CoreFactory.h"
 
 extern uint16_t intreq;
 extern uint16_t intena;
@@ -14,6 +16,8 @@ static uint16_t pending_mask()
 
 int main()
 {
+  CoreFactory::CreateServices();
+  interruptEmulationStart();
   std::cerr << "m9.3f: start\n";
   intena = 0;
   intreq = 0;
