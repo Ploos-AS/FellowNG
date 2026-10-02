@@ -178,6 +178,17 @@ jobs:
           python3 tools/validate_compat_probe_result.py sprite-p2c-decode-v1-result.json
           grep -q '"status":"PASS"' sprite-p2c-decode-v1-result.json
           echo 'FellowNG M9.3e sprite P2C decode: PASS'
+      - name: Build M9.3f interrupt DMA probe runner
+        run: cmake --build build --target fellowng-interrupt-dma-probe-runner -j2
+      - name: Execute M9.3f interrupt DMA arbitration probe
+        run: |
+          set -euo pipefail
+          RUNNER="$(find build -type f -name fellowng-interrupt-dma-probe-runner -perm -111 | head -n1)"
+          test -n "$RUNNER"
+          timeout 10s "$RUNNER" | tee interrupt-dma-arbitration-v1-result.json
+          python3 tools/validate_compat_probe_result.py interrupt-dma-arbitration-v1-result.json
+          grep -q '"status":"PASS"' interrupt-dma-arbitration-v1-result.json
+          echo 'FellowNG M9.3f interrupt/DMA arbitration: PASS'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -197,3 +208,4 @@ jobs:
             bitplane-lores-dma-fetch-v1-result.json
             sprite-register-dma-v1-result.json
             sprite-p2c-decode-v1-result.json
+            interrupt-dma-arbitration-v1-result.json
