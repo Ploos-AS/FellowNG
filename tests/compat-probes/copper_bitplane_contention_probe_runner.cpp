@@ -10,6 +10,17 @@
 #include "graphics/Graphics.h"
 #include "chipset.h"
 
+namespace {
+uint32_t gIoWrites = 0;
+uint32_t gIoObserved = 0;
+
+void captureIoWrite(uint16_t data, uint32_t)
+{
+  ++gIoWrites;
+  gIoObserved = data;
+}
+} // namespace
+
 int main()
 {
   chipsetStartup();
@@ -34,12 +45,9 @@ int main()
   _core.Registers.BplCon0 = 0x1000;
   oddscroll = evenscroll = 0;
 
-  uint32_t writes = 0;
-  uint32_t observed = 0;
-  memorySetIoWriteStub(0x180, [&](uint16_t data, uint32_t) {
-    ++writes;
-    observed = data;
-  });
+  gIoWrites = 0;
+  gIoObserved = 0;
+  memorySetIoWriteStub(0x180, captureIoWrite);
 
   copper_registers.copper_dma = true;
   copper->Load(list);
@@ -64,8 +72,8 @@ int main()
   const uint32_t after_dma_pointer = bpl1pt;
   const bool pass =
       copper_cycle == 4 &&
-      writes == 1 &&
-      observed == 0x0123 &&
+      gIoWrites == 1 &&
+      gIoObserved == 0x0123 &&
       after_copper_pc == list + 4 &&
       after_copper_pointer == pointer_before &&
       after_dma_pointer == pointer_before + 2;
