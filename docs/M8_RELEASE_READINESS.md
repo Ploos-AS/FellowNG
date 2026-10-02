@@ -52,3 +52,4 @@ AROS or AmigaOS assets to be bundled into FellowNG release archives.
 - M8.6d: release-artifact CI matrix.
 - M8.6e: checksums and release validation.
 - M8.6f: qualified release workflow.
+- M8.6g: release-candidate freeze and publication checklist.
