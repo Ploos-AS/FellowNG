@@ -1384,7 +1384,6 @@ void blitInitiate()
 // Event has already been popped.
 void blitFinishBlit()
 {
-  fprintf(stderr, "fellowng: blitFinish begin\\n");
   blitterEvent.cycle = BUS_CYCLE_DISABLE;
   blitter.dma_pending = FALSE;
   blitter.started = FALSE;
@@ -1398,9 +1397,7 @@ void blitFinishBlit()
   }
   else
   {
-    fprintf(stderr, "fellowng: before blitterCopyABCD\\n");
     blitterCopyABCD();
-    fprintf(stderr, "fellowng: after blitterCopyABCD\\n");
   }
 }
 
