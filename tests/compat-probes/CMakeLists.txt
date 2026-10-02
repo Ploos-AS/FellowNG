@@ -63,3 +63,10 @@ add_executable(fellowng-sprite-p2c-probe-runner
 )
 target_link_libraries(fellowng-sprite-p2c-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-sprite-p2c-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-interrupt-dma-probe-runner
+  interrupt_dma_probe_runner.cpp
+)
+target_link_libraries(fellowng-interrupt-dma-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-interrupt-dma-probe-runner PRIVATE cxx_std_20)
