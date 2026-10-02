@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "interrupt.h"
-#include "CpuModule.h"
 
 extern uint16_t intreq;
 extern uint16_t intena;
