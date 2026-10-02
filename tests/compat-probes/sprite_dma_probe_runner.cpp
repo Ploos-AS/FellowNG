@@ -37,6 +37,7 @@ int main()
   const uint16_t ctl = sprite_registers.sprctl[0];
   const uint16_t data = sprite_registers.sprdata[0];
   const uint16_t datb = sprite_registers.sprdatb[0];
+  const bool decode_nonzero = SpriteP2CDecoder::Decode4(0, nullptr, datb, data);
 
   // Pointer must remain word aligned; POS/CTL and data registers must retain
   // their documented control/data fields through the real IO handlers.
