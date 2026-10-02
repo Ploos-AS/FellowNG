@@ -6,6 +6,7 @@
 #include "SpriteRegisters.h"
 #include "Sprites.h"
 #include "Graphics.h"
+#include "Renderer.h"
 
 int main()
 {
