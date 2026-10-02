@@ -12,8 +12,7 @@ int main()
   graphStartup();
 
   const uint32_t source = 0x2000;
-  memory_chip[source] = 0xa5;
-  memory_chip[source + 1] = 0x5a;
+  chipmemWriteWord(0xa55a, source);
 
   bpl1pt = source;
   bpl2pt = bpl3pt = bpl4pt = bpl5pt = bpl6pt = 0;
