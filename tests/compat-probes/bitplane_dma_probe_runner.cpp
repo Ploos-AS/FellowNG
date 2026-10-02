@@ -30,6 +30,10 @@ int main()
   const uint32_t decoded_batch_size = batch_size;
   const uint8_t *odd = GraphicsContext.Planar2ChunkyDecoder.GetOddPlayfield();
 
+  std::cerr << "m9.3d: odd bytes";
+  for (uint32_t i = 0; i < decoded_batch_size; ++i) std::cerr << " " << std::hex << static_cast<unsigned>(odd[i]);
+  std::cerr << std::dec << "\n";
+
   uint32_t set_pixels = 0;
   for (uint32_t i = 17; i < decoded_batch_size; ++i)
   {
