@@ -11,6 +11,7 @@ int main()
 {
   std::cerr << "m9.3e: before chipset\n";
   chipsetStartup();
+  drawSetGraphicsEmulationMode(GRAPHICSEMULATIONMODE::GRAPHICSEMULATIONMODE_CYCLEEXACT);
   std::cerr << "m9.3e: after chipset\n";
   graphStartup();
   std::cerr << "m9.3e: after graph\n";
