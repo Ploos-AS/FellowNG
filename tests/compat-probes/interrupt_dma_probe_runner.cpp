@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "interrupt.h"
+#include "MemoryInterface.h"
 
 extern uint16_t intreq;
 extern uint16_t intena;
