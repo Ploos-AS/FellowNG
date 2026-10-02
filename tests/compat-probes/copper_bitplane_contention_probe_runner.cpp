@@ -85,8 +85,8 @@ int main()
             << "\"status\":\"" << (pass ? "PASS" : "FAIL") << "\","
             << "\"observations\":["
             << "{\"name\":\"copper_cycle\",\"value\":" << copper_cycle << "},"
-            << "{\"name\":\"copper_writes\",\"value\":" << writes << "},"
-            << "{\"name\":\"copper_value\",\"value\":" << observed << "},"
+            << "{\"name\":\"copper_writes\",\"value\":" << gIoWrites << "},
+            << "{\"name\":\"copper_value\",\"value\":" << gIoObserved << "},"
             << "{\"name\":\"after_copper_pc\",\"value\":" << after_copper_pc << "},"
             << "{\"name\":\"after_dma_pointer\",\"value\":" << after_dma_pointer << "}"
             << "]}\n";
