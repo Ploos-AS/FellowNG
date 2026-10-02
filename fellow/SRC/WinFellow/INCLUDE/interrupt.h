@@ -4,6 +4,7 @@ extern uint16_t intena;
 
 void interruptHandleEvent();
 void interruptRaisePending();
+unsigned int interruptGetScheduleLatency();
 const char *interruptGetInterruptName(uint32_t interrupt_number);
 BOOLE interruptIsRequested(uint16_t bitmask);
 
