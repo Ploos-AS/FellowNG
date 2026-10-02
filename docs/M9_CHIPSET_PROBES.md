@@ -54,3 +54,30 @@ The result validates as `fellowng.compat-probe-result.v1` with subsystem `chipse
 The probe dispatches Copper events using the same ownership rule as the bus scheduler: an event is removed from the queue before its handler is invoked, allowing the handler to schedule its successor safely. No emulator-core change was required for M9.3b.
 
 M9.3b therefore freezes deterministic Copper MOVE/WAIT/end-of-list execution as the foundation for M9.3c Blitter qualification.
+
+
+## M9.3 qualification bundle
+
+M9.3 is now gated as a single deterministic qualification bundle in GitHub Actions. The bundle requires all seven ROM-free chipset probes to validate with schema `fellowng.compat-probe-result.v1` and `status: PASS`:
+
+- M9.3a chipset pointer/register semantics
+- M9.3b Copper MOVE/WAIT/end execution
+- M9.3c Blitter A→D operation
+- M9.3d LORES bitplane DMA fetch
+- M9.3e sprite register/DMA behavior
+- M9.3e sprite planar-to-chunky decode
+- M9.3f interrupt/DMA arbitration
+
+The bundle gate is intentionally separate from the individual probes. Individual failures remain diagnosable, while the bundle provides a release-facing qualification boundary.
+
+## M9.4 next phase
+
+M9.4 starts cross-subsystem qualification rather than adding isolated register tests. The first targets are:
+
+1. Copper + bitplane DMA at the same scheduler position.
+2. Blitter completion + BLIT interrupt request.
+3. Sprite DMA + display DMA contention.
+4. Interrupt request while another custom-chip DMA owner is active.
+5. Deterministic event ordering at equal bus-cycle positions.
+
+The M9.4 probes must continue to use project-authored inputs, ROM-free execution, explicit cycle/raster coordinates, and machine-readable probe results. A cross-subsystem probe should fail if event ordering is ambiguous; no screenshot-based oracle is sufficient on its own.
