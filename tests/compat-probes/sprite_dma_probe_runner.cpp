@@ -9,16 +9,25 @@
 
 int main()
 {
+  std::cerr << "m9.3e: before chipset\n";
   chipsetStartup();
+  std::cerr << "m9.3e: after chipset\n";
   graphStartup();
+  std::cerr << "m9.3e: after graph\n";
   spriteStartup();
+  std::cerr << "m9.3e: after sprite\n";
 
   // Sprite 0: pointer, position/control, and two data words.
+  std::cerr << "m9.3e: before pointer\n";
   wsprxpth(0x0000, 0xdff120);
   wsprxptl(0x2000, 0xdff122);
+  std::cerr << "m9.3e: before pos\n";
   wsprxpos(0x2810, 0xdff140);
+  std::cerr << "m9.3e: before ctl\n";
   wsprxctl(0x8301, 0xdff142);
+  std::cerr << "m9.3e: before data\n";
   wsprxdata(0xf0f0, 0xdff144);
+  std::cerr << "m9.3e: before datb\n";
   wsprxdatb(0x0f0f, 0xdff146);
 
   const uint32_t ptr = sprite_registers.sprpt[0];
