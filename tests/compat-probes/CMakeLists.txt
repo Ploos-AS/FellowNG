@@ -49,3 +49,10 @@ add_executable(fellowng-bitplane-dma-probe-runner
 )
 target_link_libraries(fellowng-bitplane-dma-probe-runner PRIVATE FellowNG::Emulation.Portable)
 target_compile_features(fellowng-bitplane-dma-probe-runner PRIVATE cxx_std_20)
+
+
+add_executable(fellowng-sprite-dma-probe-runner
+  sprite_dma_probe_runner.cpp
+)
+target_link_libraries(fellowng-sprite-dma-probe-runner PRIVATE FellowNG::Emulation.Portable)
+target_compile_features(fellowng-sprite-dma-probe-runner PRIVATE cxx_std_20)
